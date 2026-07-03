@@ -39,7 +39,70 @@ Baut nach `nui/dist/`, `fxmanifest.lua` referenziert genau diesen Ordner.
 - `client/client.lua` – Escape-Keybind, `SetPauseMenuActive(false)` solange
   das Menü offen ist, `disconnect`-Callback für den Exit-Dialog,
   Spielerpositions-Streaming + `setWaypoint`-Callback für den Map-Tab (siehe
-  unten). `setHomeData`/`setMapBlips` mit echten Server-Daten sind noch offen.
+  unten). `setHomeData` liefert bereits echte corerp-Daten; `setMapBlips`
+  (POI-Layer) ist noch offen.
+- `client/keybinds.lua` / `client/settings.lua` – generische Registries für
+  die Tabs "Keybinds"/"Settings", siehe Abschnitt darunter.
+
+## Keybinds & Settings für andere Resourcen
+
+Beide Tabs sind bewusst **nicht** NeoV-spezifisch fest verdrahtet: Jede
+Resource (dieser Server oder Drittresourcen wie `fivem-pma-voice`) kann eigene
+Einträge per Export anmelden. Das NUI rendert ausschließlich, was diese
+Registries liefern - keine Resource wird von diesem Menü aus angefasst.
+
+**Keybinds** (`client/keybinds.lua`, Export `RegisterKeybind`): meldet einen
+bereits per `RegisterKeyMapping` registrierten Command zur Anzeige/zum Rebind
+im UI an. Aufruf aus dem Client-Skript der eigenen Resource, nachdem der
+eigene `RegisterKeyMapping`-Call gelaufen ist:
+
+```lua
+if GetResourceState('neov-pause-menu') == 'started' then
+    exports['neov-pause-menu']:RegisterKeybind({
+        id = 'myres_dosomething',       -- eindeutig, dient als KVP-Key
+        command = 'myres_dosomething',  -- Command-String aus RegisterCommand/RegisterKeyMapping
+        label = 'Etwas tun',
+        category = 'Mein Script',       -- Gruppierung im UI, frei wählbar
+        defaultKey = 'E',               -- muss zum RegisterKeyMapping-Default passen
+    })
+end
+```
+
+Rebind aus dem UI führt intern `bind`/`unbind` für genau diesen Command aus
+und merkt sich die Wahl in einem Resource-KVP (übersteht Neustarts/Reconnects
+- FiveM selbst bietet keine Query-Native für "aktuell gebundene Taste").
+
+**Settings** (`client/settings.lua`, Export `RegisterSetting`): meldet eine
+Slider- oder Toggle-Zeile an. NeoVs eigene Audio/HUD/Voice-Sektionen nutzen
+exakt dieselbe API (siehe Ende der Datei) - kein Sonderpfad für "eingebaute"
+Settings.
+
+```lua
+if GetResourceState('neov-pause-menu') == 'started' then
+    local current = exports['neov-pause-menu']:RegisterSetting({
+        id = 'myres_hud_scale',
+        section = 'Mein Script',   -- Gruppierung im UI, frei wählbar
+        label = 'HUD-Skalierung',
+        type = 'slider',           -- 'slider' | 'toggle'
+        default = 100,
+        min = 50, max = 150,       -- nur bei 'slider' relevant
+    })
+end
+
+AddEventHandler('myres:settingChanged', function(id, value)
+    -- id == 'myres_hud_scale', value == neuer Wert - hier eigene Reaktion
+    -- (Convar setzen, eigenen Export aufrufen, ...).
+end)
+```
+
+Änderungen werden von `neov-pause-menu` selbst im Resource-KVP persistiert und
+per `TriggerEvent('<eigene-resource>:settingChanged', id, value)` an die
+registrierende Resource zurückgemeldet - dieses Menü schreibt nie direkt in
+eine fremde Resource hinein.
+
+Beide Exports sind optional/lose gekoppelt (kein `dependency`-Eintrag im
+`fxmanifest.lua` der aufrufenden Resource nötig) - der `GetResourceState`-Guard
+oben verhindert nur einen Fehler, falls `neov-pause-menu` nicht läuft.
 
 ## Map-Tab
 
@@ -114,11 +177,14 @@ diesem Repo:
 
 - **Branding:** Verwendet aktuell "NEOV" als Logo-Text. Falls der öffentliche
   Servername doch anders lauten soll, in `TopBar.tsx` anpassen.
-- **Settings-Tab:** Werte sind rein lokaler React-State. Anbindung an FiveM-
-  Convars bzw. eigene Server-Settings folgt, sobald `client.lua` echte Daten
-  liefert.
-- **Keybinds-Tab:** Rebind-UI ist fertig (Klick → Taste drücken → übernommen),
-  aber greift noch nicht auf echte `bind`/`unbind`-Client-Commands durch.
+- **Settings-Tab:** datengetrieben über `client/settings.lua`
+  (`RegisterSetting`-Export, siehe oben), Werte persistieren im Resource-KVP.
+  Was eine Änderung tatsächlich bewirkt (z.B. einen echten Audio-Mix
+  beeinflussen), liegt bei der jeweils registrierenden Resource - `neov-pause-
+  menu` selbst setzt nur den Wert, keine Spiel-Convars.
+- **Keybinds-Tab:** datengetrieben über `client/keybinds.lua`
+  (`RegisterKeybind`-Export, siehe oben). Rebind führt echtes `bind`/`unbind`
+  aus und persistiert die Wahl im Resource-KVP.
 - **Fonts:** Rajdhani/Inter/JetBrains Mono liegen bereits selbst-gehostet in
   `nui/public/fonts/` (Open-Font-License, aus Google Fonts geladen) – passend
   zum bestehenden NeoV-Design-System (Graphit + Messing).

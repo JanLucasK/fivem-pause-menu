@@ -53,6 +53,34 @@ export interface MapBlip {
 
 export type MapStyle = 'satellite' | 'atlas' | 'grid';
 
+// Ein Keybind-Eintrag, wie ihn client/keybinds.lua liefert. `resource` ist die
+// Resource, die den Bind per `RegisterKeybind`-Export angemeldet hat (NeoV
+// selbst oder eine beliebige andere Resource) - rein informativ fürs UI.
+export interface KeybindEntry {
+  id: string;
+  resource: string;
+  command: string;
+  label: string;
+  category: string;
+  mapper: string;
+  key: string;
+  defaultKey: string;
+}
+
+// Ein Settings-Eintrag, wie ihn client/settings.lua liefert (siehe
+// `RegisterSetting`-Export dort). `value` ist number bei type 'slider',
+// boolean bei type 'toggle'.
+export interface SettingDefinition {
+  id: string;
+  resource: string;
+  section: string;
+  label: string;
+  type: 'slider' | 'toggle';
+  value: number | boolean;
+  min?: number;
+  max?: number;
+}
+
 // Server-seitig konfigurierbar ueber server.cfg-Convars (neov_pausemenu_map_*,
 // siehe client/client.lua) statt hart im NUI-Code - Serverbetreiber koennen so
 // Default-Stil/Umschalter ohne NUI-Rebuild aendern.

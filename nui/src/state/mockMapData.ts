@@ -5,10 +5,10 @@ import type { MapBlip, MapConfig, MapPlayerPosition } from '../types';
 // NUI-Messages vom Client-Skript (Convars) bzw. (spaeter) von corerp.
 export const mockPlayerPosition: MapPlayerPosition = { x: -200, y: 300, heading: 45 };
 
-export const mockMapBlips: MapBlip[] = [
-  { id: 'ls-customs', x: -350, y: -130, label: 'LS Customs', color: '#c8973f' },
-  { id: 'pillbox', x: 300, y: -600, label: 'Pillbox Hill Medical', color: '#e5484d' },
-  { id: 'legion-square', x: 0, y: 0, label: 'Legion Square', color: '#9aa0ad' },
-];
+// POI-Testpunkte entfernt: der POI-Layer ist alleinige corerp-Domäne (siehe
+// README "Map-Tab") und bekommt seine Daten erst über eine echte
+// 'setMapBlips'-NUI-Message. Bis dahin bleibt der Layer leer - nur der
+// Spieler-Marker (mockPlayerPosition, eigene Marker-Gruppe) bleibt bestehen.
+export const mockMapBlips: MapBlip[] = [];
 
 export const mockMapConfig: MapConfig = { defaultStyle: 'satellite', showStyleSwitcher: true };

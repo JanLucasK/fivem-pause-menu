@@ -42,6 +42,32 @@
   color: var(--text);
 }
 
+.keybinds-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.keybinds-reset {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  color: var(--muted);
+  background: transparent;
+  border: 1px solid var(--graphite-line);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: border-color 120ms ease, color 120ms ease;
+}
+
+.keybinds-reset:hover {
+  border-color: var(--brass-dim);
+  color: var(--brass);
+}
+
 .keybinds-key {
   display: flex;
   align-items: center;

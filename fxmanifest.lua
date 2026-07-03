@@ -7,7 +7,11 @@ author 'NeoV'
 description 'Custom Pause-Menu (Home/Map/Settings/Keybinds/Discord/Exit)'
 version '0.1.0'
 
-client_script 'client/client.lua'
+client_scripts {
+    'client/keybinds.lua',
+    'client/settings.lua',
+    'client/client.lua',
+}
 
 ui_page 'nui/dist/index.html'
 

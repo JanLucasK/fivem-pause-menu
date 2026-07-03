@@ -1,8 +1,18 @@
 import { useEffect, useState } from 'react';
-import type { TabId, HomeData, MapBlip, MapConfig, MapPlayerPosition } from '../types';
+import type {
+  TabId,
+  HomeData,
+  KeybindEntry,
+  MapBlip,
+  MapConfig,
+  MapPlayerPosition,
+  SettingDefinition,
+} from '../types';
 import { fetchNui, isInFivem, onNuiMessage } from '../bridge/nui';
 import { mockHomeData } from '../state/mockHomeData';
 import { mockMapBlips, mockMapConfig, mockPlayerPosition } from '../state/mockMapData';
+import { mockKeybinds } from '../tabs/keybinds/keybinds.data';
+import { mockSettings } from '../state/mockSettingsData';
 import { TABS } from './tabs.config';
 import { TopBar } from './TopBar';
 import { TabNav } from './TabNav';
@@ -23,6 +33,8 @@ export function AppShell() {
   const [playerPosition, setPlayerPosition] = useState<MapPlayerPosition>(mockPlayerPosition);
   const [mapBlips, setMapBlips] = useState<MapBlip[]>(mockMapBlips);
   const [mapConfig, setMapConfig] = useState<MapConfig>(mockMapConfig);
+  const [keybinds, setKeybinds] = useState<KeybindEntry[]>(isInFivem ? [] : mockKeybinds);
+  const [settings, setSettings] = useState<SettingDefinition[]>(isInFivem ? [] : mockSettings);
 
   useEffect(() => {
     const offVisible = onNuiMessage<boolean>('setVisible', setVisible);
@@ -30,14 +42,48 @@ export function AppShell() {
     const offPlayerPosition = onNuiMessage<MapPlayerPosition>('setPlayerPosition', setPlayerPosition);
     const offMapBlips = onNuiMessage<MapBlip[]>('setMapBlips', setMapBlips);
     const offMapConfig = onNuiMessage<MapConfig>('setMapConfig', setMapConfig);
+    const offKeybinds = onNuiMessage<KeybindEntry[]>('setKeybinds', setKeybinds);
+    const offSettings = onNuiMessage<SettingDefinition[]>('setSettings', setSettings);
     return () => {
       offVisible();
       offHomeData();
       offPlayerPosition();
       offMapBlips();
       offMapConfig();
+      offKeybinds();
+      offSettings();
     };
   }, []);
+
+  // Client-seitig (client/keybinds.lua bzw. client/settings.lua) ausgeführt,
+  // sobald verfügbar - im Browser-Dev-Modus optimistisch lokal übernommen,
+  // da fetchNui dort ({} statt einer echten Antwort) nie "ok" zurückgibt.
+  async function handleRebindKey(id: string, key: string) {
+    const previous = keybinds;
+    setKeybinds((current) => current.map((entry) => (entry.id === id ? { ...entry, key } : entry)));
+    const response = isInFivem
+      ? await fetchNui<{ ok: boolean; key?: string }>('rebindKey', { id, key })
+      : { ok: true };
+    if (!response.ok) setKeybinds(previous);
+  }
+
+  async function handleResetKeybind(id: string) {
+    if (!isInFivem) {
+      setKeybinds((current) =>
+        current.map((entry) => (entry.id === id ? { ...entry, key: entry.defaultKey } : entry)),
+      );
+      return;
+    }
+    const response = await fetchNui<{ ok: boolean; key?: string }>('resetKeybind', { id });
+    if (response.ok && response.key) {
+      setKeybinds((current) => current.map((entry) => (entry.id === id ? { ...entry, key: response.key! } : entry)));
+    }
+  }
+
+  function handleSettingChange(id: string, value: number | boolean) {
+    setSettings((current) => current.map((entry) => (entry.id === id ? { ...entry, value } : entry)));
+    fetchNui('updateSetting', { id, value });
+  }
 
   // ESC schliesst das Menue. In FiveM haelt SetNuiFocus die Tastatur in der NUI
   // fest, solange das Menue offen ist - das Client-Skript bekommt ESC in dem
@@ -94,8 +140,10 @@ export function AppShell() {
               onSetWaypoint={(x, y) => fetchNui('setWaypoint', { x, y })}
             />
           )}
-          {activeTab === 'settings' && <SettingsTab />}
-          {activeTab === 'keybinds' && <KeybindsTab />}
+          {activeTab === 'settings' && <SettingsTab settings={settings} onChange={handleSettingChange} />}
+          {activeTab === 'keybinds' && (
+            <KeybindsTab keybinds={keybinds} onRebind={handleRebindKey} onReset={handleResetKeybind} />
+          )}
         </main>
       </div>
 

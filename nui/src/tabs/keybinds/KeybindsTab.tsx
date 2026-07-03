@@ -1,10 +1,17 @@
 import { useEffect, useState } from 'react';
-import { Pencil } from 'lucide-react';
-import { mockKeybinds } from './keybinds.data';
+import { Pencil, RotateCcw } from 'lucide-react';
+import type { KeybindEntry } from '../../types';
+import { browserKeyToFivemKey } from './keyNameMap';
 import './keybindsTab.css';
 
-function groupByCategory(entries: typeof mockKeybinds) {
-  const groups = new Map<string, typeof mockKeybinds>();
+interface KeybindsTabProps {
+  keybinds: KeybindEntry[];
+  onRebind: (id: string, key: string) => void;
+  onReset: (id: string) => void;
+}
+
+function groupByCategory(entries: KeybindEntry[]) {
+  const groups = new Map<string, KeybindEntry[]>();
   for (const entry of entries) {
     const bucket = groups.get(entry.category) ?? [];
     bucket.push(entry);
@@ -13,8 +20,11 @@ function groupByCategory(entries: typeof mockKeybinds) {
   return groups;
 }
 
-export function KeybindsTab() {
-  const [keys, setKeys] = useState(mockKeybinds);
+// Datengetrieben: die Liste kommt vom Client (RegisterKeybind-Registry, siehe
+// client/keybinds.lua) statt aus lokalen Mock-Daten - jede Resource, die dort
+// registriert, taucht hier automatisch auf. "Rebind" ruft fetchNui('rebindKey', ...)
+// auf, das Client-seitig `bind`/`unbind` ausführt und die Wahl persistiert.
+export function KeybindsTab({ keybinds, onRebind, onReset }: KeybindsTabProps) {
   const [listeningFor, setListeningFor] = useState<string | null>(null);
 
   useEffect(() => {
@@ -22,20 +32,28 @@ export function KeybindsTab() {
 
     const handler = (event: KeyboardEvent) => {
       event.preventDefault();
-      const newKey = event.key.length === 1 ? event.key.toUpperCase() : event.key;
-      setKeys((current) =>
-        current.map((entry) => (entry.id === listeningFor ? { ...entry, key: newKey } : entry)),
-      );
+      // Capture + stopImmediatePropagation: muss vor AppShells ESC-Handler
+      // (schliesst das ganze Menü) laufen, sonst würde Escape während der
+      // Aufnahme das Menü schliessen statt nur die Aufnahme abzubrechen.
+      event.stopImmediatePropagation();
+
+      if (event.code === 'Escape') {
+        setListeningFor(null);
+        return;
+      }
+
+      const key = browserKeyToFivemKey(event);
+      if (!key) return; // unbekannte Taste - Aufnahme laeuft weiter
+
       setListeningFor(null);
-      // Spaeter: fetchNui('rebindKey', { id: listeningFor, key: newKey })
-      // -> Client fuehrt `bind`/`unbind` aus.
+      onRebind(listeningFor, key);
     };
 
-    window.addEventListener('keydown', handler);
-    return () => window.removeEventListener('keydown', handler);
-  }, [listeningFor]);
+    window.addEventListener('keydown', handler, true);
+    return () => window.removeEventListener('keydown', handler, true);
+  }, [listeningFor, onRebind]);
 
-  const groups = groupByCategory(keys);
+  const groups = groupByCategory(keybinds);
 
   return (
     <div className="keybinds-tab">
@@ -45,21 +63,33 @@ export function KeybindsTab() {
           <div className="keybinds-list">
             {entries.map((entry) => (
               <div key={entry.id} className="keybinds-row">
-                <span className="keybinds-action">{entry.action}</span>
-                <button
-                  type="button"
-                  className={`keybinds-key ${listeningFor === entry.id ? 'listening' : ''}`}
-                  onClick={() => setListeningFor(entry.id)}
-                >
-                  {listeningFor === entry.id ? (
-                    <span>Taste drücken…</span>
-                  ) : (
-                    <>
-                      <span>{entry.key}</span>
-                      <Pencil size={12} />
-                    </>
+                <span className="keybinds-action">{entry.label}</span>
+                <div className="keybinds-controls">
+                  {entry.key !== entry.defaultKey && (
+                    <button
+                      type="button"
+                      className="keybinds-reset"
+                      title="Auf Standard zurücksetzen"
+                      onClick={() => onReset(entry.id)}
+                    >
+                      <RotateCcw size={12} />
+                    </button>
                   )}
-                </button>
+                  <button
+                    type="button"
+                    className={`keybinds-key ${listeningFor === entry.id ? 'listening' : ''}`}
+                    onClick={() => setListeningFor(entry.id)}
+                  >
+                    {listeningFor === entry.id ? (
+                      <span>Taste drücken…</span>
+                    ) : (
+                      <>
+                        <span>{entry.key}</span>
+                        <Pencil size={12} />
+                      </>
+                    )}
+                  </button>
+                </div>
               </div>
             ))}
           </div>

@@ -101,6 +101,13 @@ local function setMenuVisible(visible)
     if visible then
         SendNUIMessage({ action = 'setMapConfig', payload = getMapConfig() })
         SendNUIMessage({ action = 'setHomeData', payload = buildHomeData() })
+        -- Keybinds/Settings-Registry (client/keybinds.lua, client/settings.lua)
+        -- laufen unabhaengig vom Menuestatus, damit andere Resourcen jederzeit
+        -- registrieren koennen - beim Oeffnen schicken wir trotzdem den
+        -- aktuellen Stand mit, falls sich seit dem letzten `setKeybinds`/
+        -- `setSettings`-Push (bei Registrierung) etwas geaendert hat.
+        SendNUIMessage({ action = 'setKeybinds', payload = GetKeybinds() })
+        SendNUIMessage({ action = 'setSettings', payload = GetSettings() })
         -- Aktuellen Stand aktiv nachfragen: Balances/IdCard werden von corerp
         -- nur bei Mutation bzw. auf Anfrage (nicht periodisch) verschickt.
         -- Beide Request-Events sind parameterlos - corerp liest source/Spieler
