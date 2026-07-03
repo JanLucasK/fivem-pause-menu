@@ -1,14 +1,19 @@
 import { MapIcon, ArrowUpRight } from 'lucide-react';
+import type { MapBlip, MapPlayerPosition, MapStyle } from '../../../types';
+import { GtaMap } from '../../../components/GtaMap';
 
 interface MapPreviewCardProps {
+  playerPosition: MapPlayerPosition;
+  blips: MapBlip[];
+  mapStyle: MapStyle;
   onOpenMap: () => void;
 }
 
-// Platzhalter fuer die spaetere echte Karte (GTA-Map-Tiles + Leaflet, siehe
-// README "Map-Tab"). Fuer den Prototyp reicht ein Stellvertreter-Muster, damit
-// das Home-Layout final bewertet werden kann, ohne auf die Tile-Integration
-// zu warten.
-export function MapPreviewCard({ onOpenMap }: MapPreviewCardProps) {
+// Live-Miniaturkarte (dieselbe GtaMap wie im Map-Tab, siehe
+// components/GtaMap.tsx) statt eines statischen Platzhalters. Kein
+// Style-Switcher (fixer defaultStyle), Klick auf die Karte oeffnet wie der
+// Button den vollen Map-Tab.
+export function MapPreviewCard({ playerPosition, blips, mapStyle, onOpenMap }: MapPreviewCardProps) {
   return (
     <section className="map-preview-card">
       <div className="map-preview-head">
@@ -22,8 +27,15 @@ export function MapPreviewCard({ onOpenMap }: MapPreviewCardProps) {
       </div>
 
       <div className="map-preview-canvas">
-        <div className="map-preview-placeholder-grid" />
-        <div className="map-preview-pin" />
+        <GtaMap
+          playerPosition={playerPosition}
+          blips={blips}
+          defaultStyle={mapStyle}
+          showStyleSwitcher={false}
+          zoom={2}
+          className="map-preview-card-canvas"
+          onMapClick={onOpenMap}
+        />
       </div>
 
       <button type="button" className="map-preview-open" onClick={onOpenMap}>

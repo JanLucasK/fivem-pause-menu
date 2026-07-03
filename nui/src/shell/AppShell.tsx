@@ -130,7 +130,15 @@ export function AppShell() {
         <TopBar location={homeData.location} />
         <TabNav activeTab={activeTab} onSelect={handleSelect} />
         <main className="app-shell-content">
-          {activeTab === 'home' && <HomeTab data={homeData} onOpenMap={() => setActiveTab('map')} />}
+          {activeTab === 'home' && (
+            <HomeTab
+              data={homeData}
+              playerPosition={playerPosition}
+              blips={mapBlips}
+              mapStyle={mapConfig.defaultStyle}
+              onOpenMap={() => setActiveTab('map')}
+            />
+          )}
           {activeTab === 'map' && (
             <MapTab
               playerPosition={playerPosition}
