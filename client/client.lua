@@ -55,7 +55,7 @@ local function buildHomeData()
         -- gegenueber dem bisherigen Prototyp-Stand, siehe TODO unten.
         server = {
             serverName = 'NeoV',
-            onlinePlayers = GetNumPlayerIndices(),
+            onlinePlayers = NetworkGetNumConnectedPlayers(),
             maxPlayers = tonumber(GetConvar('sv_maxclients', '48')) or 48,
             discordUrl = 'https://discord.gg/neov',
         },
