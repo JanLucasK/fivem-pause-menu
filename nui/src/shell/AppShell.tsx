@@ -39,15 +39,24 @@ export function AppShell() {
     };
   }, []);
 
-  // Dev-Komfort: ESC schliesst das Menue auch im Browser-Prototyp.
+  // ESC schliesst das Menue. In FiveM haelt SetNuiFocus die Tastatur in der NUI
+  // fest, solange das Menue offen ist - das Client-Skript bekommt ESC in dem
+  // Moment also nicht mehr mit und muss hierueber (closeMenu) informiert werden,
+  // statt selbst per RegisterCommand zu schliessen. Im Browser-Prototyp gibt es
+  // kein Client-Skript, dort schaltet ESC den lokalen State direkt um.
   useEffect(() => {
-    if (isInFivem) return;
+    if (!visible) return;
     const handler = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setVisible((current) => !current);
+      if (event.key !== 'Escape') return;
+      if (isInFivem) {
+        fetchNui('closeMenu');
+      } else {
+        setVisible(false);
+      }
     };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
-  }, []);
+  }, [visible]);
 
   if (!visible) return null;
 

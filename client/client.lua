@@ -29,14 +29,27 @@ RegisterCommand('neov:togglepausemenu', function()
     setMenuVisible(not isMenuOpen)
 end, false)
 
--- Verhindert, dass GTAs natives Pause-Menü parallel aufgeht, waehrend unseres offen ist.
+-- INPUT_FRONTEND_PAUSE (Control 200) dauerhaft deaktivieren, damit GTAs natives
+-- Pause-Menü niemals aufgeht - unabhaengig davon, ob unseres gerade offen ist.
+-- RegisterKeyMapping oben ist ein eigener Custom-Bind und laeuft unabhaengig
+-- von DisableControlAction, wird also weiterhin ausgeloest.
 CreateThread(function()
     while true do
+        DisableControlAction(0, 200, true)
         if isMenuOpen then
             SetPauseMenuActive(false)
         end
         Wait(0)
     end
+end)
+
+-- Schliessen per ESC: Waehrend das Menue offen ist, haelt SetNuiFocus(true, true)
+-- die Tastatureingaben in der NUI fest, RegisterCommand/RegisterKeyMapping oben
+-- feuert also nicht mehr. Das Frontend faengt ESC deshalb selbst ab (siehe
+-- AppShell.tsx) und meldet sich hierueber zurueck.
+RegisterNUICallback('closeMenu', function(_, cb)
+    setMenuVisible(false)
+    cb({})
 end)
 
 RegisterNUICallback('disconnect', function(_, cb)

@@ -7,10 +7,12 @@ body {
   overflow: hidden;
   font-family: var(--font-ui);
   color: var(--text);
-  /* Im Browser-Dev sichtbarer Hintergrund; in FiveM ersetzt das Spielbild dies
-     ohnehin optisch, "transparent" wuerde aber der NUI-Konvention entsprechen.
-     Fuer den Prototyp lassen wir ein dezentes Fallback-Bild siehe .dev-backdrop. */
-  background: var(--graphite-900);
+  /* Transparent halten: Die NUI-Page bleibt in FiveM immer geladen, auch wenn
+     die React-App bei visible=false null rendert. Ein opaker Hintergrund hier
+     wuerde dann als schwarze Flaeche ueber Spiel und andere NUI-Ressourcen
+     (z.B. Admin-Menu) gelegt bleiben. Das eigentliche Backdrop-Design kommt aus
+     .app-shell-backdrop (appShell.css), die nur bei sichtbarem Menue existiert. */
+  background: transparent;
 }
 
 #root {
