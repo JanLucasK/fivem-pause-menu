@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import type { TabId, HomeData } from '../types';
-import { isInFivem, onNuiMessage } from '../bridge/nui';
+import type { TabId, HomeData, MapBlip, MapConfig, MapPlayerPosition } from '../types';
+import { fetchNui, isInFivem, onNuiMessage } from '../bridge/nui';
 import { mockHomeData } from '../state/mockHomeData';
+import { mockMapBlips, mockMapConfig, mockPlayerPosition } from '../state/mockMapData';
 import { TABS } from './tabs.config';
 import { TopBar } from './TopBar';
 import { TabNav } from './TabNav';
@@ -19,13 +20,22 @@ export function AppShell() {
   const [activeTab, setActiveTab] = useState<TabId>('home');
   const [exitDialogOpen, setExitDialogOpen] = useState(false);
   const [homeData, setHomeData] = useState<HomeData>(mockHomeData);
+  const [playerPosition, setPlayerPosition] = useState<MapPlayerPosition>(mockPlayerPosition);
+  const [mapBlips, setMapBlips] = useState<MapBlip[]>(mockMapBlips);
+  const [mapConfig, setMapConfig] = useState<MapConfig>(mockMapConfig);
 
   useEffect(() => {
     const offVisible = onNuiMessage<boolean>('setVisible', setVisible);
     const offHomeData = onNuiMessage<HomeData>('setHomeData', setHomeData);
+    const offPlayerPosition = onNuiMessage<MapPlayerPosition>('setPlayerPosition', setPlayerPosition);
+    const offMapBlips = onNuiMessage<MapBlip[]>('setMapBlips', setMapBlips);
+    const offMapConfig = onNuiMessage<MapConfig>('setMapConfig', setMapConfig);
     return () => {
       offVisible();
       offHomeData();
+      offPlayerPosition();
+      offMapBlips();
+      offMapConfig();
     };
   }, []);
 
@@ -66,7 +76,15 @@ export function AppShell() {
         <TabNav activeTab={activeTab} onSelect={handleSelect} />
         <main className="app-shell-content">
           {activeTab === 'home' && <HomeTab data={homeData} onOpenMap={() => setActiveTab('map')} />}
-          {activeTab === 'map' && <MapTab />}
+          {activeTab === 'map' && (
+            <MapTab
+              playerPosition={playerPosition}
+              blips={mapBlips}
+              defaultStyle={mapConfig.defaultStyle}
+              showStyleSwitcher={mapConfig.showStyleSwitcher}
+              onSetWaypoint={(x, y) => fetchNui('setWaypoint', { x, y })}
+            />
+          )}
           {activeTab === 'settings' && <SettingsTab />}
           {activeTab === 'keybinds' && <KeybindsTab />}
         </main>

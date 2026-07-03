@@ -16,4 +16,8 @@ files {
     'nui/dist/assets/*.js',
     'nui/dist/assets/*.css',
     'nui/dist/fonts/*.woff2',
+    'nui/dist/blips/*.png',
+    -- Kartenkacheln (Atlas/Grid/Satellite), siehe README "Map-Tab" - leer bis
+    -- echte Tiles unter nui/public/mapStyles/ abgelegt und gebaut wurden.
+    'nui/dist/mapStyles/**/*',
 }

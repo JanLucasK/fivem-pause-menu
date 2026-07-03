@@ -1,0 +1,28 @@
+{
+  "name": "gta-v-map",
+  "version": "2.0.1",
+  "description": "GTA V interactive map as a Lit web component (vendored build, see VENDORED.md)",
+  "license": "MIT",
+  "author": "RiceaRaul",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RiceaRaul/gta-v-map-leaflet.git"
+  },
+  "type": "module",
+  "main": "dist/gta-v-map.umd.js",
+  "module": "dist/gta-v-map.es.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/gta-v-map.es.js",
+      "require": "./dist/gta-v-map.umd.js"
+    }
+  },
+  "dependencies": {
+    "leaflet": "^1.7.0",
+    "leaflet.heat": "^0.2.0",
+    "leaflet.markercluster": "^1.5.3",
+    "lit": "^3.1.0"
+  }
+}

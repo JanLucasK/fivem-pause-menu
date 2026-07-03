@@ -33,3 +33,30 @@ export interface HomeData {
   server: ServerInfo;
   location: string;
 }
+
+export interface MapPlayerPosition {
+  x: number;
+  y: number;
+  heading: number;
+}
+
+// Ein POI/Icon-Eintrag, wie ihn corerp pushen wird (Shops, Dienste, andere
+// Spieler etc.). Bewusst getrennt vom Spieler-Zeichnungs-Layer (siehe README
+// Map-Tab): corerp bleibt alleinige Quelle fuer diesen Layer.
+export interface MapBlip {
+  id: string;
+  x: number;
+  y: number;
+  label: string;
+  color?: string;
+}
+
+export type MapStyle = 'satellite' | 'atlas' | 'grid';
+
+// Server-seitig konfigurierbar ueber server.cfg-Convars (neov_pausemenu_map_*,
+// siehe client/client.lua) statt hart im NUI-Code - Serverbetreiber koennen so
+// Default-Stil/Umschalter ohne NUI-Rebuild aendern.
+export interface MapConfig {
+  defaultStyle: MapStyle;
+  showStyleSwitcher: boolean;
+}
