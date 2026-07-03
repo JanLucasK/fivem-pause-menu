@@ -123,6 +123,17 @@ RegisterCommand('neov:togglepausemenu', function()
     setMenuVisible(not isMenuOpen)
 end, false)
 
+-- Eigener Bind, registriert ueber dieselbe Registry wie fremde Resourcen
+-- (siehe client/keybinds.lua) - ohne das taucht der Menue-Toggle selbst nicht
+-- im Keybinds-Tab auf, obwohl er per RegisterKeyMapping laengst existiert.
+RegisterKeybind({
+    id = 'neov_togglepausemenu',
+    command = 'neov:togglepausemenu',
+    label = 'Pause-Menü öffnen/schließen',
+    category = 'NeoV',
+    defaultKey = 'ESCAPE',
+})
+
 -- INPUT_FRONTEND_PAUSE (Control 200) dauerhaft deaktivieren, damit GTAs natives
 -- Pause-Menü niemals aufgeht - unabhaengig davon, ob unseres gerade offen ist.
 -- RegisterKeyMapping oben ist ein eigener Custom-Bind und laeuft unabhaengig
