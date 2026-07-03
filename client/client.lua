@@ -15,12 +15,99 @@ local function getMapConfig()
     }
 end
 
+-- corerp-Anbindung (nur lesend): corerp ist eine eigenstaendige Resource
+-- (rp_core) ohne Cross-Resource-Export/State-Bag fuer Charakter-/Finanzdaten.
+-- FiveMs Client-Events sind aber global (nicht resource-scoped) - corerp
+-- schickt Charakter-/Kontostand-/Spielzeit-Updates bereits per
+-- TriggerClientEvent an den eigenen Spieler (server/RpCore.Core/Framework/Net,
+-- Event-Namen aus fivem-corerp/shared/src/events.ts). Wir haengen uns nur als
+-- zusaetzlicher Listener dran und schreiben nie zurueck - corerp bleibt
+-- unveraendert, kein neuer Rechte-/Wert-Pfad entsteht dadurch.
+local corerpHomeData = {
+    balances = nil, -- { cash, bank } in Cent, rp:money:balances
+    idcard = nil, -- { firstname, lastname, job, faction, ... }, rp:identity:card
+    progression = nil, -- { playtimeMinutes, ... }, rp:progression:update
+    lastPaydayNetCents = nil, -- rp:progression:payday (PaydayBreakdown.net)
+}
+
+local function buildHomeData()
+    local balances = corerpHomeData.balances or { cash = 0, bank = 0 }
+    local idcard = corerpHomeData.idcard or {}
+    local progression = corerpHomeData.progression or { playtimeMinutes = 0 }
+
+    return {
+        character = {
+            firstName = idcard.firstname or '',
+            lastName = idcard.lastname or '',
+            job = idcard.job,
+            faction = idcard.faction,
+            playtimeMinutes = progression.playtimeMinutes or 0,
+        },
+        finance = {
+            cash = (balances.cash or 0) / 100,
+            bank = (balances.bank or 0) / 100,
+            -- json.null statt nil: ein Lua-nil-Wert entfernt den Tabellen-Key
+            -- komplett, das Frontend erwartet aber explizit "null" (siehe
+            -- FinanceCard.tsx: `finance.lastPayday !== null`).
+            lastPayday = corerpHomeData.lastPaydayNetCents and (corerpHomeData.lastPaydayNetCents / 100) or json.null,
+        },
+        -- Server-/Standort-Info kommt (noch) nicht aus corerp - unveraendert
+        -- gegenueber dem bisherigen Prototyp-Stand, siehe TODO unten.
+        server = {
+            serverName = 'NeoV',
+            onlinePlayers = GetNumPlayerIndices(),
+            maxPlayers = tonumber(GetConvar('sv_maxclients', '48')) or 48,
+            discordUrl = 'https://discord.gg/neov',
+        },
+        location = '',
+    }
+end
+
+local function pushHomeData()
+    if isMenuOpen then
+        SendNUIMessage({ action = 'setHomeData', payload = buildHomeData() })
+    end
+end
+
+RegisterNetEvent('rp:money:balances')
+AddEventHandler('rp:money:balances', function(payloadJson)
+    corerpHomeData.balances = json.decode(payloadJson)
+    pushHomeData()
+end)
+
+RegisterNetEvent('rp:identity:card')
+AddEventHandler('rp:identity:card', function(payloadJson)
+    corerpHomeData.idcard = json.decode(payloadJson)
+    pushHomeData()
+end)
+
+RegisterNetEvent('rp:progression:update')
+AddEventHandler('rp:progression:update', function(payloadJson)
+    corerpHomeData.progression = json.decode(payloadJson)
+    pushHomeData()
+end)
+
+RegisterNetEvent('rp:progression:payday')
+AddEventHandler('rp:progression:payday', function(payloadJson)
+    local breakdown = json.decode(payloadJson)
+    corerpHomeData.lastPaydayNetCents = breakdown.net
+    pushHomeData()
+end)
+
 local function setMenuVisible(visible)
     isMenuOpen = visible
     SetNuiFocus(visible, visible)
     SendNUIMessage({ action = 'setVisible', payload = visible })
     if visible then
         SendNUIMessage({ action = 'setMapConfig', payload = getMapConfig() })
+        SendNUIMessage({ action = 'setHomeData', payload = buildHomeData() })
+        -- Aktuellen Stand aktiv nachfragen: Balances/IdCard werden von corerp
+        -- nur bei Mutation bzw. auf Anfrage (nicht periodisch) verschickt.
+        -- Beide Request-Events sind parameterlos - corerp liest source/Spieler
+        -- selbst aus dem Event-Kontext, es gibt also keinen client-seitigen
+        -- Wert, der hier manipuliert werden koennte (kein Dupe-Vektor).
+        TriggerServerEvent('rp:money:request')
+        TriggerServerEvent('rp:identity:request')
     end
 end
 
@@ -79,9 +166,6 @@ RegisterNUICallback('setWaypoint', function(data, cb)
     cb({})
 end)
 
--- TODO (naechste Iteration): 'setHomeData' mit echten Charakter-/Finanz-/Server-
--- Werten befuellen, sobald die Anbindung an den restlichen NeoV-Server steht.
---
 -- TODO (corerp-Anbindung): 'setMapBlips' mit POI/Icon-Daten aus corerp
 -- befuellen (Shops, Dienste, ggf. andere Spieler). Eigener Layer im Map-Tab,
 -- bewusst getrennt von einer spaeteren Spieler-Zeichnungsebene - siehe
