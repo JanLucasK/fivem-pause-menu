@@ -1,0 +1,4 @@
+node_modules/
+nui/dist/
+*.log
+*.tsbuildinfo

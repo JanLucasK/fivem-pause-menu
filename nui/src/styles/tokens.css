@@ -1,0 +1,64 @@
+/* Design-Tokens — an das bestehende NeoV-Design (Graphit + Messing) angeglichen,
+   damit dieses eigenstaendige Repo optisch nicht vom Rest des Servers abweicht. */
+
+@font-face {
+  font-family: 'Rajdhani';
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+  src: url('/fonts/Rajdhani-500.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Rajdhani';
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+  src: url('/fonts/Rajdhani-600.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Rajdhani';
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+  src: url('/fonts/Rajdhani-700.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Inter';
+  font-weight: 400 600;
+  font-style: normal;
+  font-display: swap;
+  src: url('/fonts/Inter-latin.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-weight: 400 600;
+  font-style: normal;
+  font-display: swap;
+  src: url('/fonts/JetBrainsMono-latin.woff2') format('woff2');
+}
+
+:root {
+  --bg: rgba(14, 15, 19, 0.96);
+  --panel: #1b1d24;
+  --line: #2c2f3a;
+  --text: #f2f3f5;
+  --muted: #9aa0ad;
+  --danger: #e5484d;
+
+  --brass: #c8973f;
+  --brass-dim: #8a6a2d;
+  --brass-bright: #e0b454;
+
+  --graphite-900: #0c0d12;
+  --graphite-800: #14161b;
+  --graphite-700: #171a21;
+  --graphite-600: #1e232c;
+  --graphite-line: #2a2f3a;
+
+  --font-display: 'Rajdhani', system-ui, sans-serif;
+  --font-ui: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  --radius-md: 12px;
+  --radius-lg: 16px;
+}

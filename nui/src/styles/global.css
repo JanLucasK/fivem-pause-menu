@@ -1,0 +1,64 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  font-family: var(--font-ui);
+  color: var(--text);
+  /* Im Browser-Dev sichtbarer Hintergrund; in FiveM ersetzt das Spielbild dies
+     ohnehin optisch, "transparent" wuerde aber der NUI-Konvention entsprechen.
+     Fuer den Prototyp lassen wir ein dezentes Fallback-Bild siehe .dev-backdrop. */
+  background: var(--graphite-900);
+}
+
+#root {
+  position: fixed;
+  inset: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+button {
+  font-family: inherit;
+}
+
+/* CEF (FiveMs Chromium) rendert native Range-Slider inkonsistent -> eigenes
+   Thumb/Track-Styling, damit es in-game wie im Browser-Dev aussieht. */
+input[type='range'] {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--brass);
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 0 6px rgba(200, 151, 63, 0.4);
+}
+
+input[type='range']::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--brass);
+  border: none;
+  cursor: pointer;
+}
+
+input[type='range']::-moz-range-track {
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.1);
+}

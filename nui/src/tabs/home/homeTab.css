@@ -1,0 +1,186 @@
+.home-tab {
+  height: 100%;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 20px;
+}
+
+.home-tab-main {
+  min-height: 0;
+}
+
+.home-tab-side {
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  overflow-y: auto;
+}
+
+/* === Gemeinsamer Panel-Look (Map-Card + Info-Cards) === */
+.map-preview-card,
+.hcard {
+  background: linear-gradient(180deg, var(--graphite-700) 0%, var(--graphite-800) 100%);
+  border: 1px solid var(--graphite-line);
+  border-radius: var(--radius-lg);
+  padding: 20px 22px;
+}
+
+.hcard-head,
+.map-preview-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.hcard-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  flex: 0 0 auto;
+  border-radius: 10px;
+  color: var(--brass);
+  background: rgba(200, 151, 63, 0.1);
+  border: 1px solid rgba(200, 151, 63, 0.2);
+}
+
+.hcard-eyebrow {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.hcard-title {
+  margin: 2px 0 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 17px;
+  letter-spacing: 0.02em;
+  color: var(--text);
+}
+
+/* === Info-Karten (rechte Spalte) === */
+.hcard-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.hcard-name {
+  margin: 0 0 6px;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--text);
+}
+
+.hcard-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13px;
+  color: var(--text);
+}
+
+.hcard-row span:first-child {
+  color: var(--muted);
+}
+
+.hcard-row--muted {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.hcard-value {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.hcard-footer {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--graphite-line);
+}
+
+.hcard-progress {
+  margin-top: 6px;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.06);
+  overflow: hidden;
+}
+
+.hcard-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--brass-dim), var(--brass));
+  border-radius: 2px;
+}
+
+/* === Map-Preview (linke, grosse Karte) === */
+.map-preview-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.map-preview-canvas {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  border-radius: var(--radius-md);
+  background: var(--graphite-900);
+  border: 1px solid var(--graphite-line);
+  overflow: hidden;
+}
+
+.map-preview-placeholder-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(200, 151, 63, 0.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(200, 151, 63, 0.12) 1px, transparent 1px);
+  background-size: 34px 34px;
+  opacity: 0.7;
+}
+
+.map-preview-pin {
+  position: absolute;
+  top: 46%;
+  left: 58%;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--brass);
+  box-shadow: 0 0 0 4px rgba(200, 151, 63, 0.2), 0 0 18px 2px rgba(200, 151, 63, 0.6);
+}
+
+.map-preview-open {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 14px;
+  padding: 12px;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--graphite-900);
+  background: linear-gradient(135deg, var(--brass) 0%, var(--brass-bright) 100%);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+
+.map-preview-open:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 26px rgba(200, 151, 63, 0.35);
+}
