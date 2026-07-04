@@ -1,4 +1,4 @@
-export type TabId = 'home' | 'map' | 'settings' | 'keybinds' | 'discord' | 'exit';
+export type TabId = 'home' | 'map' | 'settings' | 'rules' | 'discord' | 'exit';
 
 export interface TabDefinition {
   id: TabId;
@@ -87,4 +87,19 @@ export interface SettingDefinition {
 export interface MapConfig {
   defaultStyle: MapStyle;
   showStyleSwitcher: boolean;
+}
+
+// Statischer Inhalt fuer den "Regeln & Hilfe"-Tab, gepflegt in
+// nui/src/tabs/rules/rules.data.ts - anders als Keybinds/Settings kommt das
+// nicht per NUI-Message vom Client, da es keine registrierende Resource gibt.
+export interface RuleSection {
+  id: string;
+  title: string;
+  paragraphs: string[];
+}
+
+export interface FaqEntry {
+  id: string;
+  question: string;
+  answer: string;
 }

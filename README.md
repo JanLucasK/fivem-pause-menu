@@ -1,7 +1,9 @@
 # NeoV Pause Menu
 
 Custom NUI-Pause-Menü für NeoV. Ersetzt das native GTA-Pause-Menü durch ein
-eigenes, modulares React-UI: **Home · Map · Settings · Keybinds · Discord · Exit**.
+eigenes, modulares React-UI: **Home · Karte · Einstellungen (inkl. Tastenbelegung) ·
+Regeln & Hilfe · Discord · Verbindung trennen**, navigiert über eine linke
+Sidebar statt einer horizontalen Tableiste.
 
 Aktueller Stand: **Frontend-Prototyp**, standalone im Browser entwickelt/testbar
 (Mock-Daten). Die FiveM-Anbindung (`client/client.lua`) ist ein Stub, der die
@@ -30,8 +32,9 @@ Baut nach `nui/dist/`, `fxmanifest.lua` referenziert genau diesen Ordner.
 
 ## Architektur
 
-- `nui/src/shell/` – AppShell, TopBar, TabNav, zentrale Tab-Registrierung
-  (`tabs.config.ts`). Neue Tabs: hier eintragen, Rest verdrahtet sich selbst.
+- `nui/src/shell/` – AppShell, TopBar, Sidebar (linke Navigation), zentrale
+  Tab-Registrierung (`tabs.config.ts`). Neue Tabs: hier eintragen, Rest
+  verdrahtet sich selbst.
 - `nui/src/tabs/<tab>/` – ein Ordner pro Tab, eigenständig.
 - `nui/src/bridge/nui.ts` – einzige Schnittstelle zum Client-Skript
   (`fetchNui`, `onNuiMessage`). Läuft die App ausserhalb von FiveM, liefert
@@ -42,11 +45,12 @@ Baut nach `nui/dist/`, `fxmanifest.lua` referenziert genau diesen Ordner.
   unten). `setHomeData` liefert bereits echte corerp-Daten; `setMapBlips`
   (POI-Layer) ist noch offen.
 - `client/keybinds.lua` / `client/settings.lua` – generische Registries für
-  die Tabs "Keybinds"/"Settings", siehe Abschnitt darunter.
+  die "Tastenbelegung"/"Allgemein"-Unteransichten im Einstellungen-Tab, siehe
+  Abschnitt darunter.
 
 ## Keybinds & Settings für andere Resourcen
 
-Beide Tabs sind bewusst **nicht** NeoV-spezifisch fest verdrahtet: Jede
+Beide Bereiche sind bewusst **nicht** NeoV-spezifisch fest verdrahtet: Jede
 Resource (dieser Server oder Drittresourcen wie `fivem-pma-voice`) kann eigene
 Einträge per Export anmelden. Das NUI rendert ausschließlich, was diese
 Registries liefern - keine Resource wird von diesem Menü aus angefasst.

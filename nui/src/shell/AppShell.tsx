@@ -13,13 +13,14 @@ import { mockHomeData } from '../state/mockHomeData';
 import { mockMapBlips, mockMapConfig, mockPlayerPosition } from '../state/mockMapData';
 import { mockKeybinds } from '../tabs/keybinds/keybinds.data';
 import { mockSettings } from '../state/mockSettingsData';
+import { ruleSections, faqEntries } from '../tabs/rules/rules.data';
 import { TABS } from './tabs.config';
 import { TopBar } from './TopBar';
-import { TabNav } from './TabNav';
+import { Sidebar } from './Sidebar';
 import { HomeTab } from '../tabs/home/HomeTab';
 import { MapTab } from '../tabs/map/MapTab';
 import { SettingsTab } from '../tabs/settings/SettingsTab';
-import { KeybindsTab } from '../tabs/keybinds/KeybindsTab';
+import { RulesTab } from '../tabs/rules/RulesTab';
 import { ExitConfirmDialog } from '../tabs/exit/ExitConfirmDialog';
 import './appShell.css';
 
@@ -128,31 +129,39 @@ export function AppShell() {
       <div className="app-shell-backdrop" />
       <div className="app-shell-frame">
         <TopBar location={homeData.location} />
-        <TabNav activeTab={activeTab} onSelect={handleSelect} />
-        <main className="app-shell-content">
-          {activeTab === 'home' && (
-            <HomeTab
-              data={homeData}
-              playerPosition={playerPosition}
-              blips={mapBlips}
-              mapStyle={mapConfig.defaultStyle}
-              onOpenMap={() => setActiveTab('map')}
-            />
-          )}
-          {activeTab === 'map' && (
-            <MapTab
-              playerPosition={playerPosition}
-              blips={mapBlips}
-              defaultStyle={mapConfig.defaultStyle}
-              showStyleSwitcher={mapConfig.showStyleSwitcher}
-              onSetWaypoint={(x, y) => fetchNui('setWaypoint', { x, y })}
-            />
-          )}
-          {activeTab === 'settings' && <SettingsTab settings={settings} onChange={handleSettingChange} />}
-          {activeTab === 'keybinds' && (
-            <KeybindsTab keybinds={keybinds} onRebind={handleRebindKey} onReset={handleResetKeybind} />
-          )}
-        </main>
+        <div className="app-shell-body">
+          <Sidebar activeTab={activeTab} onSelect={handleSelect} />
+          <main className="app-shell-content">
+            {activeTab === 'home' && (
+              <HomeTab
+                data={homeData}
+                playerPosition={playerPosition}
+                blips={mapBlips}
+                mapStyle={mapConfig.defaultStyle}
+                onOpenMap={() => setActiveTab('map')}
+              />
+            )}
+            {activeTab === 'map' && (
+              <MapTab
+                playerPosition={playerPosition}
+                blips={mapBlips}
+                defaultStyle={mapConfig.defaultStyle}
+                showStyleSwitcher={mapConfig.showStyleSwitcher}
+                onSetWaypoint={(x, y) => fetchNui('setWaypoint', { x, y })}
+              />
+            )}
+            {activeTab === 'settings' && (
+              <SettingsTab
+                settings={settings}
+                onChange={handleSettingChange}
+                keybinds={keybinds}
+                onRebindKeybind={handleRebindKey}
+                onResetKeybind={handleResetKeybind}
+              />
+            )}
+            {activeTab === 'rules' && <RulesTab sections={ruleSections} faq={faqEntries} />}
+          </main>
+        </div>
       </div>
 
       {exitDialogOpen && <ExitConfirmDialog onCancel={() => setExitDialogOpen(false)} />}

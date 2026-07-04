@@ -5,9 +5,9 @@ import type { TabDefinition } from '../types';
 // kennt die Tab-Reihenfolge hart codiert).
 export const TABS: TabDefinition[] = [
   { id: 'home', label: 'Home', kind: 'screen' },
-  { id: 'map', label: 'Map', kind: 'screen' },
-  { id: 'settings', label: 'Settings', kind: 'screen' },
-  { id: 'keybinds', label: 'Keybinds', kind: 'screen' },
+  { id: 'map', label: 'Karte', kind: 'screen' },
+  { id: 'settings', label: 'Einstellungen', kind: 'screen' },
+  { id: 'rules', label: 'Regeln & Hilfe', kind: 'screen' },
   { id: 'discord', label: 'Discord', kind: 'action' },
-  { id: 'exit', label: 'Exit', kind: 'action' },
+  { id: 'exit', label: 'Verbindung trennen', kind: 'action' },
 ];

@@ -1,10 +1,49 @@
 .settings-tab {
   height: 100%;
-  overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: 16px;
   max-width: 640px;
+}
+
+.settings-subnav {
+  display: flex;
+  gap: 8px;
+  flex: 0 0 auto;
+}
+
+.settings-subnav-item {
+  padding: 8px 16px;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--graphite-line);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: color 120ms ease, border-color 120ms ease, background 120ms ease;
+}
+
+.settings-subnav-item:hover {
+  color: var(--text);
+}
+
+.settings-subnav-item.active {
+  color: var(--brass);
+  border-color: var(--brass-dim);
+  background: rgba(200, 151, 63, 0.08);
+}
+
+.settings-tab-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .settings-section {
