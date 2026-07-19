@@ -57,7 +57,8 @@ end
 -- unveraendert, kein neuer Rechte-/Wert-Pfad entsteht dadurch.
 local corerpHomeData = {
     balances = nil, -- { cash, bank } in Cent, rp:money:balances
-    idcard = nil, -- { firstname, lastname, job, faction, ... }, rp:identity:card
+    idcard = nil, -- { firstname, lastname, job, faction, ... }, rp:identity:card (nur falls Spieler /id oeffnet)
+    spawned = nil, -- { firstname, lastname, ... }, rp:character:spawned (Name ohne UI-Folge)
     progression = nil, -- { playtimeMinutes, ... }, rp:progression:update
     lastPaydayNetCents = nil, -- rp:progression:payday (PaydayBreakdown.net)
 }
@@ -65,12 +66,17 @@ local corerpHomeData = {
 local function buildHomeData()
     local balances = corerpHomeData.balances or { cash = 0, bank = 0 }
     local idcard = corerpHomeData.idcard or {}
+    local spawned = corerpHomeData.spawned or {}
     local progression = corerpHomeData.progression or { playtimeMinutes = 0 }
 
     return {
         character = {
-            firstName = idcard.firstname or '',
-            lastName = idcard.lastname or '',
+            -- Name: bevorzugt aus der (optional geoeffneten) Ausweis-Karte, sonst
+            -- aus dem Spawn-Event (kommt ohne UI-Folge, siehe setMenuVisible).
+            firstName = idcard.firstname or spawned.firstname or '',
+            lastName = idcard.lastname or spawned.lastname or '',
+            -- Job liefert corerp nur ueber die Ausweis-Karte; ohne dass der Spieler
+            -- seinen Ausweis oeffnet, bleibt er leer (kein UI-freier Job-Push in corerp).
             job = idcard.job,
             faction = idcard.faction,
             playtimeMinutes = progression.playtimeMinutes or 0,
@@ -110,9 +116,19 @@ AddEventHandler('rp:money:balances', function(payloadJson)
     pushHomeData()
 end)
 
+-- Passiv: nur falls der Spieler seinen Ausweis selbst per /id oeffnet. Wir loesen
+-- das Event NIE selbst aus (das oeffnet das Ausweis-Modal) - hier nur mithoeren,
+-- um dann auch Job/Faction fuers Menue zu haben.
 RegisterNetEvent('rp:identity:card')
 AddEventHandler('rp:identity:card', function(payloadJson)
     corerpHomeData.idcard = json.decode(payloadJson)
+    pushHomeData()
+end)
+
+-- Name ohne UI-Folge: corerp pusht den gespawnten Charakter beim Charakter-Laden.
+RegisterNetEvent('rp:character:spawned')
+AddEventHandler('rp:character:spawned', function(payloadJson)
+    corerpHomeData.spawned = json.decode(payloadJson)
     pushHomeData()
 end)
 
@@ -143,14 +159,16 @@ local function setMenuVisible(visible)
         -- `setSettings`-Push (bei Registrierung) etwas geaendert hat.
         SendNUIMessage({ action = 'setKeybinds', payload = GetKeybinds() })
         SendNUIMessage({ action = 'setSettings', payload = GetSettings() })
-        -- Aktuellen Stand aktiv nachfragen: Balances/IdCard werden von corerp
-        -- nur bei Mutation bzw. auf Anfrage (nicht periodisch) verschickt.
-        -- WICHTIG: corerp verwirft Requests mit leerer Nutzlast (ServerEventBus.On:
-        -- `if string.IsNullOrEmpty(rawJson) then ... return`). Deshalb muss - wie bei
-        -- allen corerp-Client-Calls (emitNet(name, '{}')) - ein leerer JSON-String
-        -- '{}' mitgeschickt werden, sonst kommen Bargeld/Bank/Identitaet nie an.
+        -- Bargeld/Bank aktiv nachfragen: corerp schickt Balances nur bei Mutation
+        -- bzw. auf Anfrage. WICHTIG: corerp verwirft Requests mit leerer Nutzlast
+        -- (ServerEventBus.On: `if string.IsNullOrEmpty(rawJson) then ... return`),
+        -- deshalb - wie bei allen corerp-Client-Calls (emitNet(name, '{}')) - ein
+        -- leerer JSON-String '{}' mitschicken. rp:money:request hat KEINE UI-Folge.
         TriggerServerEvent('rp:money:request', '{}')
-        TriggerServerEvent('rp:identity:request', '{}')
+        -- Bewusst KEIN rp:identity:request: das ist corerps /id-Handler und oeffnet
+        -- den Personalausweis (corerps Client zeigt bei rp:identity:card ein Modal).
+        -- Name/Job holen wir stattdessen ohne UI-Folge aus rp:character:spawned bzw.
+        -- passiv aus rp:identity:card, falls der Spieler seinen Ausweis selbst oeffnet.
     end
 end
 
