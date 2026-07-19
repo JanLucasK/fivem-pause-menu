@@ -165,10 +165,10 @@
   transform: translateY(-1px);
 }
 
-/* === Body: 3 Spalten (Aktionen | Discord | Ankündigungen) === */
+/* === Body: linke Hälfte (Aktionen) | rechte Hälfte (Discord + Ankündigungen) === */
 .dashboard-body {
   display: grid;
-  grid-template-columns: 1.25fr 0.85fr 1.1fr;
+  grid-template-columns: 1fr 1fr;
   gap: 26px;
   flex: 1 1 auto;
   min-height: 0;
@@ -183,6 +183,19 @@
 
 .dashboard-col--menu {
   gap: 18px;
+}
+
+/* Karte + Einstellungen fuellen die linke Haelfte zu gleichen Teilen. */
+.dashboard-col--menu .action-card {
+  flex: 1 1 0;
+  min-height: 0;
+}
+
+/* Rechte Haelfte: Discord und Ankündigungen nebeneinander. */
+.dashboard-col--right {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 26px;
 }
 
 .dashboard-section-label {

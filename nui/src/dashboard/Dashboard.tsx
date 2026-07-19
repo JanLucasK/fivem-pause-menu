@@ -48,16 +48,18 @@ export function Dashboard({
               icon={Settings}
               title="Einstellungen"
               subtitle="GTA-Einstellungen öffnen"
+              variant="feature"
               onClick={onOpenSettings}
             />
           </section>
 
-          <DiscordPanel
-            memberHint="+1000 Mitglieder in unserem Server"
-            onJoin={onOpenDiscord}
-          />
-
-          <AnnouncementsPanel announcements={announcements} />
+          <section className="dashboard-col dashboard-col--right">
+            <DiscordPanel
+              memberHint="+1000 Mitglieder in unserem Server"
+              onJoin={onOpenDiscord}
+            />
+            <AnnouncementsPanel announcements={announcements} />
+          </section>
         </div>
 
         <p className="dashboard-hint">

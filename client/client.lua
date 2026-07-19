@@ -145,11 +145,12 @@ local function setMenuVisible(visible)
         SendNUIMessage({ action = 'setSettings', payload = GetSettings() })
         -- Aktuellen Stand aktiv nachfragen: Balances/IdCard werden von corerp
         -- nur bei Mutation bzw. auf Anfrage (nicht periodisch) verschickt.
-        -- Beide Request-Events sind parameterlos - corerp liest source/Spieler
-        -- selbst aus dem Event-Kontext, es gibt also keinen client-seitigen
-        -- Wert, der hier manipuliert werden koennte (kein Dupe-Vektor).
-        TriggerServerEvent('rp:money:request')
-        TriggerServerEvent('rp:identity:request')
+        -- WICHTIG: corerp verwirft Requests mit leerer Nutzlast (ServerEventBus.On:
+        -- `if string.IsNullOrEmpty(rawJson) then ... return`). Deshalb muss - wie bei
+        -- allen corerp-Client-Calls (emitNet(name, '{}')) - ein leerer JSON-String
+        -- '{}' mitgeschickt werden, sonst kommen Bargeld/Bank/Identitaet nie an.
+        TriggerServerEvent('rp:money:request', '{}')
+        TriggerServerEvent('rp:identity:request', '{}')
     end
 end
 
