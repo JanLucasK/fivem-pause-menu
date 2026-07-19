@@ -153,42 +153,62 @@ local function setMenuVisible(visible)
     end
 end
 
-RegisterKeyMapping('neov:togglepausemenu', 'NeoV Pause-Menü öffnen', 'keyboard', 'ESCAPE')
-RegisterCommand('neov:togglepausemenu', function()
+-- ESC laesst sich in FiveM NICHT zuverlaessig ueber RegisterKeyMapping binden
+-- (die Taste ist von Spiel/CEF reserviert - ein 'ESCAPE'-Mapping feuert oft gar
+-- nicht). Deshalb oeffnen wir das Menue nicht per Keymapping, sondern lesen den
+-- (unterdrueckten) Pause-Control direkt im Frame-Thread unten aus. Der Command
+-- bleibt fuer /neov:togglepausemenu bzw. externes Ausloesen erhalten.
+local lastToggle = 0
+local function toggleMenu()
     -- Waehrend das native GTA-Pausenmenue (Einstellungen) offen ist bzw. gerade
-    -- geschlossen wurde, faengt derselbe ESC-Druck sonst hier wieder an und wuerde
-    -- unser Menue direkt neu oeffnen - genau das soll nicht passieren.
+    -- geschlossen wurde, wuerde derselbe ESC-Druck sonst unser Menue direkt neu
+    -- oeffnen - genau das soll nicht passieren.
     if gtaSettingsOpen or IsPauseMenuActive() then return end
+    -- Kurze Entprellung gegen Doppel-Toggle in einem Frame-Fenster.
+    local now = GetGameTimer()
+    if now - lastToggle < 250 then return end
+    lastToggle = now
     setMenuVisible(not isMenuOpen)
+end
+
+RegisterCommand('neov:togglepausemenu', function()
+    toggleMenu()
 end, false)
 
--- Eigener Bind, registriert ueber dieselbe Registry wie fremde Resourcen
--- (siehe client/keybinds.lua) - ohne das taucht der Menue-Toggle selbst nicht
--- im Keybinds-Tab auf, obwohl er per RegisterKeyMapping laengst existiert.
-RegisterKeybind({
-    id = 'neov_togglepausemenu',
-    command = 'neov:togglepausemenu',
-    label = 'Pause-Menü öffnen/schließen',
-    category = 'NeoV',
-    defaultKey = 'ESCAPE',
-})
-
--- INPUT_FRONTEND_PAUSE (Control 200) dauerhaft deaktivieren, damit GTAs natives
--- Pause-Menü niemals aufgeht - unabhaengig davon, ob unseres gerade offen ist.
--- RegisterKeyMapping oben ist ein eigener Custom-Bind und laeuft unabhaengig
--- von DisableControlAction, wird also weiterhin ausgeloest.
+-- Natives Pausenmenue unterdruecken UND ESC selbst auswerten. Control 199
+-- (INPUT_FRONTEND_PAUSE = P) und 200 (INPUT_FRONTEND_PAUSE_ALTERNATE = ESC)
+-- werden jeden Frame deaktiviert, damit GTAs Menue nicht aufgeht; den Tastendruck
+-- lesen wir ueber die *Disabled*-Control-Natives trotzdem aus und toggeln unser
+-- Menue. So haengt das Oeffnen nicht am (unzuverlaessigen) ESCAPE-Keymapping.
 CreateThread(function()
     while true do
+        Wait(0)
         -- Nicht unterdruecken, solange wir das native GTA-Pausenmenue absichtlich
         -- offen halten (Einstellungen) - sonst liesse es sich nicht per ESC wieder
         -- schliessen.
         if not gtaSettingsOpen then
+            -- ESC/Pause je nach Build/Layout auf mehreren Controls: 200
+            -- (FRONTEND_PAUSE_ALTERNATE = ESC), 199 (FRONTEND_PAUSE = P), 322.
+            DisableControlAction(0, 199, true)
             DisableControlAction(0, 200, true)
+            DisableControlAction(0, 322, true)
+            -- Sicherheitsnetz: sollte das native Menue trotz Control-Disable doch
+            -- aufgehen (Control-Index-Unterschiede zwischen Builds), sofort wieder
+            -- schliessen - unseres uebernimmt.
+            if IsPauseMenuActive() then
+                SetPauseMenuActive(false)
+            end
+            -- Menue oeffnen nur, wenn unseres zu ist: bei offenem Menue haelt
+            -- SetNuiFocus die Tastatur in der NUI, die ESC selbst per
+            -- closeMenu-Callback behandelt (siehe AppShell.tsx).
+            if not isMenuOpen and (
+                IsDisabledControlJustReleased(0, 200)
+                or IsDisabledControlJustReleased(0, 199)
+                or IsDisabledControlJustReleased(0, 322)
+            ) then
+                toggleMenu()
+            end
         end
-        if isMenuOpen then
-            SetPauseMenuActive(false)
-        end
-        Wait(0)
     end
 end)
 
