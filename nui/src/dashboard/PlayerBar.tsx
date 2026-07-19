@@ -6,7 +6,7 @@ function formatMoney(amount: number): string {
 }
 
 function formatJoined(unix: number | null): string {
-  if (unix === null) return '—';
+  if (!unix) return '—';
   return new Date(unix * 1000).toLocaleString('de-DE', {
     weekday: 'short',
     day: '2-digit',

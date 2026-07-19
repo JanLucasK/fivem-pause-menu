@@ -6,7 +6,21 @@ local isMenuOpen = false
 
 -- Beitrittszeitpunkt (Ressourcenstart ~ Spawn) als Unix-Zeit fuer die
 -- "Beigetreten"-Anzeige in der Player-Bar. Reine Anzeige, client-lokal.
-local joinedAtUnix = os.time()
+-- WICHTIG: os.time()/os.date() sind client-seitig in FiveM NICHT verfuegbar
+-- (das os-Modul ist gesandboxt) - ein Aufruf wirft beim Laden und wuerde den
+-- Rest von client.lua abbrechen. Deshalb die native Cloud-Zeit (UTC-Unixzeit),
+-- einmal nach dem Start festgehalten (nil, bis sie verfuegbar ist).
+local joinedAtUnix = nil
+CreateThread(function()
+    while joinedAtUnix == nil do
+        local t = GetCloudTimeAsInt()
+        if t and t > 0 then
+            joinedAtUnix = t
+        else
+            Wait(250)
+        end
+    end
+end)
 
 -- True, solange wir fuer den Spieler das native GTA-Pausenmenue (Einstellungen)
 -- geoeffnet haben. In dieser Zeit unterdruecken wir Control 200 NICHT (sonst
@@ -76,7 +90,9 @@ local function buildHomeData()
             onlinePlayers = NetworkGetNumConnectedPlayers(),
             maxPlayers = tonumber(GetConvar('sv_maxclients', '48')) or 48,
             discordUrl = 'https://discord.gg/neov',
-            joinedAtUnix = joinedAtUnix,
+            -- json.null statt nil: ein Lua-nil-Wert wuerde den Key ganz entfernen,
+            -- das Frontend erwartet aber explizit number|null (siehe PlayerBar).
+            joinedAtUnix = joinedAtUnix or json.null,
         },
         location = '',
     }
