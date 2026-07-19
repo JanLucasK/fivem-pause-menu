@@ -1,4 +1,5 @@
 import type { LucideIcon } from 'lucide-react';
+import { CardPattern } from './CardPattern';
 
 interface ActionCardProps {
   icon: LucideIcon;
@@ -7,6 +8,8 @@ interface ActionCardProps {
   hint?: string;
   // 'feature' = grosse Hero-Kachel (z.B. Karte), 'default' = normale Kachel.
   variant?: 'default' | 'feature';
+  // Optionaler dezenter SVG-Hintergrund, damit grosse Kacheln nicht leer wirken.
+  pattern?: 'map' | 'settings';
   onClick: () => void;
 }
 
@@ -17,10 +20,12 @@ export function ActionCard({
   subtitle,
   hint,
   variant = 'default',
+  pattern,
   onClick,
 }: ActionCardProps) {
   return (
     <button type="button" className={`action-card action-card--${variant}`} onClick={onClick}>
+      {pattern && <CardPattern kind={pattern} />}
       <span className="action-card-icon">
         <Icon size={variant === 'feature' ? 30 : 24} />
       </span>

@@ -57,28 +57,62 @@ end
 -- unveraendert, kein neuer Rechte-/Wert-Pfad entsteht dadurch.
 local corerpHomeData = {
     balances = nil, -- { cash, bank } in Cent, rp:money:balances
-    idcard = nil, -- { firstname, lastname, job, faction, ... }, rp:identity:card (nur falls Spieler /id oeffnet)
-    spawned = nil, -- { firstname, lastname, ... }, rp:character:spawned (Name ohne UI-Folge)
+    identity = nil, -- { firstname, lastname, job?, faction? } bestbekannt (Name/Job)
     progression = nil, -- { playtimeMinutes, ... }, rp:progression:update
     lastPaydayNetCents = nil, -- rp:progression:payday (PaydayBreakdown.net)
 }
 
+-- Identitaet ueber Ressourcen-Neustarts/Reconnects hinweg cachen: corerp liefert
+-- den Namen nur UI-frei ueber rp:character:spawned (einmalig beim Spawn) und Job
+-- nur ueber die Ausweis-Karte (rp:identity:card, wenn der Spieler /id oeffnet).
+-- Beides ist NICHT on-demand ohne UI abrufbar - deshalb den zuletzt gesehenen
+-- Stand im Resource-KVP persistieren und beim Laden daraus seeden, damit der Name
+-- nach einem Restart nicht auf "Unbekannt" faellt.
+local IDENTITY_KVP = 'corerp:identity'
+
+-- Vorwaertsdeklaration: pushHomeData wird weiter unten definiert, updateIdentity
+-- ruft es aber schon auf.
+local pushHomeData
+
+local function updateIdentity(patch)
+    local cur = corerpHomeData.identity or {}
+    corerpHomeData.identity = {
+        firstname = patch.firstname or cur.firstname,
+        lastname = patch.lastname or cur.lastname,
+        job = patch.job or cur.job,
+        faction = patch.faction or cur.faction,
+    }
+    local id = corerpHomeData.identity
+    if id.firstname or id.lastname then
+        SetResourceKvp(IDENTITY_KVP, json.encode(id))
+    end
+    if pushHomeData then pushHomeData() end
+end
+
+do
+    local saved = GetResourceKvpString(IDENTITY_KVP)
+    if saved then
+        local ok, decoded = pcall(json.decode, saved)
+        if ok and type(decoded) == 'table' then
+            corerpHomeData.identity = decoded
+        end
+    end
+end
+
 local function buildHomeData()
     local balances = corerpHomeData.balances or { cash = 0, bank = 0 }
-    local idcard = corerpHomeData.idcard or {}
-    local spawned = corerpHomeData.spawned or {}
+    local identity = corerpHomeData.identity or {}
     local progression = corerpHomeData.progression or { playtimeMinutes = 0 }
 
     return {
         character = {
-            -- Name: bevorzugt aus der (optional geoeffneten) Ausweis-Karte, sonst
-            -- aus dem Spawn-Event (kommt ohne UI-Folge, siehe setMenuVisible).
-            firstName = idcard.firstname or spawned.firstname or '',
-            lastName = idcard.lastname or spawned.lastname or '',
-            -- Job liefert corerp nur ueber die Ausweis-Karte; ohne dass der Spieler
-            -- seinen Ausweis oeffnet, bleibt er leer (kein UI-freier Job-Push in corerp).
-            job = idcard.job,
-            faction = idcard.faction,
+            -- Name/Job aus dem bestbekannten, im KVP gecachten Identitaets-Stand
+            -- (rp:character:spawned fuer den Namen, rp:identity:card fuer Job/Faction,
+            -- falls der Spieler seinen Ausweis geoeffnet hat).
+            firstName = identity.firstname or '',
+            lastName = identity.lastname or '',
+            job = identity.job,
+            faction = identity.faction,
             playtimeMinutes = progression.playtimeMinutes or 0,
         },
         finance = {
@@ -104,7 +138,9 @@ local function buildHomeData()
     }
 end
 
-local function pushHomeData()
+-- Zuweisung an die oben forward-deklarierte Local (kein neues `local`), damit
+-- updateIdentity dieselbe Funktion sieht.
+function pushHomeData()
     if isMenuOpen then
         SendNUIMessage({ action = 'setHomeData', payload = buildHomeData() })
     end
@@ -118,18 +154,18 @@ end)
 
 -- Passiv: nur falls der Spieler seinen Ausweis selbst per /id oeffnet. Wir loesen
 -- das Event NIE selbst aus (das oeffnet das Ausweis-Modal) - hier nur mithoeren,
--- um dann auch Job/Faction fuers Menue zu haben.
+-- um dann auch Job/Faction fuers Menue zu haben (wird im KVP mitgecacht).
 RegisterNetEvent('rp:identity:card')
 AddEventHandler('rp:identity:card', function(payloadJson)
-    corerpHomeData.idcard = json.decode(payloadJson)
-    pushHomeData()
+    local card = json.decode(payloadJson) or {}
+    updateIdentity({ firstname = card.firstname, lastname = card.lastname, job = card.job, faction = card.faction })
 end)
 
 -- Name ohne UI-Folge: corerp pusht den gespawnten Charakter beim Charakter-Laden.
 RegisterNetEvent('rp:character:spawned')
 AddEventHandler('rp:character:spawned', function(payloadJson)
-    corerpHomeData.spawned = json.decode(payloadJson)
-    pushHomeData()
+    local sp = json.decode(payloadJson) or {}
+    updateIdentity({ firstname = sp.firstname, lastname = sp.lastname })
 end)
 
 RegisterNetEvent('rp:progression:update')

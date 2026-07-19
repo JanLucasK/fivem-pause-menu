@@ -216,11 +216,36 @@
   padding: 22px 24px 24px;
   text-align: left;
   cursor: pointer;
+  overflow: hidden;
   color: var(--text);
   background: linear-gradient(180deg, var(--graphite-700) 0%, var(--graphite-800) 100%);
   border: 1px solid var(--graphite-line);
   border-radius: var(--radius-lg);
   transition: transform 120ms ease, border-color 120ms ease, box-shadow 120ms ease;
+}
+
+/* Dezenter SVG-Hintergrund (Karte/Einstellungen): fuellt die Kachel, liegt hinter
+   dem Inhalt, reagiert nicht auf Klicks. */
+.action-card-pattern {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  color: var(--brass);
+  opacity: 0.08;
+  pointer-events: none;
+}
+
+.action-card:hover .action-card-pattern {
+  opacity: 0.13;
+}
+
+/* Inhalt immer ueber dem Deko-SVG. */
+.action-card-icon,
+.action-card-text,
+.action-card-hint {
+  z-index: 1;
 }
 
 .action-card--default {

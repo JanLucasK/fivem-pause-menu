@@ -42,6 +42,7 @@ export function Dashboard({
               subtitle="Vollbildkarte in Los Santos öffnen"
               hint="M"
               variant="feature"
+              pattern="map"
               onClick={onOpenMap}
             />
             <ActionCard
@@ -49,6 +50,7 @@ export function Dashboard({
               title="Einstellungen"
               subtitle="GTA-Einstellungen öffnen"
               variant="feature"
+              pattern="settings"
               onClick={onOpenSettings}
             />
           </section>
