@@ -20,6 +20,7 @@ export const mockHomeData: HomeData = {
     onlinePlayers: 42,
     maxPlayers: 128,
     discordUrl: 'https://discord.gg/neov',
+    joinedAtUnix: Math.floor(Date.now() / 1000) - 67 * 60,
   },
   location: 'Palomino Avenue',
 };

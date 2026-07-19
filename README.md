@@ -1,13 +1,45 @@
 # NeoV Pause Menu
 
 Custom NUI-Pause-Menü für NeoV. Ersetzt das native GTA-Pause-Menü durch ein
-eigenes, modulares React-UI: **Home · Karte · Einstellungen (inkl. Tastenbelegung) ·
-Regeln & Hilfe · Discord · Verbindung trennen**, navigiert über eine linke
-Sidebar statt einer horizontalen Tableiste.
+schlankes **Zwischenmenü** im NeoV-Look (Graphit + Messing): oben eine
+Spielerleiste (Name/Job/Bargeld/Bank/Online/Beigetreten aus corerp), darunter
+drei Spalten – **Karte & Einstellungen** links, **Discord** in der Mitte,
+**Ankündigungen** rechts.
 
-Aktueller Stand: **Frontend-Prototyp**, standalone im Browser entwickelt/testbar
-(Mock-Daten). Die FiveM-Anbindung (`client/client.lua`) ist ein Stub, der die
-NUI sichtbar/unsichtbar schaltet und noch keine echten Server-Daten liefert.
+Das Menü hat bewusst wenig Eigenlogik – es ruft vorhandene Funktionen auf statt
+sie nachzubauen:
+
+- **Karte** öffnet nicht eine eigene Karte, sondern die corerp-Vollbildkarte
+  (Command `rp_map`, standardmäßig Taste **M**). Das Menü schließt sich dafür
+  zuerst, corerp übernimmt Fokus/Anzeige selbst.
+- **Einstellungen** öffnet das **native GTA-Pausenmenü** (dort liegen die
+  GTA-Settings). Das Menü schließt sich dafür zuerst, sodass ein anschließendes
+  **ESC** das GTA-Menü schließt und normal ins Spiel zurückführt – **nicht**
+  zurück in dieses Menü.
+- **Discord** (Mock) zeigt eine „Discord beitreten"-Schaltfläche; die
+  **Ankündigungen** rechts sind ebenfalls Mock (`nui/src/state/mockAnnouncements.ts`).
+
+Die Spielerdaten oben kommen live aus corerp (`client/client.lua` hängt sich
+lesend an dessen Charakter-/Kontostand-/Progression-Events, siehe unten).
+
+> Hinweis: Frühere Tab-Ansichten (interne Karte, interner Einstellungen-/
+> Keybinds-/Regeln-Tab) liegen noch im Quellcode (`nui/src/tabs/`, `nui/src/shell/`),
+> werden aber **nicht mehr gemountet** und landen nicht im Build-Bundle. Sie
+> können bei einer späteren Aufräum-Iteration entfernt werden.
+
+## Convars
+
+In `server-data/server.cfg` setzbar (alle mit sinnvollem Default, ohne Eintrag
+läuft das Menü unverändert):
+
+- `neov_pausemenu_gta_settings_component` (Default `42`) – welcher Tab des nativen
+  GTA-Pausenmenüs beim Klick auf **Einstellungen** angesteuert wird (dritter
+  Parameter von `ActivateFrontendMenu`). Der passende Wert ist **GTA-Build-
+  abhängig**; landet der Klick nicht auf dem gewünschten Tab, hier den zum Build
+  passenden Wert setzen – kein NUI-Rebuild nötig.
+- `neov_pausemenu_map_default_style` / `neov_pausemenu_map_show_style_switcher` –
+  Kartenstil-Convars der (aktuell nicht gemounteten) internen Karte, siehe
+  Abschnitt „Map-Tab".
 
 ## Entwickeln (Browser, ohne FiveM)
 

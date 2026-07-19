@@ -1,0 +1,484 @@
+.dashboard {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  pointer-events: auto;
+  font-family: var(--font-ui);
+  color: var(--text);
+}
+
+/* Im Spiel liegt das (geblurrte) Gameplay dahinter; im Browser-Dev simulieren
+   wir Tiefe mit Messing-Glow + Punktraster statt eines Screenshots. */
+.dashboard-backdrop {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% -10%, rgba(200, 151, 63, 0.1) 0%, transparent 55%),
+    radial-gradient(circle at 100% 100%, rgba(200, 151, 63, 0.05) 0%, transparent 45%),
+    var(--graphite-900);
+}
+
+.dashboard-backdrop::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.45;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+.dashboard-frame {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 36px 52px 28px;
+  gap: 26px;
+}
+
+/* === Player-Bar (oben) === */
+.playerbar {
+  display: flex;
+  align-items: center;
+  gap: 26px;
+  padding-bottom: 22px;
+  border-bottom: 1px solid var(--graphite-line);
+}
+
+.playerbar-brand {
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 24px;
+  letter-spacing: 0.12em;
+}
+
+.playerbar-brand-name {
+  color: var(--text);
+}
+
+.playerbar-brand-suffix {
+  color: var(--brass);
+  text-shadow: 0 0 22px rgba(200, 151, 63, 0.45);
+}
+
+.playerbar-identity {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding-left: 26px;
+  border-left: 1px solid var(--graphite-line);
+}
+
+.playerbar-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  flex: 0 0 auto;
+  border-radius: 12px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: 0.04em;
+  color: var(--brass-bright);
+  background: rgba(200, 151, 63, 0.12);
+  border: 1px solid rgba(200, 151, 63, 0.3);
+}
+
+.playerbar-name {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 18px;
+  letter-spacing: 0.02em;
+}
+
+.playerbar-job {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.playerbar-stats {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: auto;
+}
+
+.playerbar-stat {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--graphite-line);
+  color: var(--brass);
+}
+
+.playerbar-stat > div {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.3;
+}
+
+.playerbar-stat-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.playerbar-stat-value {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.playerbar-disconnect {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  flex: 0 0 auto;
+  border-radius: var(--radius-md);
+  color: var(--danger);
+  background: rgba(229, 72, 77, 0.06);
+  border: 1px solid rgba(229, 72, 77, 0.28);
+  cursor: pointer;
+  transition: background 120ms ease, border-color 120ms ease, transform 120ms ease;
+}
+
+.playerbar-disconnect:hover {
+  background: rgba(229, 72, 77, 0.14);
+  border-color: rgba(229, 72, 77, 0.5);
+  transform: translateY(-1px);
+}
+
+/* === Body: 3 Spalten (Aktionen | Discord | Ankündigungen) === */
+.dashboard-body {
+  display: grid;
+  grid-template-columns: 1.25fr 0.85fr 1.1fr;
+  gap: 26px;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.dashboard-col {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+
+.dashboard-col--menu {
+  gap: 18px;
+}
+
+.dashboard-section-label {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* === Aktions-Kacheln (Karte / Einstellungen) === */
+.action-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 22px 24px 24px;
+  text-align: left;
+  cursor: pointer;
+  color: var(--text);
+  background: linear-gradient(180deg, var(--graphite-700) 0%, var(--graphite-800) 100%);
+  border: 1px solid var(--graphite-line);
+  border-radius: var(--radius-lg);
+  transition: transform 120ms ease, border-color 120ms ease, box-shadow 120ms ease;
+}
+
+.action-card--default {
+  flex: 0 0 auto;
+}
+
+/* Karte = Hero-Kachel: füllt die verbleibende Spaltenhöhe (wie im Referenzbild). */
+.action-card--feature {
+  flex: 1 1 auto;
+  justify-content: flex-end;
+  overflow: hidden;
+}
+
+.action-card--feature::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 78% 18%, rgba(200, 151, 63, 0.16) 0%, transparent 46%),
+    linear-gradient(160deg, rgba(200, 151, 63, 0.06) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.action-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--brass-dim);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(200, 151, 63, 0.15);
+}
+
+.action-card-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  color: var(--graphite-900);
+  background: linear-gradient(135deg, var(--brass) 0%, var(--brass-bright) 100%);
+  box-shadow: 0 6px 18px rgba(200, 151, 63, 0.3);
+}
+
+.action-card-text {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.action-card--feature .action-card-text {
+  margin-top: auto;
+}
+
+.action-card-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 20px;
+  letter-spacing: 0.02em;
+}
+
+.action-card--feature .action-card-title {
+  font-size: 30px;
+}
+
+.action-card-subtitle {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.action-card-hint {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  min-width: 26px;
+  padding: 4px 8px;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--brass-bright);
+  background: rgba(200, 151, 63, 0.1);
+  border: 1px solid rgba(200, 151, 63, 0.25);
+  border-radius: 8px;
+}
+
+/* === Discord-Panel (Mitte) === */
+.discord-panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 32px 28px;
+  overflow: hidden;
+  text-align: center;
+  background: linear-gradient(180deg, var(--graphite-700) 0%, var(--graphite-800) 100%);
+  border: 1px solid var(--graphite-line);
+  border-radius: var(--radius-lg);
+}
+
+.discord-panel-glow {
+  position: absolute;
+  top: -30%;
+  left: 50%;
+  width: 320px;
+  height: 320px;
+  transform: translateX(-50%);
+  background: radial-gradient(circle, rgba(200, 151, 63, 0.14) 0%, transparent 62%);
+  pointer-events: none;
+}
+
+.discord-panel-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 84px;
+  height: 84px;
+  border-radius: 22px;
+  color: var(--brass-bright);
+  background: rgba(200, 151, 63, 0.1);
+  border: 1px solid rgba(200, 151, 63, 0.28);
+  box-shadow: 0 0 34px rgba(200, 151, 63, 0.18);
+}
+
+.discord-panel-title {
+  position: relative;
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 22px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.discord-panel-hint {
+  position: relative;
+  margin: 0;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.discord-panel-btn {
+  position: relative;
+  margin-top: 6px;
+  padding: 12px 26px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--graphite-900);
+  background: linear-gradient(135deg, var(--brass) 0%, var(--brass-bright) 100%);
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(200, 151, 63, 0.28);
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+
+.discord-panel-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 26px rgba(200, 151, 63, 0.4);
+}
+
+/* === Ankündigungen (rechts) === */
+.announcements {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.announcements-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.announcements-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  color: var(--brass);
+  background: rgba(200, 151, 63, 0.1);
+  border: 1px solid rgba(200, 151, 63, 0.2);
+}
+
+.announcements-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 17px;
+  letter-spacing: 0.02em;
+}
+
+.announcements-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.announcement {
+  padding: 18px 20px;
+  background: linear-gradient(180deg, var(--graphite-700) 0%, var(--graphite-800) 100%);
+  border: 1px solid var(--graphite-line);
+  border-left: 2px solid var(--brass);
+  border-radius: var(--radius-md);
+}
+
+.announcement-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.announcement-tag {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--brass-bright);
+  padding: 3px 8px;
+  background: rgba(200, 151, 63, 0.1);
+  border-radius: 6px;
+}
+
+.announcement-date {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.announcement-title {
+  margin: 0 0 6px;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: 0.01em;
+}
+
+.announcement-body {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+/* === Fusszeile === */
+.dashboard-hint {
+  margin: 0;
+  text-align: center;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.dashboard-hint kbd {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  padding: 3px 7px;
+  margin-right: 6px;
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--graphite-line);
+  border-radius: 6px;
+}

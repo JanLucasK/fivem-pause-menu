@@ -25,6 +25,21 @@ export interface ServerInfo {
   onlinePlayers: number;
   maxPlayers: number;
   discordUrl: string;
+  // Unix-Zeit (Sekunden), zu der der Spieler dem Server beigetreten ist - in
+  // client/client.lua beim Ressourcenstart per os.time() festgehalten und im
+  // Player-Bar als "Beigetreten" angezeigt. null, solange unbekannt (Browser-Dev).
+  joinedAtUnix: number | null;
+}
+
+// Eine Ankündigung/News-Karte für die rechte Spalte des Menüs. Aktuell reiner
+// Mock (siehe state/mockAnnouncements.ts) - später könnte dies aus einem
+// CMS/Discord-Feed kommen, das UI bleibt gleich.
+export interface Announcement {
+  id: string;
+  tag: string;
+  date: string;
+  title: string;
+  body: string;
 }
 
 export interface HomeData {

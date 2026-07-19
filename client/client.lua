@@ -4,6 +4,16 @@
 
 local isMenuOpen = false
 
+-- Beitrittszeitpunkt (Ressourcenstart ~ Spawn) als Unix-Zeit fuer die
+-- "Beigetreten"-Anzeige in der Player-Bar. Reine Anzeige, client-lokal.
+local joinedAtUnix = os.time()
+
+-- True, solange wir fuer den Spieler das native GTA-Pausenmenue (Einstellungen)
+-- geoeffnet haben. In dieser Zeit unterdruecken wir Control 200 NICHT (sonst
+-- liesse sich das GTA-Menue nicht per ESC schliessen) und blockieren das erneute
+-- Oeffnen unseres Menues, damit ESC sauber ins Spiel zurueckfuehrt statt hierher.
+local gtaSettingsOpen = false
+
 -- Kartenstil (Atlas/Grid/Satellite) per server.cfg-Convar statt hart im
 -- NUI-Code, damit Serverbetreiber Default-Stil/Umschalter ohne NUI-Rebuild
 -- aendern koennen: neov_pausemenu_map_default_style / _show_style_switcher,
@@ -13,6 +23,14 @@ local function getMapConfig()
         defaultStyle = GetConvar('neov_pausemenu_map_default_style', 'satellite'),
         showStyleSwitcher = GetConvarInt('neov_pausemenu_map_show_style_switcher', 1) == 1,
     }
+end
+
+-- Welcher Pausenmenue-Tab beim Klick auf "Einstellungen" angesteuert wird, haengt
+-- vom GTA-Build ab (dritter Parameter von ActivateFrontendMenu). Deshalb per
+-- Convar statt hart im Code, damit der Serverbetreiber ohne Rebuild den richtigen
+-- Tab treffen kann: neov_pausemenu_gta_settings_component (Default 42).
+local function getSettingsComponent()
+    return GetConvarInt('neov_pausemenu_gta_settings_component', 42)
 end
 
 -- corerp-Anbindung (nur lesend): corerp ist eine eigenstaendige Resource
@@ -58,6 +76,7 @@ local function buildHomeData()
             onlinePlayers = NetworkGetNumConnectedPlayers(),
             maxPlayers = tonumber(GetConvar('sv_maxclients', '48')) or 48,
             discordUrl = 'https://discord.gg/neov',
+            joinedAtUnix = joinedAtUnix,
         },
         location = '',
     }
@@ -120,6 +139,10 @@ end
 
 RegisterKeyMapping('neov:togglepausemenu', 'NeoV Pause-Menü öffnen', 'keyboard', 'ESCAPE')
 RegisterCommand('neov:togglepausemenu', function()
+    -- Waehrend das native GTA-Pausenmenue (Einstellungen) offen ist bzw. gerade
+    -- geschlossen wurde, faengt derselbe ESC-Druck sonst hier wieder an und wuerde
+    -- unser Menue direkt neu oeffnen - genau das soll nicht passieren.
+    if gtaSettingsOpen or IsPauseMenuActive() then return end
     setMenuVisible(not isMenuOpen)
 end, false)
 
@@ -140,7 +163,12 @@ RegisterKeybind({
 -- von DisableControlAction, wird also weiterhin ausgeloest.
 CreateThread(function()
     while true do
-        DisableControlAction(0, 200, true)
+        -- Nicht unterdruecken, solange wir das native GTA-Pausenmenue absichtlich
+        -- offen halten (Einstellungen) - sonst liesse es sich nicht per ESC wieder
+        -- schliessen.
+        if not gtaSettingsOpen then
+            DisableControlAction(0, 200, true)
+        end
         if isMenuOpen then
             SetPauseMenuActive(false)
         end
@@ -154,6 +182,45 @@ end)
 -- AppShell.tsx) und meldet sich hierueber zurueck.
 RegisterNUICallback('closeMenu', function(_, cb)
     setMenuVisible(false)
+    cb({})
+end)
+
+-- "Karte" im Menue: nicht eine eigene Karte, sondern die corerp-Vollbildkarte
+-- (Command 'rp_map', standardmaessig Taste M). Wir schliessen erst unser Menue
+-- (gibt den NUI-Fokus frei) und stossen dann den corerp-Command an - Commands
+-- sind global, also ressourceuebergreifend ausfuehrbar. corerp uebernimmt danach
+-- Fokus/Anzeige/Schliessen der Karte selbst.
+RegisterNUICallback('openMap', function(_, cb)
+    setMenuVisible(false)
+    ExecuteCommand('rp_map')
+    cb({})
+end)
+
+-- "Einstellungen" im Menue: das native GTA-Pausenmenue oeffnen (dort liegen die
+-- GTA-Settings). Erst unser Menue schliessen (Fokus zurueck ans Spiel), dann das
+-- Frontend-Menue aktivieren. gtaSettingsOpen haelt die Control-200-Unterdrueckung
+-- und das Wieder-Oeffnen unseres Menues zurueck, bis der Spieler das GTA-Menue
+-- per ESC schliesst - dann geht es normal ins Spiel zurueck, nicht in unser Menue.
+RegisterNUICallback('openSettings', function(_, cb)
+    setMenuVisible(false)
+    gtaSettingsOpen = true
+    ActivateFrontendMenu(GetHashKey('FE_MENU_VERSION_SP_PAUSE'), false, getSettingsComponent())
+    CreateThread(function()
+        -- Warten, bis das Pausenmenue tatsaechlich offen ist (mit Timeout, falls
+        -- ActivateFrontendMenu auf diesem Build nicht greift).
+        local guard = GetGameTimer() + 2000
+        while gtaSettingsOpen and not IsPauseMenuActive() and GetGameTimer() < guard do
+            Wait(0)
+        end
+        -- ... dann warten, bis der Spieler es wieder schliesst.
+        while gtaSettingsOpen and IsPauseMenuActive() do
+            Wait(100)
+        end
+        -- Kurzer Nachlauf, damit derselbe ESC-Druck, der das GTA-Menue schliesst,
+        -- nicht sofort wieder unser Menue oeffnet (Control-200-Race).
+        Wait(300)
+        gtaSettingsOpen = false
+    end)
     cb({})
 end)
 
