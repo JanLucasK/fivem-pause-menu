@@ -71,7 +71,7 @@ input[type='range']::-moz-range-track {
   flex: 0 0 auto;
   /* Keine width/height hier: die Groesse kommt aus dem size-Prop als Attribut,
      CSS wuerde es ueberschreiben. */
-  overflow: visible;
+  object-fit: contain;
   /* Uebernimmt den Messing-Schein der frueheren Wortmarke. */
   filter: drop-shadow(0 0 14px rgba(200, 151, 63, 0.35));
 }

@@ -64,22 +64,22 @@ Baut nach `nui/dist/`, `fxmanifest.lua` referenziert genau diesen Ordner.
 
 ## Logo
 
-Die Bildmarke steckt als inline-SVG in
-`nui/src/components/BrandMark.tsx` und ersetzt in der TopBar sowie in der
-PlayerBar die frühere Wortmarke "NEOV".
+`nui/src/assets/logo.png` ist das Original-Render der Marke, auf das Zeichen
+zugeschnitten und freigestellt (der schwarze Hintergrund des Renders wurde per
+Luminanz ausgekeyt). Dadurch bringt es sein eigenes Alpha mit und sitzt auf dem
+Panel-Hintergrund statt auf einem schwarzen Kasten. 512×512, quadratisch.
 
-Bewusst keine externe Bilddatei: die müsste erst über das `files{}`-Manifest
-ausgeliefert werden, und genau daran scheitert die Marke sonst still (404 ohne
-sichtbaren Fehler). Inline kann sie nicht fehlen und braucht keinen
-Manifest-Eintrag.
+`nui/src/components/BrandMark.tsx` zeigt es in der TopBar und der PlayerBar und
+ersetzt dort die frühere Wortmarke "NEOV".
 
-Gezeichnet wird dieselbe Silhouette zweimal: einmal versetzt in Fast-Schwarz
-als Extrusionstiefe, davor die Messingfläche. Die Verlaufs-IDs sind per
-`useId()` eindeutig, weil TopBar und PlayerBar gleichzeitig im DOM stehen
-können.
+Die Datei wird **importiert**, nicht über einen Pfad-String aus `public/`
+geladen: so hängt Vite sie in die Asset-Pipeline, vergibt den gehashten Namen
+und setzt den relativen Pfad selbst. Ein handgeschriebener Pfad zeigt bei
+falscher `base` still ins Leere — die Marke fehlt dann kommentarlos. Im
+Manifest deckt `nui/dist/assets/*.png` das Ergebnis ab.
 
 - Größe: `size`-Prop von `<BrandMark />`.
-- Farben: die Stops von `neovGold` / `neovDepth` in `BrandMark.tsx`.
+- Der Messing-Schein kommt aus `.brand-mark` in `nui/src/styles/global.css`.
 
 ## Architektur
 

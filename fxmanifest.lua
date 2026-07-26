@@ -19,6 +19,8 @@ files {
     'nui/dist/index.html',
     'nui/dist/assets/*.js',
     'nui/dist/assets/*.css',
+    -- Bildmarke: BrandMark.tsx importiert sie, Vite legt sie gehasht unter assets/ ab.
+    'nui/dist/assets/*.png',
     'nui/dist/fonts/*.woff2',
     'nui/dist/blips/*.png',
     -- Kartenkacheln (Atlas/Grid/Satellite), siehe README "Map-Tab" - leer bis
