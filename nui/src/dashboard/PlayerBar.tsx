@@ -1,5 +1,6 @@
 import { Banknote, Landmark, Users, LogOut, CalendarClock } from 'lucide-react';
 import type { HomeData } from '../types';
+import { BrandMark } from '../components/BrandMark';
 
 function formatMoney(amount: number): string {
   return `${amount.toLocaleString('de-DE')} €`;
@@ -34,6 +35,7 @@ export function PlayerBar({ data, onDisconnect }: PlayerBarProps) {
   return (
     <header className="playerbar">
       <div className="playerbar-brand">
+        <BrandMark size={34} />
         <span className="playerbar-brand-name">NEO</span>
         <span className="playerbar-brand-suffix">V</span>
       </div>

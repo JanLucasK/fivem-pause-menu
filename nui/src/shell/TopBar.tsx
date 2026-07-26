@@ -1,4 +1,5 @@
 import { MapPin } from 'lucide-react';
+import { BrandMark } from '../components/BrandMark';
 
 interface TopBarProps {
   location: string;
@@ -8,6 +9,7 @@ export function TopBar({ location }: TopBarProps) {
   return (
     <header className="topbar">
       <div className="topbar-brand">
+        <BrandMark size={30} />
         <span className="topbar-brand-name">NEO</span>
         <span className="topbar-brand-suffix">V</span>
       </div>

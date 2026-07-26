@@ -62,6 +62,20 @@ npm run build
 
 Baut nach `nui/dist/`, `fxmanifest.lua` referenziert genau diesen Ordner.
 
+## Logo
+
+Die Bildmarke steckt in `nui/src/components/BrandMark.tsx` und wird in der
+TopBar sowie in der PlayerBar neben der Wortmarke "NEOV" gezeigt.
+
+Sie lädt zuerst `img/logo.png` und fällt auf den Vektor-Nachbau
+`img/logo.svg` zurück, solange das PNG fehlt — die Marke ist also nie ein
+kaputtes Bild.
+
+Um das Original-Render zu verwenden: Datei als `nui/public/img/logo.png`
+ablegen und neu bauen. Vite kopiert `nui/public/` unverändert nach
+`nui/dist/`, `fxmanifest.lua` liefert `nui/dist/img/*` bereits aus. Empfohlen:
+quadratisches PNG mit Transparenz, ca. 512×512 px.
+
 ## Architektur
 
 - `nui/src/shell/` – AppShell, TopBar, Sidebar (linke Navigation), zentrale

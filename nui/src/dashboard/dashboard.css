@@ -48,12 +48,17 @@
 
 .playerbar-brand {
   display: flex;
-  align-items: baseline;
+  /* siehe .topbar-brand: baseline wuerde die Bildmarke gegen die Wortmarke versetzen */
+  align-items: center;
   gap: 2px;
   font-family: var(--font-display);
   font-weight: 700;
   font-size: 24px;
   letter-spacing: 0.12em;
+}
+
+.playerbar-brand .brand-mark {
+  margin-right: 11px;
 }
 
 .playerbar-brand-name {

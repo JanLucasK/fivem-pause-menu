@@ -64,3 +64,14 @@ input[type='range']::-moz-range-track {
   border-radius: 2px;
   background: rgba(255, 255, 255, 0.1);
 }
+
+/* === Bildmarke (BrandMark) === */
+.brand-mark {
+  display: block;
+  flex: 0 0 auto;
+  height: auto;
+  object-fit: contain;
+  /* Gleicher Messing-Schein wie beim Wortmarken-Suffix, damit Bild- und
+     Schriftmarke nebeneinander als eine Einheit lesen. */
+  filter: drop-shadow(0 0 14px rgba(200, 151, 63, 0.35));
+}
