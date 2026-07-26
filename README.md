@@ -64,17 +64,22 @@ Baut nach `nui/dist/`, `fxmanifest.lua` referenziert genau diesen Ordner.
 
 ## Logo
 
-Die Bildmarke steckt in `nui/src/components/BrandMark.tsx` und wird in der
-TopBar sowie in der PlayerBar neben der Wortmarke "NEOV" gezeigt.
+Die Bildmarke steckt als inline-SVG in
+`nui/src/components/BrandMark.tsx` und ersetzt in der TopBar sowie in der
+PlayerBar die frühere Wortmarke "NEOV".
 
-Sie lädt zuerst `img/logo.png` und fällt auf den Vektor-Nachbau
-`img/logo.svg` zurück, solange das PNG fehlt — die Marke ist also nie ein
-kaputtes Bild.
+Bewusst keine externe Bilddatei: die müsste erst über das `files{}`-Manifest
+ausgeliefert werden, und genau daran scheitert die Marke sonst still (404 ohne
+sichtbaren Fehler). Inline kann sie nicht fehlen und braucht keinen
+Manifest-Eintrag.
 
-Um das Original-Render zu verwenden: Datei als `nui/public/img/logo.png`
-ablegen und neu bauen. Vite kopiert `nui/public/` unverändert nach
-`nui/dist/`, `fxmanifest.lua` liefert `nui/dist/img/*` bereits aus. Empfohlen:
-quadratisches PNG mit Transparenz, ca. 512×512 px.
+Gezeichnet wird dieselbe Silhouette zweimal: einmal versetzt in Fast-Schwarz
+als Extrusionstiefe, davor die Messingfläche. Die Verlaufs-IDs sind per
+`useId()` eindeutig, weil TopBar und PlayerBar gleichzeitig im DOM stehen
+können.
+
+- Größe: `size`-Prop von `<BrandMark />`.
+- Farben: die Stops von `neovGold` / `neovDepth` in `BrandMark.tsx`.
 
 ## Architektur
 

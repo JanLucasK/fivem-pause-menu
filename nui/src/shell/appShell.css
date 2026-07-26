@@ -59,27 +59,7 @@
 
 .topbar-brand {
   display: flex;
-  /* center statt baseline: die Bildmarke hat keine Textbasislinie und wuerde
-     sonst gegenueber "NEOV" nach unten versetzt sitzen. */
   align-items: center;
-  gap: 2px;
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 22px;
-  letter-spacing: 0.12em;
-}
-
-.topbar-brand .brand-mark {
-  margin-right: 10px;
-}
-
-.topbar-brand-name {
-  color: var(--text);
-}
-
-.topbar-brand-suffix {
-  color: var(--brass);
-  text-shadow: 0 0 22px rgba(200, 151, 63, 0.45);
 }
 
 .topbar-location {

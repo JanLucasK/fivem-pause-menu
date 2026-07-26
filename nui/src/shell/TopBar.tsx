@@ -9,9 +9,7 @@ export function TopBar({ location }: TopBarProps) {
   return (
     <header className="topbar">
       <div className="topbar-brand">
-        <BrandMark size={30} />
-        <span className="topbar-brand-name">NEO</span>
-        <span className="topbar-brand-suffix">V</span>
+        <BrandMark size={34} />
       </div>
       <div className="topbar-location">
         <MapPin size={14} />

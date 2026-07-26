@@ -21,9 +21,6 @@ files {
     'nui/dist/assets/*.css',
     'nui/dist/fonts/*.woff2',
     'nui/dist/blips/*.png',
-    -- Bildmarke: BrandMark.tsx laedt zuerst img/logo.png und faellt auf img/logo.svg
-    -- zurueck. Beide muessen gelistet sein, sonst liefert der Client 404.
-    'nui/dist/img/*',
     -- Kartenkacheln (Atlas/Grid/Satellite), siehe README "Map-Tab" - leer bis
     -- echte Tiles unter nui/public/mapStyles/ abgelegt und gebaut wurden.
     'nui/dist/mapStyles/**/*',
