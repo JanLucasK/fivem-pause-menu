@@ -72,11 +72,19 @@ Panel-Hintergrund statt auf einem schwarzen Kasten. 512×512, quadratisch.
 `nui/src/components/BrandMark.tsx` zeigt es in der TopBar und der PlayerBar und
 ersetzt dort die frühere Wortmarke "NEOV".
 
-Die Datei wird **importiert**, nicht über einen Pfad-String aus `public/`
-geladen: so hängt Vite sie in die Asset-Pipeline, vergibt den gehashten Namen
-und setzt den relativen Pfad selbst. Ein handgeschriebener Pfad zeigt bei
-falscher `base` still ins Leere — die Marke fehlt dann kommentarlos. Im
-Manifest deckt `nui/dist/assets/*.png` das Ergebnis ab.
+Die Datei wird **importiert** und von Vite als `data:`-URI ins JS-Bundle
+eingebettet (`assetsInlineLimit` in `vite.config.ts`) — **sie wird bewusst
+nicht als eigene Datei ausgeliefert.**
+
+Als eigene Datei kam sie nicht beim Client an: der Server hat die Bytes nicht
+in `cache/files/…/resource.rpf` gepackt, obwohl die Datei korrekt im Ordner
+lag, lesbar war, im `files{}` stand und die Resource neu gestartet war. Im
+Spiel gab das ein Broken-Image ohne jede Fehlermeldung. Eingebettet kann nichts
+fehlen. Deshalb ist das Asset auf 128×128 verkleinert — angezeigt wird es mit
+34–40 px, das reicht mit Reserve und hält das Bundle klein (+19 KB).
+
+`assetsInlineLimit` betrifft nur **importierte** Assets. Alles unter `public/`
+(Fonts, Blips, Map-Tiles) läuft unverändert als Datei.
 
 - Größe: `size`-Prop von `<BrandMark />`.
 - Der Messing-Schein kommt aus `.brand-mark` in `nui/src/styles/global.css`.
