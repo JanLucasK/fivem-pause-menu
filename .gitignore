@@ -1,4 +1,5 @@
 node_modules/
 nui/dist/
+_preview/
 *.log
 *.tsbuildinfo
