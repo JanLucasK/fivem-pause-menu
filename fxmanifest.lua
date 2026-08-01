@@ -22,8 +22,8 @@ files {
     -- Kein Eintrag fuer die Bildmarke: Vite bettet sie als data:-URI ins JS-Bundle ein
     -- (assetsInlineLimit in vite.config.ts). Als eigene Datei kam sie nicht beim Client an.
     'nui/dist/fonts/*.woff2',
-    -- Kachel-Artwork (public/img/, z.B. Gold-Textur der Einstellungen-Kachel).
-    'nui/dist/img/*.jpg',
+    -- Kachel-Artwork (public/img/, z.B. NeoV-Logomark der Einstellungen-Kachel).
+    'nui/dist/img/*',
     'nui/dist/blips/*.png',
     -- Kartenkacheln (Atlas/Grid/Satellite), siehe README "Map-Tab" - leer bis
     -- echte Tiles unter nui/public/mapStyles/ abgelegt und gebaut wurden.

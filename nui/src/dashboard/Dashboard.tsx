@@ -56,7 +56,8 @@ export function Dashboard({
               subtitle="Vollbildkarte in Los Santos öffnen"
               hint="M"
               variant="feature"
-              image="mapStyles/styleSatelite/3/3/5.jpg"
+              image="mapStyles/styleAtlas/3/3/5.jpg"
+              imageStyle="contour"
               onClick={onOpenMap}
             />
             <ActionCard
@@ -64,8 +65,8 @@ export function Dashboard({
               title="Einstellungen"
               subtitle="GTA-Einstellungen öffnen"
               variant="feature"
-              image="img/gold-texture.jpg"
-              imageDim
+              image="img/logomark.svg"
+              imageStyle="brand"
               onClick={onOpenSettings}
             />
           </section>

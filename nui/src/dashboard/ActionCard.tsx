@@ -10,12 +10,13 @@ interface ActionCardProps {
   variant?: 'default' | 'feature';
   // Optionaler dezenter SVG-Hintergrund, damit grosse Kacheln nicht leer wirken.
   pattern?: 'map' | 'settings';
-  // Optionales Foto/Artwork als Kachel-Hintergrund (Pfad relativ zu dist/);
-  // hat Vorrang vor `pattern`. Ein Gradient-Overlay haelt den Text lesbar.
+  // Optionales Artwork als Kachel-Hintergrund (Pfad relativ zu dist/);
+  // hat Vorrang vor `pattern`.
   image?: string;
-  // Fuer helle Artworks (z.B. Gold-Textur): Media stark abdunkeln, damit die
-  // Kachel nicht wie ein leuchtendes Banner wirkt.
-  imageDim?: boolean;
+  // 'contour': Kartenkachel - Tile wird per Filterkette zur dunklen
+  //            Gold-Konturen-Skizze (0r-Anleihe), Overlay haelt Text lesbar.
+  // 'brand':   Ghost-Watermark (z.B. NeoV-Logomark) rechts, ohne Overlay.
+  imageStyle?: 'contour' | 'brand';
   // Fuer Grid-Area-Zuordnung im Dashboard-Body.
   className?: string;
   onClick: () => void;
@@ -30,7 +31,7 @@ export function ActionCard({
   variant = 'default',
   pattern,
   image,
-  imageDim = false,
+  imageStyle,
   className,
   onClick,
 }: ActionCardProps) {
@@ -42,7 +43,7 @@ export function ActionCard({
     >
       {image ? (
         <span
-          className={imageDim ? 'action-card-media action-card-media--dim' : 'action-card-media'}
+          className={`action-card-media${imageStyle ? ` action-card-media--${imageStyle}` : ''}`}
           style={{ backgroundImage: `url(${image})` }}
         />
       ) : (
