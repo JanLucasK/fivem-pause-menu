@@ -36,7 +36,7 @@ export function PlayerBar({ data, onDisconnect }: PlayerBarProps) {
   return (
     <header className="playerbar">
       <div className="playerbar-brand">
-        <BrandMark size={40} />
+        <BrandMark height={34} />
       </div>
 
       <div className="playerbar-identity">

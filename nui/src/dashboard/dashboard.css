@@ -3,6 +3,7 @@
   inset: 0;
   z-index: 50;
   pointer-events: auto;
+  display: flex;
   font-family: var(--font-ui);
   color: var(--text);
 }
@@ -28,11 +29,18 @@
 }
 
 /* Safe-Zone-Raender relativ statt fixer Pixel: auf TVs mit Overscan bleibt
-   kritisches UI innerhalb ~93% der Flaeche (game-ui-design: Safe Zones). */
+   kritisches UI innerhalb ~93% der Flaeche (game-ui-design: Safe Zones).
+   Zusaetzlich Breite/Hoehe gedeckelt und zentriert: auf 1440p/4K wachsen die
+   Karten sonst ins Riesige (Nutzer-Feedback) - das Menue behaelt so ueberall
+   etwa die Proportionen des 1080p-Layouts. */
 .dashboard-frame {
   position: relative;
   z-index: 1;
-  height: 100%;
+  flex: 1 1 auto;
+  width: 100%;
+  max-width: 1760px;
+  max-height: 1020px;
+  margin: auto;
   display: flex;
   flex-direction: column;
   padding: clamp(24px, 3.5vh, 44px) clamp(36px, 4vw, 72px) clamp(20px, 3vh, 36px);
@@ -40,11 +48,13 @@
 }
 
 /* === Player-Bar (oben) === */
+/* Kopfzeile bewusst kraeftig: sie traegt Identitaet + alle Kern-Infos und darf
+   neben den grossen Kacheln nicht untergehen (Nutzer-Feedback "sehr klein"). */
 .playerbar {
   display: flex;
   align-items: center;
-  gap: 26px;
-  padding-bottom: 22px;
+  gap: 28px;
+  padding-bottom: 24px;
   border-bottom: 1px solid var(--graphite-line);
 }
 
@@ -65,8 +75,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 46px;
-  height: 46px;
+  width: 54px;
+  height: 54px;
   flex: 0 0 auto;
   border-radius: 12px;
   font-family: var(--font-display);
@@ -82,13 +92,13 @@
   margin: 0;
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: 18px;
+  font-size: 21px;
   letter-spacing: 0.02em;
 }
 
 .playerbar-job {
   margin: 2px 0 0;
-  font-size: 13px;
+  font-size: 14px;
   color: var(--muted);
 }
 
@@ -102,8 +112,8 @@
 .playerbar-stat {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 10px 16px;
+  gap: 11px;
+  padding: 12px 18px;
   border-radius: var(--radius-md);
   background: var(--surface-1);
   backdrop-filter: blur(8px);
@@ -122,7 +132,7 @@
 .playerbar-stat-label {
   font-family: var(--font-ui);
   font-weight: 500;
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--muted);
@@ -131,7 +141,7 @@
 .playerbar-stat-value {
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: 17px;
+  font-size: 19px;
   letter-spacing: 0.02em;
   font-variant-numeric: tabular-nums;
   color: var(--text);
@@ -142,8 +152,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 42px;
-  height: 42px;
+  width: 48px;
+  height: 48px;
   flex: 0 0 auto;
   border-radius: var(--radius-md);
   color: var(--danger);
