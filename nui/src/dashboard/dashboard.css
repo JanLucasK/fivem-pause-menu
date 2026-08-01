@@ -27,7 +27,9 @@
   content: '';
   position: absolute;
   inset: -20%;
-  opacity: 0.018;
+  /* "Maximal subtil" (Nutzer-Vorgabe): unter 1% - im Standbild kaum
+     wahrnehmbar, bricht nur die tote Flaeche. */
+  opacity: 0.008;
   /* Relativ zur gebauten CSS in dist/assets/ -> dist/img/. Ein absoluter
      /img-Pfad wuerde in FiveM auf die Resource-Root statt dist/ zeigen. */
   background-image: url(../img/logomark.svg);
