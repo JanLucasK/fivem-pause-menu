@@ -159,59 +159,43 @@
   transform: translateY(-1px);
 }
 
-/* === Body: Area-Grid mit zwei gleich hohen Reihen ===
-   "map     discord  news"
-   "settings tiles   news"
-   Alle Kanten fluchten: Discord = Hoehe Karte, kleine Kacheln = Hoehe
-   Einstellungen, News laeuft ueber beide Reihen. */
+/* === Body: drei Spalten, jede fuellt die volle Hoehe ===
+   Container duerfen unterschiedlich gross sein - nur die Ober- und Unterkante
+   der Spalten muss fluchten (Nutzer-Feedback). */
 .dashboard-body {
   display: grid;
   grid-template-columns: 1.15fr 0.9fr 0.95fr;
-  grid-template-rows: 1fr 1fr;
-  grid-template-areas:
-    'map      discord news'
-    'settings tiles   news';
   gap: 22px;
   flex: 1 1 auto;
   min-height: 0;
 }
 
-/* Grid-Items duerfen schrumpfen (min-height:auto wuerde sonst ueberlaufen). */
-.dashboard-body > * {
+.dashboard-col {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
   min-width: 0;
   min-height: 0;
 }
 
-.dashboard-area-map {
-  grid-area: map;
+/* Karte + Einstellungen teilen sich die linke Spalte zu gleichen Teilen. */
+.dashboard-col--menu .action-card {
+  flex: 1 1 0;
+  min-height: 0;
 }
 
-.dashboard-area-settings {
-  grid-area: settings;
-}
-
-.dashboard-body > .discord-panel {
-  grid-area: discord;
-}
-
-.dashboard-body > .announcements {
-  grid-area: news;
+/* Mitte: Discord dehnt sich, die kleinen Kacheln bleiben kompakt am
+   Spaltenende - so schliesst ihre Unterkante mit den Nachbarspalten ab. */
+.dashboard-col--middle .discord-panel {
+  flex: 1 1 auto;
+  min-height: 0;
 }
 
 .dashboard-tile-row {
-  grid-area: tiles;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 22px;
-}
-
-/* Kleine Kacheln: Text unten verankert wie bei den grossen Feature-Kacheln. */
-.dashboard-tile-row .action-card {
-  justify-content: flex-end;
-}
-
-.dashboard-tile-row .action-card .action-card-text {
-  margin-top: auto;
+  flex: 0 0 auto;
 }
 
 /* === Aktions-Kacheln (Karte / Einstellungen) === */
@@ -424,11 +408,20 @@
   box-shadow: 0 12px 26px rgba(200, 151, 63, 0.4);
 }
 
-/* === Ankündigungen (rechts) === */
+/* === Ankündigungen (rechts) ===
+   Eigener Panel-Rahmen, der die volle Spaltenhoehe fuellt - so schliesst die
+   News-Spalte oben und unten buendig mit den Nachbarspalten ab, egal wie
+   viele Eintraege es gibt (die Liste scrollt innen). */
 .announcements {
   display: flex;
   flex-direction: column;
+  flex: 1 1 auto;
   min-height: 0;
+  padding: 20px;
+  background: linear-gradient(180deg, var(--surface-2) 0%, var(--surface-1) 100%);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--graphite-line);
+  border-radius: var(--radius-lg);
 }
 
 .announcements-head {
@@ -466,10 +459,10 @@
   padding-right: 4px;
 }
 
+/* Flacher als der Panel-Rahmen drumherum (kein Gradient-im-Gradient). */
 .announcement {
-  padding: 18px 20px;
-  background: linear-gradient(180deg, var(--surface-2) 0%, var(--surface-1) 100%);
-  backdrop-filter: blur(8px);
+  padding: 16px 18px;
+  background: rgba(255, 255, 255, 0.03);
   border: 1px solid var(--graphite-line);
   border-left: 2px solid var(--brass);
   border-radius: var(--radius-md);

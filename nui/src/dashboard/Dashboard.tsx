@@ -42,48 +42,55 @@ export function Dashboard({
       <div className="dashboard-frame">
         <PlayerBar data={data} onDisconnect={onDisconnect} />
 
-        {/* Area-Grid mit zwei gleich hohen Reihen: Discord endet auf derselben
-            Kante wie die Karte, die kleinen Kacheln auf der der Einstellungen -
-            keine ungleich hohen Container mehr (Nutzer-Feedback). */}
+        {/* Drei Spalten, Container unterschiedlich gross - aber Ober- und
+            Unterkante aller Spalten fluchten: jede Spalte fuellt die volle
+            Body-Hoehe, die Announcements bekommen dafuer einen fuellenden
+            Panel-Rahmen (Nutzer-Feedback). */}
         <div className="dashboard-body">
-          <ActionCard
-            icon={MapIcon}
-            title="Karte"
-            subtitle="Vollbildkarte in Los Santos öffnen"
-            hint="M"
-            variant="feature"
-            pattern="map"
-            className="dashboard-area-map"
-            onClick={onOpenMap}
-          />
-          <ActionCard
-            icon={Settings}
-            title="Einstellungen"
-            subtitle="GTA-Einstellungen öffnen"
-            variant="feature"
-            pattern="settings"
-            className="dashboard-area-settings"
-            onClick={onOpenSettings}
-          />
-          <DiscordPanel
-            memberHint="+1000 Mitglieder in unserem Server"
-            onJoin={onOpenDiscord}
-          />
-          <div className="dashboard-tile-row">
+          <section className="dashboard-col dashboard-col--menu">
             <ActionCard
-              icon={Keyboard}
-              title="Tastenbelegung"
-              subtitle="Tasten anpassen"
-              onClick={onOpenKeybinds}
+              icon={MapIcon}
+              title="Karte"
+              subtitle="Vollbildkarte in Los Santos öffnen"
+              hint="M"
+              variant="feature"
+              pattern="map"
+              onClick={onOpenMap}
             />
             <ActionCard
-              icon={BookOpenText}
-              title="Regeln & Hilfe"
-              subtitle="Serverregeln & FAQ"
-              onClick={onOpenRules}
+              icon={Settings}
+              title="Einstellungen"
+              subtitle="GTA-Einstellungen öffnen"
+              variant="feature"
+              pattern="settings"
+              onClick={onOpenSettings}
             />
-          </div>
-          <AnnouncementsPanel announcements={announcements} />
+          </section>
+
+          <section className="dashboard-col dashboard-col--middle">
+            <DiscordPanel
+              memberHint="+1000 Mitglieder in unserem Server"
+              onJoin={onOpenDiscord}
+            />
+            <div className="dashboard-tile-row">
+              <ActionCard
+                icon={Keyboard}
+                title="Tastenbelegung"
+                subtitle="Tasten anpassen"
+                onClick={onOpenKeybinds}
+              />
+              <ActionCard
+                icon={BookOpenText}
+                title="Regeln & Hilfe"
+                subtitle="Serverregeln & FAQ"
+                onClick={onOpenRules}
+              />
+            </div>
+          </section>
+
+          <section className="dashboard-col dashboard-col--news">
+            <AnnouncementsPanel announcements={announcements} />
+          </section>
         </div>
 
         <PromoBanner config={promo} onAction={onPromoAction} />
