@@ -49,21 +49,21 @@ export function PlayerBar({ data, onDisconnect }: PlayerBarProps) {
 
       <div className="playerbar-stats">
         <div className="playerbar-stat">
-          <Banknote size={16} />
+          <Banknote size="1rem" />
           <div>
             <span className="playerbar-stat-label">Bargeld</span>
             <span className="playerbar-stat-value">{formatMoney(finance.cash)}</span>
           </div>
         </div>
         <div className="playerbar-stat">
-          <Landmark size={16} />
+          <Landmark size="1rem" />
           <div>
             <span className="playerbar-stat-label">Bank</span>
             <span className="playerbar-stat-value">{formatMoney(finance.bank)}</span>
           </div>
         </div>
         <div className="playerbar-stat">
-          <Users size={16} />
+          <Users size="1rem" />
           <div>
             <span className="playerbar-stat-label">Online</span>
             <span className="playerbar-stat-value">
@@ -72,7 +72,7 @@ export function PlayerBar({ data, onDisconnect }: PlayerBarProps) {
           </div>
         </div>
         <div className="playerbar-stat">
-          <CalendarClock size={16} />
+          <CalendarClock size="1rem" />
           <div>
             <span className="playerbar-stat-label">Beigetreten</span>
             <span className="playerbar-stat-value">{formatJoined(server.joinedAtUnix)}</span>
@@ -83,7 +83,7 @@ export function PlayerBar({ data, onDisconnect }: PlayerBarProps) {
             sie in den HomeData-Payload aufnimmt. */}
         {server.weather && (
           <div className="playerbar-stat">
-            <CloudSun size={16} />
+            <CloudSun size="1rem" />
             <div>
               <span className="playerbar-stat-label">Wetter</span>
               <span className="playerbar-stat-value">{server.weather}</span>
@@ -92,7 +92,7 @@ export function PlayerBar({ data, onDisconnect }: PlayerBarProps) {
         )}
         {character.phone && (
           <div className="playerbar-stat">
-            <Smartphone size={16} />
+            <Smartphone size="1rem" />
             <div>
               <span className="playerbar-stat-label">Telefon</span>
               <span className="playerbar-stat-value">{character.phone}</span>
@@ -101,7 +101,7 @@ export function PlayerBar({ data, onDisconnect }: PlayerBarProps) {
         )}
         {character.faction && (
           <div className="playerbar-stat">
-            <Users size={16} />
+            <Users size="1rem" />
             <div>
               <span className="playerbar-stat-label">Fraktion</span>
               <span className="playerbar-stat-value">{character.faction}</span>
@@ -117,7 +117,7 @@ export function PlayerBar({ data, onDisconnect }: PlayerBarProps) {
         title="Verbindung trennen"
         aria-label="Verbindung trennen"
       >
-        <LogOut size={17} />
+        <LogOut size="1.0625rem" />
       </button>
     </header>
   );

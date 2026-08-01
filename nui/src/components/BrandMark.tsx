@@ -17,7 +17,9 @@ export function BrandMark({ height = 34, className }: BrandMarkProps) {
       className={className ? `brand-mark ${className}` : 'brand-mark'}
       src={wordmarkUrl}
       alt="NeoV"
-      height={height}
+      // rem statt px-Attribut, damit die Marke mit der Root-Schrift
+      // (Aufloesungs-Skalierung in global.css) mitwaechst.
+      style={{ height: `${height / 16}rem`, width: 'auto' }}
     />
   );
 }

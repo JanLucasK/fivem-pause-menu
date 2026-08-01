@@ -16,7 +16,7 @@ export function PromoBanner({ config, onAction }: PromoBannerProps) {
     <section className="promo-banner">
       <div className="promo-banner-glow" />
       <div className="promo-banner-icon">
-        <Sparkles size={22} />
+        <Sparkles size="1.375rem" />
       </div>
       <div className="promo-banner-text">
         <h3 className="promo-banner-title">{config.title}</h3>

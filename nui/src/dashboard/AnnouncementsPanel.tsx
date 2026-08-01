@@ -6,7 +6,7 @@ export function AnnouncementsPanel({ announcements }: { announcements: Announcem
     <aside className="announcements">
       <div className="announcements-head">
         <span className="announcements-icon">
-          <Megaphone size={16} />
+          <Megaphone size="1rem" />
         </span>
         <h2 className="announcements-title">Ankündigungen</h2>
       </div>

@@ -34,7 +34,7 @@ export function ActionCard({
     >
       {pattern && <CardPattern kind={pattern} />}
       <span className="action-card-icon">
-        <Icon size={variant === 'feature' ? 30 : 24} />
+        <Icon size={variant === 'feature' ? '1.875rem' : '1.5rem'} />
       </span>
       <span className="action-card-text">
         <span className="action-card-title">{title}</span>

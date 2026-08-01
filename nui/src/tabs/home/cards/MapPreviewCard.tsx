@@ -18,7 +18,7 @@ export function MapPreviewCard({ playerPosition, blips, mapStyle, onOpenMap }: M
     <section className="map-preview-card">
       <div className="map-preview-head">
         <div className="hcard-icon">
-          <MapIcon size={18} />
+          <MapIcon size="1.125rem" />
         </div>
         <div>
           <p className="hcard-eyebrow">View Location</p>
@@ -40,7 +40,7 @@ export function MapPreviewCard({ playerPosition, blips, mapStyle, onOpenMap }: M
 
       <button type="button" className="map-preview-open" onClick={onOpenMap}>
         <span>Open Map</span>
-        <ArrowUpRight size={16} />
+        <ArrowUpRight size="1rem" />
       </button>
     </section>
   );
