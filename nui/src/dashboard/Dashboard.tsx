@@ -42,52 +42,48 @@ export function Dashboard({
       <div className="dashboard-frame">
         <PlayerBar data={data} onDisconnect={onDisconnect} />
 
+        {/* Area-Grid mit zwei gleich hohen Reihen: Discord endet auf derselben
+            Kante wie die Karte, die kleinen Kacheln auf der der Einstellungen -
+            keine ungleich hohen Container mehr (Nutzer-Feedback). */}
         <div className="dashboard-body">
-          <section className="dashboard-col dashboard-col--menu">
-            <p className="dashboard-section-label">Menü</p>
+          <ActionCard
+            icon={MapIcon}
+            title="Karte"
+            subtitle="Vollbildkarte in Los Santos öffnen"
+            hint="M"
+            variant="feature"
+            pattern="map"
+            className="dashboard-area-map"
+            onClick={onOpenMap}
+          />
+          <ActionCard
+            icon={Settings}
+            title="Einstellungen"
+            subtitle="GTA-Einstellungen öffnen"
+            variant="feature"
+            pattern="settings"
+            className="dashboard-area-settings"
+            onClick={onOpenSettings}
+          />
+          <DiscordPanel
+            memberHint="+1000 Mitglieder in unserem Server"
+            onJoin={onOpenDiscord}
+          />
+          <div className="dashboard-tile-row">
             <ActionCard
-              icon={MapIcon}
-              title="Karte"
-              subtitle="Vollbildkarte in Los Santos öffnen"
-              hint="M"
-              variant="feature"
-              pattern="map"
-              onClick={onOpenMap}
+              icon={Keyboard}
+              title="Tastenbelegung"
+              subtitle="Tasten anpassen"
+              onClick={onOpenKeybinds}
             />
             <ActionCard
-              icon={Settings}
-              title="Einstellungen"
-              subtitle="GTA-Einstellungen öffnen"
-              variant="feature"
-              pattern="settings"
-              onClick={onOpenSettings}
+              icon={BookOpenText}
+              title="Regeln & Hilfe"
+              subtitle="Serverregeln & FAQ"
+              onClick={onOpenRules}
             />
-          </section>
-
-          <section className="dashboard-col dashboard-col--middle">
-            <DiscordPanel
-              memberHint="+1000 Mitglieder in unserem Server"
-              onJoin={onOpenDiscord}
-            />
-            <div className="dashboard-tile-row">
-              <ActionCard
-                icon={Keyboard}
-                title="Tastenbelegung"
-                subtitle="Tasten anpassen"
-                onClick={onOpenKeybinds}
-              />
-              <ActionCard
-                icon={BookOpenText}
-                title="Regeln & Hilfe"
-                subtitle="Serverregeln & FAQ"
-                onClick={onOpenRules}
-              />
-            </div>
-          </section>
-
-          <section className="dashboard-col dashboard-col--news">
-            <AnnouncementsPanel announcements={announcements} />
-          </section>
+          </div>
+          <AnnouncementsPanel announcements={announcements} />
         </div>
 
         <PromoBanner config={promo} onAction={onPromoAction} />

@@ -10,6 +10,8 @@ interface ActionCardProps {
   variant?: 'default' | 'feature';
   // Optionaler dezenter SVG-Hintergrund, damit grosse Kacheln nicht leer wirken.
   pattern?: 'map' | 'settings';
+  // Fuer Grid-Area-Zuordnung im Dashboard-Body.
+  className?: string;
   onClick: () => void;
 }
 
@@ -21,10 +23,15 @@ export function ActionCard({
   hint,
   variant = 'default',
   pattern,
+  className,
   onClick,
 }: ActionCardProps) {
   return (
-    <button type="button" className={`action-card action-card--${variant}`} onClick={onClick}>
+    <button
+      type="button"
+      className={`action-card action-card--${variant}${className ? ` ${className}` : ''}`}
+      onClick={onClick}
+    >
       {pattern && <CardPattern kind={pattern} />}
       <span className="action-card-icon">
         <Icon size={variant === 'feature' ? 30 : 24} />

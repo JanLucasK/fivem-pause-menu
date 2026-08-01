@@ -36,6 +36,39 @@ button {
   box-shadow: var(--focus-ring);
 }
 
+/* Scrollbars gehoeren zum Design: nie der native Chromium-Look (Nutzer-
+   Vorgabe). Schmale Graphit-Leiste, Messing erst bei Hover; gilt global fuer
+   alle scrollenden Bereiche (Announcements, Overlays, Listen). */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--graphite-600) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--graphite-600);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--brass-dim);
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
 /* CEF (FiveMs Chromium) rendert native Range-Slider inkonsistent -> eigenes
    Thumb/Track-Styling, damit es in-game wie im Browser-Dev aussieht. */
 input[type='range'] {

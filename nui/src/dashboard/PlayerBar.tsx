@@ -6,15 +6,16 @@ function formatMoney(amount: number): string {
   return `${amount.toLocaleString('de-DE')} €`;
 }
 
+// Kompakt: "11:55" wenn heute beigetreten, sonst "01.08. 11:55" - das lange
+// Locale-Format ("Sa., 01. Aug., 11:55") war als Chip-Wert unleserlich.
 function formatJoined(unix: number | null): string {
   if (!unix) return '—';
-  return new Date(unix * 1000).toLocaleString('de-DE', {
-    weekday: 'short',
-    day: '2-digit',
-    month: 'short',
-    hour: '2-digit',
-    minute: '2-digit',
-  });
+  const joined = new Date(unix * 1000);
+  const now = new Date();
+  const time = joined.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
+  if (joined.toDateString() === now.toDateString()) return time;
+  const day = joined.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit' });
+  return `${day} ${time}`;
 }
 
 function initials(character: HomeData['character']): string {
