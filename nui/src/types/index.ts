@@ -12,6 +12,9 @@ export interface CharacterInfo {
   job: string | null;
   faction: string | null;
   playtimeMinutes: number;
+  // Optional-nullable: erscheint erst, wenn der rp_core-Handshake eine
+  // Telefonnummer liefert - fehlt das Feld, rendert die PlayerBar keinen Chip.
+  phone?: string | null;
 }
 
 export interface FinanceInfo {
@@ -29,6 +32,18 @@ export interface ServerInfo {
   // client/client.lua beim Ressourcenstart per os.time() festgehalten und im
   // Player-Bar als "Beigetreten" angezeigt. null, solange unbekannt (Browser-Dev).
   joinedAtUnix: number | null;
+  // Deutsches Wetter-Label (client/client.lua, GetPrevWeatherTypeHashName).
+  // Optional-nullable, damit aeltere Payloads ohne Feld valid bleiben.
+  weather?: string | null;
+}
+
+// Promo-/Event-Banner unten im Hub. Komplett Convar-getrieben
+// (neov_pausemenu_promo_* in client/client.lua): leerer title versteckt das
+// Banner, leerer buttonLabel den Button - kein NUI-Rebuild fuer Content.
+export interface PromoConfig {
+  title: string;
+  subtitle: string;
+  buttonLabel: string;
 }
 
 // Eine Ankündigung/News-Karte für die rechte Spalte des Menüs. Aktuell reiner
