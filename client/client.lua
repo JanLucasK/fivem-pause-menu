@@ -99,6 +99,32 @@ do
     end
 end
 
+-- Wetter-Hash -> deutsches Label fuer den Chip in der PlayerBar. Hashes wie in
+-- GetPrevWeatherTypeHashName() (String-Namen, nicht Joaat-Zahlen) - unbekannte
+-- Typen ergeben json.null, dann rendert das NUI den Chip nicht.
+local weatherLabels = {
+    CLEAR = 'Klar', EXTRASUNNY = 'Sonnig', CLOUDS = 'Bewölkt', OVERCAST = 'Bedeckt',
+    RAIN = 'Regen', CLEARING = 'Aufklarend', THUNDER = 'Gewitter', SMOG = 'Smog',
+    FOGGY = 'Nebel', XMAS = 'Schneefall', SNOW = 'Schnee', SNOWLIGHT = 'Leichter Schnee',
+    BLIZZARD = 'Schneesturm', HALLOWEEN = 'Halloween', NEUTRAL = 'Neutral',
+}
+
+-- Promo-/Event-Banner unten im Hub, komplett per server.cfg-Convars steuerbar
+-- (leerer Titel blendet das Banner aus) - kein NUI-Rebuild fuer Content-Pflege.
+local function getPromoConfig()
+    return {
+        title = GetConvar('neov_pausemenu_promo_title', ''),
+        subtitle = GetConvar('neov_pausemenu_promo_subtitle', ''),
+        buttonLabel = GetConvar('neov_pausemenu_promo_button', ''),
+    }
+end
+
+-- Hook fuer den Promo-Banner-Button ("promoAction"-NUI-Callback). Bewusst leer:
+-- Serverbetreiber fuellen hier z. B. das Oeffnen eines Battle-Pass-/Event-UIs
+-- ein (ExecuteCommand, TriggerEvent, ...). Das Menue bleibt dabei offen.
+local function OnPromoAction()
+end
+
 local function buildHomeData()
     local balances = corerpHomeData.balances or { cash = 0, bank = 0 }
     local identity = corerpHomeData.identity or {}
@@ -133,6 +159,8 @@ local function buildHomeData()
             -- json.null statt nil: ein Lua-nil-Wert wuerde den Key ganz entfernen,
             -- das Frontend erwartet aber explizit number|null (siehe PlayerBar).
             joinedAtUnix = joinedAtUnix or json.null,
+            -- json.null statt nil (Key wuerde sonst fehlen; NUI erwartet string|null).
+            weather = weatherLabels[GetPrevWeatherTypeHashName()] or json.null,
         },
         location = '',
     }
@@ -187,6 +215,7 @@ local function setMenuVisible(visible)
     SendNUIMessage({ action = 'setVisible', payload = visible })
     if visible then
         SendNUIMessage({ action = 'setMapConfig', payload = getMapConfig() })
+        SendNUIMessage({ action = 'setPromoConfig', payload = getPromoConfig() })
         SendNUIMessage({ action = 'setHomeData', payload = buildHomeData() })
         -- Keybinds/Settings-Registry (client/keybinds.lua, client/settings.lua)
         -- laufen unabhaengig vom Menuestatus, damit andere Resourcen jederzeit
@@ -312,6 +341,11 @@ RegisterNUICallback('openSettings', function(_, cb)
         Wait(300)
         gtaSettingsOpen = false
     end)
+    cb({})
+end)
+
+RegisterNUICallback('promoAction', function(_, cb)
+    OnPromoAction()
     cb({})
 end)
 
