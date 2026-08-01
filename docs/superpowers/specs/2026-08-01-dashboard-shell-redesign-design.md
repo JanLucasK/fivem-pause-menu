@@ -48,9 +48,11 @@ Einstellungen springt weiterhin ins native GTA-Menü.
   in Vollbild-Overlay-Container mit Zurück-Leiste.
 - **Discord-Card + AnnouncementsPanel**: bestehende Komponenten, neu
   gestylt.
-- **PromoBanner** (neu): Titel/Untertitel/Button-Text/Aktion aus Convars
+- **PromoBanner** (neu): Titel/Untertitel/Button-Text aus Convars
   (`neov_pausemenu_promo_*`), Banner entfällt, wenn Titel leer — kein
-  NUI-Rebuild für Content-Änderungen.
+  NUI-Rebuild für Content-Änderungen. Button feuert NUI-Callback
+  `promoAction`; Lua-seitig ein leerer Hook (wie 0rs `MiscButton`), den der
+  Serverbetreiber in client.lua füllt. Kein Button-Text → kein Button.
 
 ## Visuelle Richtung
 
