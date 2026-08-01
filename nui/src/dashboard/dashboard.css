@@ -19,13 +19,49 @@
     var(--graphite-900);
 }
 
+/* Monogramm-Muster (Luxus-Anleihe): die NeoV-Logomark als grosses, leicht
+   gedrehtes Kachelraster, messing-getoent und fast unsichtbar - ersetzt das
+   frueher generische Punktraster. Oversized + rotiert, damit keine Kante des
+   gedrehten Layers ins Bild laeuft. */
 .dashboard-backdrop::before {
   content: '';
   position: absolute;
-  inset: 0;
-  opacity: 0.45;
-  background-image: radial-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-  background-size: 1.375rem 1.375rem;
+  inset: -20%;
+  opacity: 0.018;
+  /* Relativ zur gebauten CSS in dist/assets/ -> dist/img/. Ein absoluter
+     /img-Pfad wuerde in FiveM auf die Resource-Root statt dist/ zeigen. */
+  background-image: url(../img/logomark.svg);
+  background-size: 6.5rem 6.5rem;
+  background-repeat: repeat;
+  filter: sepia(1) saturate(3) hue-rotate(-14deg) brightness(0.9);
+  transform: rotate(-8deg);
+}
+
+/* Ambiente Lichtflecken: zwei weiche Messing-Schimmer, die extrem langsam
+   treiben - nimmt dem Hintergrund die tote Flaeche, ohne abzulenken. */
+.dashboard-backdrop::after {
+  content: '';
+  position: absolute;
+  inset: -30%;
+  background:
+    radial-gradient(circle at 22% 30%, rgba(200, 151, 63, 0.07) 0%, transparent 30%),
+    radial-gradient(circle at 78% 75%, rgba(200, 151, 63, 0.05) 0%, transparent 26%);
+  animation: backdrop-drift 70s ease-in-out infinite alternate;
+}
+
+@keyframes backdrop-drift {
+  from {
+    transform: translate(0, 0);
+  }
+  to {
+    transform: translate(4%, -3%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dashboard-backdrop::after {
+    animation: none;
+  }
 }
 
 /* Safe-Zone-Raender relativ statt fixer Pixel: auf TVs mit Overscan bleibt
@@ -282,6 +318,14 @@
    Linien messing (im Browser-Preview auf Varianten getestet). */
 .action-card-media--contour {
   filter: grayscale(1) brightness(0.55) contrast(2.1) sepia(0.95) saturate(2.4) hue-rotate(-12deg);
+}
+
+/* Konturen-Look ist selbst schon dunkel - das Standard-Overlay wuerde oben/
+   unten zu viel Schwarz stapeln, deshalb hier deutlich zurueckgenommen. */
+.action-card-media--contour::after {
+  background:
+    linear-gradient(180deg, rgba(12, 13, 18, 0.2) 0%, transparent 40%, rgba(12, 13, 18, 0.55) 100%),
+    linear-gradient(160deg, rgba(200, 151, 63, 0.08) 0%, transparent 55%);
 }
 
 /* Ghost-Watermark (NeoV-Logomark): gross rechts angeschnitten, Messing-Ton,
