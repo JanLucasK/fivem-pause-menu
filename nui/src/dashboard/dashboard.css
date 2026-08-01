@@ -27,14 +27,16 @@
   background-size: 22px 22px;
 }
 
+/* Safe-Zone-Raender relativ statt fixer Pixel: auf TVs mit Overscan bleibt
+   kritisches UI innerhalb ~93% der Flaeche (game-ui-design: Safe Zones). */
 .dashboard-frame {
   position: relative;
   z-index: 1;
   height: 100%;
   display: flex;
   flex-direction: column;
-  padding: 36px 52px 28px;
-  gap: 26px;
+  padding: clamp(24px, 3.5vh, 44px) clamp(36px, 4vw, 72px) clamp(20px, 3vh, 36px);
+  gap: clamp(16px, 2.4vh, 26px);
 }
 
 /* === Player-Bar (oben) === */
@@ -86,7 +88,7 @@
 
 .playerbar-job {
   margin: 2px 0 0;
-  font-size: 12px;
+  font-size: 13px;
   color: var(--muted);
 }
 
@@ -103,7 +105,8 @@
   gap: 10px;
   padding: 10px 16px;
   border-radius: var(--radius-md);
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--surface-1);
+  backdrop-filter: blur(8px);
   border: 1px solid var(--graphite-line);
   color: var(--brass);
 }
@@ -116,7 +119,7 @@
 
 .playerbar-stat-label {
   font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: 11px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--muted);
@@ -124,7 +127,7 @@
 
 .playerbar-stat-value {
   font-family: var(--font-mono);
-  font-size: 14px;
+  font-size: 15px;
   font-variant-numeric: tabular-nums;
   color: var(--text);
   white-space: nowrap;
@@ -197,7 +200,7 @@
 .dashboard-section-label {
   margin: 0;
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--muted);
@@ -214,7 +217,8 @@
   cursor: pointer;
   overflow: hidden;
   color: var(--text);
-  background: linear-gradient(180deg, var(--graphite-700) 0%, var(--graphite-800) 100%);
+  background: linear-gradient(180deg, var(--surface-2) 0%, var(--surface-1) 100%);
+  backdrop-filter: blur(10px);
   border: 1px solid var(--graphite-line);
   border-radius: var(--radius-lg);
   transition: transform 120ms ease, border-color 120ms ease, box-shadow 120ms ease;
@@ -265,7 +269,8 @@
   pointer-events: none;
 }
 
-.action-card:hover {
+.action-card:hover,
+.action-card:focus-visible {
   transform: translateY(-2px);
   border-color: var(--brass-dim);
   box-shadow: 0 14px 34px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(200, 151, 63, 0.15);
@@ -307,7 +312,7 @@
 }
 
 .action-card-subtitle {
-  font-size: 13px;
+  font-size: 14px;
   color: var(--muted);
 }
 
@@ -338,7 +343,8 @@
   padding: 32px 28px;
   overflow: hidden;
   text-align: center;
-  background: linear-gradient(180deg, var(--graphite-700) 0%, var(--graphite-800) 100%);
+  background: linear-gradient(180deg, var(--surface-2) 0%, var(--surface-1) 100%);
+  backdrop-filter: blur(10px);
   border: 1px solid var(--graphite-line);
   border-radius: var(--radius-lg);
 }
@@ -454,7 +460,8 @@
 
 .announcement {
   padding: 18px 20px;
-  background: linear-gradient(180deg, var(--graphite-700) 0%, var(--graphite-800) 100%);
+  background: linear-gradient(180deg, var(--surface-2) 0%, var(--surface-1) 100%);
+  backdrop-filter: blur(8px);
   border: 1px solid var(--graphite-line);
   border-left: 2px solid var(--brass);
   border-radius: var(--radius-md);
@@ -493,7 +500,7 @@
 
 .announcement-body {
   margin: 0;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.5;
   color: var(--muted);
 }
@@ -507,7 +514,8 @@
   flex: 0 0 auto;
   padding: 20px 26px;
   overflow: hidden;
-  background: linear-gradient(90deg, rgba(200, 151, 63, 0.14) 0%, var(--graphite-700) 45%, var(--graphite-800) 100%);
+  background: linear-gradient(90deg, rgba(200, 151, 63, 0.14) 0%, var(--surface-2) 45%, var(--surface-1) 100%);
+  backdrop-filter: blur(10px);
   border: 1px solid rgba(200, 151, 63, 0.3);
   border-radius: var(--radius-lg);
 }
@@ -585,7 +593,7 @@
 .dashboard-hint {
   margin: 0;
   text-align: center;
-  font-size: 12px;
+  font-size: 13px;
   color: var(--muted);
 }
 

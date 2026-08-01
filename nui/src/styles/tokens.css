@@ -61,4 +61,14 @@
 
   --radius-md: 12px;
   --radius-lg: 16px;
+
+  /* Drei Flaechen-Stufen (Hintergrund -> Card -> erhabene Card) fuer klares
+     Layering; Cards nutzen dazu leichten Blur ("Glas") ueber dem Gameplay. */
+  --surface-1: rgba(20, 22, 27, 0.72);
+  --surface-2: rgba(26, 29, 36, 0.82);
+  --surface-3: rgba(33, 37, 46, 0.9);
+
+  /* Fokus-Ring fuer Tastatur-/Gamepad-Navigation: sichtbarer Doppelring statt
+     reiner Farbaenderung (Colorblind-tauglich, funktioniert auf jedem Grund). */
+  --focus-ring: 0 0 0 2px var(--graphite-900), 0 0 0 4px var(--brass-bright);
 }
