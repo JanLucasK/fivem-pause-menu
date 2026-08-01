@@ -209,6 +209,47 @@ AddEventHandler('rp:progression:payday', function(payloadJson)
     pushHomeData()
 end)
 
+-- Spielerfoto: transparenter Ped-Headshot als NUI-Textur - dieselbe Mechanik,
+-- mit der rp_core sein "Passfoto" erzeugt (RegisterPedheadshotTransparent ->
+-- https://nui-img/{txd}/{txd}), nur nativ hier, ohne rp_core-Abhaengigkeit.
+-- Kein Datei-Upload: die Textur lebt nur, solange der Headshot registriert ist.
+-- Deshalb beim Oeffnen erzeugen, beim Schliessen freigeben (Engine-Limit ~34
+-- Headshot-Slots, ein haengender Slot wuerde irgendwann alle UIs treffen).
+local headshotHandle = 0
+
+local function releaseHeadshot()
+    if headshotHandle ~= 0 then
+        UnregisterPedheadshot(headshotHandle)
+        headshotHandle = 0
+    end
+end
+
+local function pushHeadshot()
+    releaseHeadshot()
+    local handle = RegisterPedheadshotTransparent(PlayerPedId())
+    headshotHandle = handle
+    CreateThread(function()
+        local deadline = GetGameTimer() + 3000
+        while headshotHandle == handle and GetGameTimer() < deadline do
+            if IsPedheadshotValid(handle) and IsPedheadshotReady(handle) then
+                -- Nur senden, wenn dieser Handle noch aktuell und das Menue
+                -- weiterhin offen ist (Spieler koennte schnell zugemacht haben).
+                if headshotHandle == handle and isMenuOpen then
+                    local txd = GetPedheadshotTxdString(handle)
+                    SendNUIMessage({
+                        action = 'setAvatar',
+                        payload = ('https://nui-img/%s/%s'):format(txd, txd),
+                    })
+                end
+                return
+            end
+            Wait(50)
+        end
+        -- Timeout (z.B. Ped nicht geladen): Slot nicht dauerhaft blockieren.
+        if headshotHandle == handle then releaseHeadshot() end
+    end)
+end
+
 local function setMenuVisible(visible)
     isMenuOpen = visible
     SetNuiFocus(visible, visible)
@@ -216,6 +257,7 @@ local function setMenuVisible(visible)
     if visible then
         SendNUIMessage({ action = 'setMapConfig', payload = getMapConfig() })
         SendNUIMessage({ action = 'setPromoConfig', payload = getPromoConfig() })
+        pushHeadshot()
         SendNUIMessage({ action = 'setHomeData', payload = buildHomeData() })
         -- Keybinds/Settings-Registry (client/keybinds.lua, client/settings.lua)
         -- laufen unabhaengig vom Menuestatus, damit andere Resourcen jederzeit
@@ -234,6 +276,10 @@ local function setMenuVisible(visible)
         -- den Personalausweis (corerps Client zeigt bei rp:identity:card ein Modal).
         -- Name/Job holen wir stattdessen ohne UI-Folge aus rp:character:spawned bzw.
         -- passiv aus rp:identity:card, falls der Spieler seinen Ausweis selbst oeffnet.
+    else
+        -- Headshot-Slot freigeben; die NUI faellt auf die Initialen zurueck.
+        releaseHeadshot()
+        SendNUIMessage({ action = 'setAvatar', payload = json.null })
     end
 end
 

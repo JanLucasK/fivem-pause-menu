@@ -11,6 +11,7 @@ interface DashboardProps {
   data: HomeData;
   announcements: Announcement[];
   promo: PromoConfig;
+  avatarUrl: string | null;
   onOpenMap: () => void;
   onOpenSettings: () => void;
   onOpenKeybinds: () => void;
@@ -28,6 +29,7 @@ export function Dashboard({
   data,
   announcements,
   promo,
+  avatarUrl,
   onOpenMap,
   onOpenSettings,
   onOpenKeybinds,
@@ -40,7 +42,7 @@ export function Dashboard({
     <div className="dashboard">
       <div className="dashboard-backdrop" />
       <div className="dashboard-frame">
-        <PlayerBar data={data} onDisconnect={onDisconnect} />
+        <PlayerBar data={data} avatarUrl={avatarUrl} onDisconnect={onDisconnect} />
 
         {/* Drei Spalten, Container unterschiedlich gross - aber Ober- und
             Unterkante aller Spalten fluchten: jede Spalte fuellt die volle
@@ -54,7 +56,7 @@ export function Dashboard({
               subtitle="Vollbildkarte in Los Santos öffnen"
               hint="M"
               variant="feature"
-              pattern="map"
+              image="mapStyles/styleSatelite/3/3/5.jpg"
               onClick={onOpenMap}
             />
             <ActionCard
@@ -62,7 +64,8 @@ export function Dashboard({
               title="Einstellungen"
               subtitle="GTA-Einstellungen öffnen"
               variant="feature"
-              pattern="settings"
+              image="img/gold-texture.jpg"
+              imageDim
               onClick={onOpenSettings}
             />
           </section>
