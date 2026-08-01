@@ -1,4 +1,4 @@
-import { Banknote, Landmark, Users, LogOut, CalendarClock } from 'lucide-react';
+import { Banknote, CloudSun, Landmark, LogOut, CalendarClock, Smartphone, Users } from 'lucide-react';
 import type { HomeData } from '../types';
 import { BrandMark } from '../components/BrandMark';
 
@@ -77,6 +77,36 @@ export function PlayerBar({ data, onDisconnect }: PlayerBarProps) {
             <span className="playerbar-stat-value">{formatJoined(server.joinedAtUnix)}</span>
           </div>
         </div>
+        {/* Bedingte Chips: rendern nur, wenn der Client das Feld liefert -
+            Telefon/Fraktion erscheinen automatisch, sobald der rp_core-Handshake
+            sie in den HomeData-Payload aufnimmt. */}
+        {server.weather && (
+          <div className="playerbar-stat">
+            <CloudSun size={16} />
+            <div>
+              <span className="playerbar-stat-label">Wetter</span>
+              <span className="playerbar-stat-value">{server.weather}</span>
+            </div>
+          </div>
+        )}
+        {character.phone && (
+          <div className="playerbar-stat">
+            <Smartphone size={16} />
+            <div>
+              <span className="playerbar-stat-label">Telefon</span>
+              <span className="playerbar-stat-value">{character.phone}</span>
+            </div>
+          </div>
+        )}
+        {character.faction && (
+          <div className="playerbar-stat">
+            <Users size={16} />
+            <div>
+              <span className="playerbar-stat-label">Fraktion</span>
+              <span className="playerbar-stat-value">{character.faction}</span>
+            </div>
+          </div>
+        )}
       </div>
 
       <button
