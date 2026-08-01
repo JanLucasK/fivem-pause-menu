@@ -151,10 +151,10 @@
   transform: translateY(-1px);
 }
 
-/* === Body: linke Hälfte (Aktionen) | rechte Hälfte (Discord + Ankündigungen) === */
+/* === Body: grosse Kacheln | Discord + kleine Kacheln | Ankündigungen === */
 .dashboard-body {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1.15fr 0.9fr 0.95fr;
   gap: 26px;
   flex: 1 1 auto;
   min-height: 0;
@@ -171,17 +171,27 @@
   gap: 18px;
 }
 
-/* Karte + Einstellungen fuellen die linke Haelfte zu gleichen Teilen. */
+/* Karte + Einstellungen fuellen die linke Spalte zu gleichen Teilen. */
 .dashboard-col--menu .action-card {
   flex: 1 1 0;
   min-height: 0;
 }
 
-/* Rechte Haelfte: Discord und Ankündigungen nebeneinander. */
-.dashboard-col--right {
+/* Mitte: Discord oben (dehnt sich), darunter die zwei kleinen Kacheln. */
+.dashboard-col--middle {
+  gap: 18px;
+}
+
+.dashboard-col--middle .discord-panel {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.dashboard-tile-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 26px;
+  gap: 18px;
+  flex: 0 0 auto;
 }
 
 .dashboard-section-label {
@@ -486,6 +496,89 @@
   font-size: 13px;
   line-height: 1.5;
   color: var(--muted);
+}
+
+/* === Promo-/Event-Banner (volle Breite, Convar-getrieben) === */
+.promo-banner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex: 0 0 auto;
+  padding: 20px 26px;
+  overflow: hidden;
+  background: linear-gradient(90deg, rgba(200, 151, 63, 0.14) 0%, var(--graphite-700) 45%, var(--graphite-800) 100%);
+  border: 1px solid rgba(200, 151, 63, 0.3);
+  border-radius: var(--radius-lg);
+}
+
+.promo-banner-glow {
+  position: absolute;
+  top: 50%;
+  left: -60px;
+  width: 340px;
+  height: 340px;
+  transform: translateY(-50%);
+  background: radial-gradient(circle, rgba(200, 151, 63, 0.22) 0%, transparent 62%);
+  pointer-events: none;
+}
+
+.promo-banner-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  flex: 0 0 auto;
+  border-radius: 14px;
+  color: var(--graphite-900);
+  background: linear-gradient(135deg, var(--brass) 0%, var(--brass-bright) 100%);
+  box-shadow: 0 6px 18px rgba(200, 151, 63, 0.3);
+}
+
+.promo-banner-text {
+  position: relative;
+  min-width: 0;
+}
+
+.promo-banner-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 20px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.promo-banner-subtitle {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.promo-banner-btn {
+  position: relative;
+  margin-left: auto;
+  flex: 0 0 auto;
+  padding: 12px 26px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--graphite-900);
+  background: linear-gradient(135deg, var(--brass) 0%, var(--brass-bright) 100%);
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(200, 151, 63, 0.28);
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+
+.promo-banner-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 26px rgba(200, 151, 63, 0.4);
 }
 
 /* === Fusszeile === */
