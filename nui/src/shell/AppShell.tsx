@@ -37,8 +37,6 @@ export function AppShell() {
   // ohne das UI zu ändern - solange der Client nichts pusht, bleibt der Mock.
   const [announcements, setAnnouncements] = useState<Announcement[]>(mockAnnouncements);
   const [promo, setPromo] = useState<PromoConfig>(isInFivem ? { title: '', subtitle: '', buttonLabel: '' } : mockPromoConfig);
-  // Spielerfoto (nui-img-Textur vom Client); null -> Initialen-Fallback.
-  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [mapConfig, setMapConfig] = useState<MapConfig>(mockMapConfig);
   const [playerPosition, setPlayerPosition] = useState<MapPlayerPosition>(mockPlayerPosition);
   const [mapBlips, setMapBlips] = useState<MapBlip[]>(mockMapBlips);
@@ -56,7 +54,6 @@ export function AppShell() {
       onNuiMessage<HomeData>('setHomeData', setHomeData),
       onNuiMessage<Announcement[]>('setAnnouncements', setAnnouncements),
       onNuiMessage<PromoConfig>('setPromoConfig', setPromo),
-      onNuiMessage<string | null>('setAvatar', setAvatarUrl),
       onNuiMessage<MapConfig>('setMapConfig', setMapConfig),
       onNuiMessage<MapPlayerPosition>('setPlayerPosition', setPlayerPosition),
       onNuiMessage<MapBlip[]>('setMapBlips', setMapBlips),
@@ -127,7 +124,6 @@ export function AppShell() {
         data={homeData}
         announcements={announcements}
         promo={promo}
-        avatarUrl={avatarUrl}
         onOpenMap={() => setView('map')}
         onOpenSettings={handleOpenSettings}
         onOpenKeybinds={() => setView('keybinds')}

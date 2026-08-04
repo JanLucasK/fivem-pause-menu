@@ -18,7 +18,7 @@ export function OverlayView({ title, onBack, children, bleed = false }: OverlayV
     <div className="overlay-view">
       <header className="overlay-bar">
         <button type="button" className="overlay-back" onClick={onBack} aria-label="Zurück zum Menü">
-          <ArrowLeft size="1rem" />
+          <ArrowLeft size={16} />
           <span>Zurück</span>
         </button>
         <h2 className="overlay-title">{title}</h2>

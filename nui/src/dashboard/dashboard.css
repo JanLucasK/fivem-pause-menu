@@ -3,7 +3,6 @@
   inset: 0;
   z-index: 50;
   pointer-events: auto;
-  display: flex;
   font-family: var(--font-ui);
   color: var(--text);
 }
@@ -19,80 +18,33 @@
     var(--graphite-900);
 }
 
-/* Monogramm-Muster (Luxus-Anleihe): die NeoV-Logomark als grosses, leicht
-   gedrehtes Kachelraster, messing-getoent und fast unsichtbar - ersetzt das
-   frueher generische Punktraster. Oversized + rotiert, damit keine Kante des
-   gedrehten Layers ins Bild laeuft. */
 .dashboard-backdrop::before {
   content: '';
   position: absolute;
-  inset: -20%;
-  /* "Maximal subtil" (Nutzer-Vorgabe): unter 1% - im Standbild kaum
-     wahrnehmbar, bricht nur die tote Flaeche. */
-  opacity: 0.008;
-  /* Relativ zur gebauten CSS in dist/assets/ -> dist/img/. Ein absoluter
-     /img-Pfad wuerde in FiveM auf die Resource-Root statt dist/ zeigen. */
-  background-image: url(../img/logomark.svg);
-  background-size: 6.5rem 6.5rem;
-  background-repeat: repeat;
-  filter: sepia(1) saturate(3) hue-rotate(-14deg) brightness(0.9);
-  transform: rotate(-8deg);
-}
-
-/* Ambiente Lichtflecken: zwei weiche Messing-Schimmer, die extrem langsam
-   treiben - nimmt dem Hintergrund die tote Flaeche, ohne abzulenken. */
-.dashboard-backdrop::after {
-  content: '';
-  position: absolute;
-  inset: -30%;
-  background:
-    radial-gradient(circle at 22% 30%, rgba(200, 151, 63, 0.07) 0%, transparent 30%),
-    radial-gradient(circle at 78% 75%, rgba(200, 151, 63, 0.05) 0%, transparent 26%);
-  animation: backdrop-drift 70s ease-in-out infinite alternate;
-}
-
-@keyframes backdrop-drift {
-  from {
-    transform: translate(0, 0);
-  }
-  to {
-    transform: translate(4%, -3%);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .dashboard-backdrop::after {
-    animation: none;
-  }
+  inset: 0;
+  opacity: 0.45;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 22px 22px;
 }
 
 /* Safe-Zone-Raender relativ statt fixer Pixel: auf TVs mit Overscan bleibt
-   kritisches UI innerhalb ~93% der Flaeche (game-ui-design: Safe Zones).
-   Zusaetzlich Breite/Hoehe gedeckelt und zentriert: auf 1440p/4K wachsen die
-   Karten sonst ins Riesige (Nutzer-Feedback) - das Menue behaelt so ueberall
-   etwa die Proportionen des 1080p-Layouts. */
+   kritisches UI innerhalb ~93% der Flaeche (game-ui-design: Safe Zones). */
 .dashboard-frame {
   position: relative;
   z-index: 1;
-  flex: 1 1 auto;
-  width: 100%;
-  max-width: 110rem;
-  max-height: 63.75rem;
-  margin: auto;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  padding: clamp(1.5rem, 3.5vh, 2.75rem) clamp(2.25rem, 4vw, 4.5rem) clamp(1.25rem, 3vh, 2.25rem);
-  gap: clamp(1rem, 2.4vh, 1.625rem);
+  padding: clamp(24px, 3.5vh, 44px) clamp(36px, 4vw, 72px) clamp(20px, 3vh, 36px);
+  gap: clamp(16px, 2.4vh, 26px);
 }
 
 /* === Player-Bar (oben) === */
-/* Kopfzeile bewusst kraeftig: sie traegt Identitaet + alle Kern-Infos und darf
-   neben den grossen Kacheln nicht untergehen (Nutzer-Feedback "sehr klein"). */
 .playerbar {
   display: flex;
   align-items: center;
-  gap: 1.75rem;
-  padding-bottom: 1.5rem;
+  gap: 26px;
+  padding-bottom: 22px;
   border-bottom: 1px solid var(--graphite-line);
 }
 
@@ -104,8 +56,8 @@
 .playerbar-identity {
   display: flex;
   align-items: center;
-  gap: 0.875rem;
-  padding-left: 1.625rem;
+  gap: 14px;
+  padding-left: 26px;
   border-left: 1px solid var(--graphite-line);
 }
 
@@ -113,74 +65,50 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 3.375rem;
-  height: 3.375rem;
+  width: 46px;
+  height: 46px;
   flex: 0 0 auto;
-  overflow: hidden;
-  border-radius: 0.75rem;
+  border-radius: 12px;
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 1.125rem;
+  font-size: 18px;
   letter-spacing: 0.04em;
   color: var(--brass-bright);
   background: rgba(200, 151, 63, 0.12);
   border: 1px solid rgba(200, 151, 63, 0.3);
 }
 
-/* Ped-Headshot (nui-img): quadratisch zugeschnitten; die Textur ist
-   transparent freigestellt, der Chip-Hintergrund bleibt sichtbar. */
-.playerbar-avatar-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
 .playerbar-name {
   margin: 0;
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: 1.3125rem;
+  font-size: 18px;
   letter-spacing: 0.02em;
 }
 
 .playerbar-job {
-  margin: 0.125rem 0 0;
-  font-size: 0.875rem;
+  margin: 2px 0 0;
+  font-size: 13px;
   color: var(--muted);
 }
 
 .playerbar-stats {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 12px;
   margin-left: auto;
 }
 
 .playerbar-stat {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.5rem 1.125rem 0.5rem 0.5rem;
+  gap: 10px;
+  padding: 10px 16px;
   border-radius: var(--radius-md);
   background: var(--surface-1);
-  backdrop-filter: blur(0.5rem);
+  backdrop-filter: blur(8px);
   border: 1px solid var(--graphite-line);
   color: var(--brass);
-}
-
-/* Icon im gefuellten Messing-Badge (0r-Anleihe): gibt den Chips einen klaren
-   Ankerpunkt, statt eines duennen Icons im Nichts. */
-.playerbar-stat-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 2.375rem;
-  height: 2.375rem;
-  flex: 0 0 auto;
-  border-radius: 0.625rem;
-  color: var(--graphite-900);
-  background: linear-gradient(135deg, var(--brass) 0%, var(--brass-bright) 100%);
-  box-shadow: 0 0.25rem 0.75rem rgba(200, 151, 63, 0.25);
 }
 
 .playerbar-stat > div {
@@ -194,7 +122,7 @@
 .playerbar-stat-label {
   font-family: var(--font-ui);
   font-weight: 500;
-  font-size: 0.75rem;
+  font-size: 11px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--muted);
@@ -202,8 +130,8 @@
 
 .playerbar-stat-value {
   font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 1.1875rem;
+  font-weight: 600;
+  font-size: 17px;
   letter-spacing: 0.02em;
   font-variant-numeric: tabular-nums;
   color: var(--text);
@@ -214,8 +142,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 3rem;
-  height: 3rem;
+  width: 42px;
+  height: 42px;
   flex: 0 0 auto;
   border-radius: var(--radius-md);
   color: var(--danger);
@@ -237,7 +165,7 @@
 .dashboard-body {
   display: grid;
   grid-template-columns: 1.15fr 0.9fr 0.95fr;
-  gap: 1.375rem;
+  gap: 22px;
   flex: 1 1 auto;
   min-height: 0;
 }
@@ -245,7 +173,7 @@
 .dashboard-col {
   display: flex;
   flex-direction: column;
-  gap: 1.375rem;
+  gap: 22px;
   min-width: 0;
   min-height: 0;
 }
@@ -266,7 +194,7 @@
 .dashboard-tile-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1.375rem;
+  gap: 22px;
   flex: 0 0 auto;
 }
 
@@ -275,73 +203,17 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 1.125rem;
-  padding: 1.375rem 1.5rem 1.5rem;
+  gap: 18px;
+  padding: 22px 24px 24px;
   text-align: left;
   cursor: pointer;
   overflow: hidden;
   color: var(--text);
   background: linear-gradient(180deg, var(--surface-2) 0%, var(--surface-1) 100%);
-  backdrop-filter: blur(0.625rem);
+  backdrop-filter: blur(10px);
   border: 1px solid var(--graphite-line);
   border-radius: var(--radius-lg);
   transition: transform 120ms ease, border-color 120ms ease, box-shadow 120ms ease;
-}
-
-/* Foto/Artwork als Kachel-Hintergrund (0r-Anleihe): cover-zugeschnitten, mit
-   Gradient-Overlay von unten, damit Titel/Untertitel lesbar bleiben
-   (game-ui-design: Readability). Dezenter Zoom bei Hover. */
-.action-card-media {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  background-size: cover;
-  background-position: center;
-  pointer-events: none;
-  transition: transform 300ms ease;
-}
-
-.action-card-media::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(180deg, rgba(12, 13, 18, 0.55) 0%, rgba(12, 13, 18, 0.25) 40%, rgba(12, 13, 18, 0.88) 100%),
-    linear-gradient(160deg, rgba(200, 151, 63, 0.12) 0%, transparent 55%);
-}
-
-.action-card:hover .action-card-media,
-.action-card:focus-visible .action-card-media {
-  transform: scale(1.04);
-}
-
-/* Kartenkachel: helles Atlas-Tile wird zur dunklen Gold-Konturen-Skizze -
-   grayscale+contrast trennt Strassen vom Grund, sepia/saturate faerbt die
-   Linien messing (im Browser-Preview auf Varianten getestet). */
-.action-card-media--contour {
-  filter: grayscale(1) brightness(0.55) contrast(2.1) sepia(0.95) saturate(2.4) hue-rotate(-12deg);
-}
-
-/* Konturen-Look ist selbst schon dunkel - das Standard-Overlay wuerde oben/
-   unten zu viel Schwarz stapeln, deshalb hier deutlich zurueckgenommen. */
-.action-card-media--contour::after {
-  background:
-    linear-gradient(180deg, rgba(12, 13, 18, 0.2) 0%, transparent 40%, rgba(12, 13, 18, 0.55) 100%),
-    linear-gradient(160deg, rgba(200, 151, 63, 0.08) 0%, transparent 55%);
-}
-
-/* Ghost-Watermark (NeoV-Logomark): gross rechts angeschnitten, Messing-Ton,
-   ohne abdunkelndes Overlay - die Kachelflaeche selbst bleibt das Dunkel. */
-.action-card-media--brand {
-  background-size: auto 165%;
-  background-position: right -3rem center;
-  background-repeat: no-repeat;
-  opacity: 0.07;
-  filter: sepia(1) saturate(3) hue-rotate(-14deg) brightness(0.8);
-}
-
-.action-card-media--brand::after {
-  content: none;
 }
 
 /* Dezenter SVG-Hintergrund (Karte/Einstellungen): fuellt die Kachel, liegt hinter
@@ -391,9 +263,9 @@
 
 .action-card:hover,
 .action-card:focus-visible {
-  transform: translateY(-0.125rem);
+  transform: translateY(-2px);
   border-color: var(--brass-dim);
-  box-shadow: 0 0.875rem 2.125rem rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(200, 151, 63, 0.15);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(200, 151, 63, 0.15);
 }
 
 .action-card-icon {
@@ -401,19 +273,19 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 3.25rem;
-  height: 3.25rem;
-  border-radius: 0.875rem;
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
   color: var(--graphite-900);
   background: linear-gradient(135deg, var(--brass) 0%, var(--brass-bright) 100%);
-  box-shadow: 0 0.375rem 1.125rem rgba(200, 151, 63, 0.3);
+  box-shadow: 0 6px 18px rgba(200, 151, 63, 0.3);
 }
 
 .action-card-text {
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 0.375rem;
+  gap: 6px;
 }
 
 .action-card--feature .action-card-text {
@@ -423,33 +295,33 @@
 .action-card-title {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 1.25rem;
+  font-size: 20px;
   letter-spacing: 0.02em;
 }
 
 .action-card--feature .action-card-title {
-  font-size: 1.875rem;
+  font-size: 30px;
 }
 
 .action-card-subtitle {
-  font-size: 0.875rem;
+  font-size: 14px;
   color: var(--muted);
 }
 
 .action-card-hint {
   position: absolute;
-  top: 1.25rem;
-  right: 1.25rem;
-  min-width: 1.625rem;
-  padding: 0.25rem 0.5rem;
+  top: 20px;
+  right: 20px;
+  min-width: 26px;
+  padding: 4px 8px;
   text-align: center;
   font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-size: 12px;
   font-weight: 600;
   color: var(--brass-bright);
   background: rgba(200, 151, 63, 0.1);
   border: 1px solid rgba(200, 151, 63, 0.25);
-  border-radius: 0.5rem;
+  border-radius: 8px;
 }
 
 /* === Discord-Panel (Mitte) === */
@@ -459,12 +331,12 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 1rem;
-  padding: 2rem 1.75rem;
+  gap: 16px;
+  padding: 32px 28px;
   overflow: hidden;
   text-align: center;
   background: linear-gradient(180deg, var(--surface-2) 0%, var(--surface-1) 100%);
-  backdrop-filter: blur(0.625rem);
+  backdrop-filter: blur(10px);
   border: 1px solid var(--graphite-line);
   border-radius: var(--radius-lg);
 }
@@ -473,8 +345,8 @@
   position: absolute;
   top: -30%;
   left: 50%;
-  width: 20rem;
-  height: 20rem;
+  width: 320px;
+  height: 320px;
   transform: translateX(-50%);
   background: radial-gradient(circle, rgba(200, 151, 63, 0.14) 0%, transparent 62%);
   pointer-events: none;
@@ -485,13 +357,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 5.25rem;
-  height: 5.25rem;
-  border-radius: 1.375rem;
+  width: 84px;
+  height: 84px;
+  border-radius: 22px;
   color: var(--brass-bright);
   background: rgba(200, 151, 63, 0.1);
   border: 1px solid rgba(200, 151, 63, 0.28);
-  box-shadow: 0 0 2.125rem rgba(200, 151, 63, 0.18);
+  box-shadow: 0 0 34px rgba(200, 151, 63, 0.18);
 }
 
 .discord-panel-title {
@@ -499,7 +371,7 @@
   margin: 0;
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 1.375rem;
+  font-size: 22px;
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
@@ -507,7 +379,7 @@
 .discord-panel-hint {
   position: relative;
   margin: 0;
-  font-size: 0.75rem;
+  font-size: 12px;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--muted);
@@ -515,11 +387,11 @@
 
 .discord-panel-btn {
   position: relative;
-  margin-top: 0.375rem;
-  padding: 0.75rem 1.625rem;
+  margin-top: 6px;
+  padding: 12px 26px;
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 0.875rem;
+  font-size: 14px;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--graphite-900);
@@ -527,13 +399,13 @@
   border: none;
   border-radius: var(--radius-md);
   cursor: pointer;
-  box-shadow: 0 0.5rem 1.25rem rgba(200, 151, 63, 0.28);
+  box-shadow: 0 8px 20px rgba(200, 151, 63, 0.28);
   transition: transform 120ms ease, box-shadow 120ms ease;
 }
 
 .discord-panel-btn:hover {
-  transform: translateY(-0.125rem);
-  box-shadow: 0 0.75rem 1.625rem rgba(200, 151, 63, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 26px rgba(200, 151, 63, 0.4);
 }
 
 /* === Ankündigungen (rechts) ===
@@ -545,9 +417,9 @@
   flex-direction: column;
   flex: 1 1 auto;
   min-height: 0;
-  padding: 1.25rem;
+  padding: 20px;
   background: linear-gradient(180deg, var(--surface-2) 0%, var(--surface-1) 100%);
-  backdrop-filter: blur(0.625rem);
+  backdrop-filter: blur(10px);
   border: 1px solid var(--graphite-line);
   border-radius: var(--radius-lg);
 }
@@ -555,17 +427,17 @@
 .announcements-head {
   display: flex;
   align-items: center;
-  gap: 0.625rem;
-  margin-bottom: 1rem;
+  gap: 10px;
+  margin-bottom: 16px;
 }
 
 .announcements-icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 1.875rem;
-  height: 1.875rem;
-  border-radius: 0.5625rem;
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
   color: var(--brass);
   background: rgba(200, 151, 63, 0.1);
   border: 1px solid rgba(200, 151, 63, 0.2);
@@ -575,61 +447,61 @@
   margin: 0;
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 1.0625rem;
+  font-size: 17px;
   letter-spacing: 0.02em;
 }
 
 .announcements-list {
   display: flex;
   flex-direction: column;
-  gap: 0.875rem;
+  gap: 14px;
   overflow-y: auto;
-  padding-right: 0.25rem;
+  padding-right: 4px;
 }
 
 /* Flacher als der Panel-Rahmen drumherum (kein Gradient-im-Gradient). */
 .announcement {
-  padding: 1rem 1.125rem;
+  padding: 16px 18px;
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid var(--graphite-line);
-  border-left: 0.125rem solid var(--brass);
+  border-left: 2px solid var(--brass);
   border-radius: var(--radius-md);
 }
 
 .announcement-meta {
   display: flex;
   align-items: center;
-  gap: 0.625rem;
-  margin-bottom: 0.5rem;
+  gap: 10px;
+  margin-bottom: 8px;
 }
 
 .announcement-tag {
   font-family: var(--font-mono);
-  font-size: 0.625rem;
+  font-size: 10px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--brass-bright);
-  padding: 0.1875rem 0.5rem;
+  padding: 3px 8px;
   background: rgba(200, 151, 63, 0.1);
-  border-radius: 0.375rem;
+  border-radius: 6px;
 }
 
 .announcement-date {
-  font-size: 0.6875rem;
+  font-size: 11px;
   color: var(--muted);
 }
 
 .announcement-title {
-  margin: 0 0 0.375rem;
+  margin: 0 0 6px;
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: 0.9375rem;
+  font-size: 15px;
   letter-spacing: 0.01em;
 }
 
 .announcement-body {
   margin: 0;
-  font-size: 0.875rem;
+  font-size: 14px;
   line-height: 1.5;
   color: var(--muted);
 }
@@ -639,12 +511,12 @@
   position: relative;
   display: flex;
   align-items: center;
-  gap: 1.25rem;
+  gap: 20px;
   flex: 0 0 auto;
-  padding: 1.25rem 1.625rem;
+  padding: 20px 26px;
   overflow: hidden;
   background: linear-gradient(90deg, rgba(200, 151, 63, 0.14) 0%, var(--surface-2) 45%, var(--surface-1) 100%);
-  backdrop-filter: blur(0.625rem);
+  backdrop-filter: blur(10px);
   border: 1px solid rgba(200, 151, 63, 0.3);
   border-radius: var(--radius-lg);
 }
@@ -652,9 +524,9 @@
 .promo-banner-glow {
   position: absolute;
   top: 50%;
-  left: -3.75rem;
-  width: 21.25rem;
-  height: 21.25rem;
+  left: -60px;
+  width: 340px;
+  height: 340px;
   transform: translateY(-50%);
   background: radial-gradient(circle, rgba(200, 151, 63, 0.22) 0%, transparent 62%);
   pointer-events: none;
@@ -665,13 +537,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 3rem;
-  height: 3rem;
+  width: 48px;
+  height: 48px;
   flex: 0 0 auto;
-  border-radius: 0.875rem;
+  border-radius: 14px;
   color: var(--graphite-900);
   background: linear-gradient(135deg, var(--brass) 0%, var(--brass-bright) 100%);
-  box-shadow: 0 0.375rem 1.125rem rgba(200, 151, 63, 0.3);
+  box-shadow: 0 6px 18px rgba(200, 151, 63, 0.3);
 }
 
 .promo-banner-text {
@@ -683,14 +555,14 @@
   margin: 0;
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 1.25rem;
+  font-size: 20px;
   letter-spacing: 0.04em;
   text-transform: uppercase;
 }
 
 .promo-banner-subtitle {
-  margin: 0.25rem 0 0;
-  font-size: 0.8125rem;
+  margin: 4px 0 0;
+  font-size: 13px;
   color: var(--muted);
 }
 
@@ -698,10 +570,10 @@
   position: relative;
   margin-left: auto;
   flex: 0 0 auto;
-  padding: 0.75rem 1.625rem;
+  padding: 12px 26px;
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 0.875rem;
+  font-size: 14px;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--graphite-900);
@@ -709,30 +581,30 @@
   border: none;
   border-radius: var(--radius-md);
   cursor: pointer;
-  box-shadow: 0 0.5rem 1.25rem rgba(200, 151, 63, 0.28);
+  box-shadow: 0 8px 20px rgba(200, 151, 63, 0.28);
   transition: transform 120ms ease, box-shadow 120ms ease;
 }
 
 .promo-banner-btn:hover {
-  transform: translateY(-0.125rem);
-  box-shadow: 0 0.75rem 1.625rem rgba(200, 151, 63, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 26px rgba(200, 151, 63, 0.4);
 }
 
 /* === Fusszeile === */
 .dashboard-hint {
   margin: 0;
   text-align: center;
-  font-size: 0.8125rem;
+  font-size: 13px;
   color: var(--muted);
 }
 
 .dashboard-hint kbd {
   font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  padding: 0.1875rem 0.4375rem;
-  margin-right: 0.375rem;
+  font-size: 11px;
+  padding: 3px 7px;
+  margin-right: 6px;
   color: var(--text);
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid var(--graphite-line);
-  border-radius: 0.375rem;
+  border-radius: 6px;
 }

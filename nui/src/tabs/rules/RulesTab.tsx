@@ -12,7 +12,7 @@ export function RulesTab({ sections, faq }: RulesTabProps) {
     <div className="rules-tab">
       <section className="rules-block">
         <h3 className="rules-block-title">
-          <ScrollText size="1rem" />
+          <ScrollText size={16} />
           <span>Serverregeln</span>
         </h3>
         <div className="rules-sections">
@@ -31,7 +31,7 @@ export function RulesTab({ sections, faq }: RulesTabProps) {
 
       <section className="rules-block">
         <h3 className="rules-block-title">
-          <HelpCircle size="1rem" />
+          <HelpCircle size={16} />
           <span>Häufige Fragen</span>
         </h3>
         <div className="rules-faq-list">

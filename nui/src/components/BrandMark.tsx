@@ -2,24 +2,23 @@
 // die Asset-Pipeline, vergibt den gehashten Namen und setzt den relativen Pfad selbst.
 // Ein handgeschriebener Pfad wuerde bei falscher base still ins Leere zeigen - die
 // Marke fehlt dann kommentarlos (404 ohne sichtbaren Fehler in der NUI).
-import wordmarkUrl from '../assets/wordmark.png';
+import logoUrl from '../assets/logo.png';
 
 interface BrandMarkProps {
-  /** Hoehe in px; die Wortmarke ist breit freigestellt, Breite ergibt sich. */
-  height?: number;
+  /** Kantenlaenge in px; das Zeichen ist quadratisch freigestellt. */
+  size?: number;
   className?: string;
 }
 
-/** NeoV-Wortmarke (weiss auf transparent, fuer dunklen Grund). */
-export function BrandMark({ height = 34, className }: BrandMarkProps) {
+/** NeoV-Bildmarke (freigestelltes Original-Render). */
+export function BrandMark({ size = 34, className }: BrandMarkProps) {
   return (
     <img
       className={className ? `brand-mark ${className}` : 'brand-mark'}
-      src={wordmarkUrl}
+      src={logoUrl}
       alt="NeoV"
-      // rem statt px-Attribut, damit die Marke mit der Root-Schrift
-      // (Aufloesungs-Skalierung in global.css) mitwaechst.
-      style={{ height: `${height / 16}rem`, width: 'auto' }}
+      width={size}
+      height={size}
     />
   );
 }

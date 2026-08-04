@@ -26,29 +26,21 @@ function initials(character: HomeData['character']): string {
 
 interface PlayerBarProps {
   data: HomeData;
-  // Ped-Headshot als nui-img-URL (client/client.lua); null -> Initialen.
-  avatarUrl: string | null;
   onDisconnect: () => void;
 }
 
-export function PlayerBar({ data, avatarUrl, onDisconnect }: PlayerBarProps) {
+export function PlayerBar({ data, onDisconnect }: PlayerBarProps) {
   const { character, finance, server } = data;
   const fullName = `${character.firstName} ${character.lastName}`.trim() || 'Unbekannt';
 
   return (
     <header className="playerbar">
       <div className="playerbar-brand">
-        <BrandMark height={34} />
+        <BrandMark size={40} />
       </div>
 
       <div className="playerbar-identity">
-        <div className="playerbar-avatar">
-          {avatarUrl ? (
-            <img className="playerbar-avatar-img" src={avatarUrl} alt="" />
-          ) : (
-            initials(character)
-          )}
-        </div>
+        <div className="playerbar-avatar">{initials(character)}</div>
         <div className="playerbar-identity-text">
           <p className="playerbar-name">{fullName}</p>
           <p className="playerbar-job">{character.job ?? 'Ohne Beschäftigung'}</p>
@@ -57,21 +49,21 @@ export function PlayerBar({ data, avatarUrl, onDisconnect }: PlayerBarProps) {
 
       <div className="playerbar-stats">
         <div className="playerbar-stat">
-          <span className="playerbar-stat-icon"><Banknote size="1rem" /></span>
+          <Banknote size={16} />
           <div>
             <span className="playerbar-stat-label">Bargeld</span>
             <span className="playerbar-stat-value">{formatMoney(finance.cash)}</span>
           </div>
         </div>
         <div className="playerbar-stat">
-          <span className="playerbar-stat-icon"><Landmark size="1rem" /></span>
+          <Landmark size={16} />
           <div>
             <span className="playerbar-stat-label">Bank</span>
             <span className="playerbar-stat-value">{formatMoney(finance.bank)}</span>
           </div>
         </div>
         <div className="playerbar-stat">
-          <span className="playerbar-stat-icon"><Users size="1rem" /></span>
+          <Users size={16} />
           <div>
             <span className="playerbar-stat-label">Online</span>
             <span className="playerbar-stat-value">
@@ -80,7 +72,7 @@ export function PlayerBar({ data, avatarUrl, onDisconnect }: PlayerBarProps) {
           </div>
         </div>
         <div className="playerbar-stat">
-          <span className="playerbar-stat-icon"><CalendarClock size="1rem" /></span>
+          <CalendarClock size={16} />
           <div>
             <span className="playerbar-stat-label">Beigetreten</span>
             <span className="playerbar-stat-value">{formatJoined(server.joinedAtUnix)}</span>
@@ -91,7 +83,7 @@ export function PlayerBar({ data, avatarUrl, onDisconnect }: PlayerBarProps) {
             sie in den HomeData-Payload aufnimmt. */}
         {server.weather && (
           <div className="playerbar-stat">
-            <span className="playerbar-stat-icon"><CloudSun size="1rem" /></span>
+            <CloudSun size={16} />
             <div>
               <span className="playerbar-stat-label">Wetter</span>
               <span className="playerbar-stat-value">{server.weather}</span>
@@ -100,7 +92,7 @@ export function PlayerBar({ data, avatarUrl, onDisconnect }: PlayerBarProps) {
         )}
         {character.phone && (
           <div className="playerbar-stat">
-            <span className="playerbar-stat-icon"><Smartphone size="1rem" /></span>
+            <Smartphone size={16} />
             <div>
               <span className="playerbar-stat-label">Telefon</span>
               <span className="playerbar-stat-value">{character.phone}</span>
@@ -109,7 +101,7 @@ export function PlayerBar({ data, avatarUrl, onDisconnect }: PlayerBarProps) {
         )}
         {character.faction && (
           <div className="playerbar-stat">
-            <span className="playerbar-stat-icon"><Users size="1rem" /></span>
+            <Users size={16} />
             <div>
               <span className="playerbar-stat-label">Fraktion</span>
               <span className="playerbar-stat-value">{character.faction}</span>
@@ -125,7 +117,7 @@ export function PlayerBar({ data, avatarUrl, onDisconnect }: PlayerBarProps) {
         title="Verbindung trennen"
         aria-label="Verbindung trennen"
       >
-        <LogOut size="1.0625rem" />
+        <LogOut size={17} />
       </button>
     </header>
   );

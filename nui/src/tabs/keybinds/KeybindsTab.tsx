@@ -72,7 +72,7 @@ export function KeybindsTab({ keybinds, onRebind, onReset }: KeybindsTabProps) {
                       title="Auf Standard zurücksetzen"
                       onClick={() => onReset(entry.id)}
                     >
-                      <RotateCcw size="0.75rem" />
+                      <RotateCcw size={12} />
                     </button>
                   )}
                   <button
@@ -85,7 +85,7 @@ export function KeybindsTab({ keybinds, onRebind, onReset }: KeybindsTabProps) {
                     ) : (
                       <>
                         <span>{entry.key}</span>
-                        <Pencil size="0.75rem" />
+                        <Pencil size={12} />
                       </>
                     )}
                   </button>

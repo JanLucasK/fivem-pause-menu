@@ -16,7 +16,7 @@ export function Card({ icon: Icon, eyebrow, title, children, footer }: CardProps
     <section className="hcard">
       <div className="hcard-head">
         <div className="hcard-icon">
-          <Icon size="1.125rem" />
+          <Icon size={18} />
         </div>
         <div>
           <p className="hcard-eyebrow">{eyebrow}</p>

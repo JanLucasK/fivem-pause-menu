@@ -15,7 +15,7 @@ export function ExitConfirmDialog({ onCancel }: ExitConfirmDialogProps) {
     <div className="exit-dialog-backdrop" onClick={onCancel}>
       <div className="exit-dialog" onClick={(event) => event.stopPropagation()}>
         <div className="exit-dialog-icon">
-          <LogOut size="1.375rem" />
+          <LogOut size={22} />
         </div>
         <h3 className="exit-dialog-title">Server verlassen?</h3>
         <p className="exit-dialog-text">Du wirst die Verbindung zu NeoV trennen.</p>
