@@ -1,3 +1,13 @@
+// Tab-Typen fuer Sidebar/TopBar/tabs.config (in ec055ef wieder eingefuehrt,
+// die Typen fehlten dabei - deshalb hier wiederhergestellt).
+export type TabId = 'home' | 'map' | 'settings' | 'rules' | 'discord' | 'exit';
+
+export interface TabDefinition {
+  id: TabId;
+  label: string;
+  kind: 'screen' | 'action';
+}
+
 export interface CharacterInfo {
   firstName: string;
   lastName: string;
