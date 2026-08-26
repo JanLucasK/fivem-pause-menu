@@ -13,7 +13,7 @@ export function DiscordPanel({ memberHint, onJoin }: DiscordPanelProps) {
     <aside className="discord-panel">
       <div className="discord-panel-glow" />
       <div className="discord-panel-icon">
-        <MessagesSquare size={40} />
+        <MessagesSquare size="2.5rem" />
       </div>
       <h2 className="discord-panel-title">Discord</h2>
       <p className="discord-panel-hint">{memberHint}</p>

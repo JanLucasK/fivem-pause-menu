@@ -7,6 +7,12 @@ body {
   overflow: hidden;
   font-family: var(--font-ui);
   color: var(--text);
+  /* UI skaliert proportional mit der Aufloesung (Nutzer-Vorgabe: 1440p soll
+     wie "rangezoomtes" 1080p wirken): 16px Basis bei 1920x1080, ~21.3px bei
+     1440p, 32px bei 4K. Alle Masse liegen in rem, haengen also hieran.
+     min() haelt beide Achsen im Verhaeltnis (Ultrawide skaliert nach Hoehe),
+     max() verhindert Winzig-UI unterhalb von 720p. */
+  font-size: max(min(calc(100vw / 120), calc(100vh / 67.5)), 12px);
   /* Transparent halten: Die NUI-Page bleibt in FiveM immer geladen, auch wenn
      die React-App bei visible=false null rendert. Ein opaker Hintergrund hier
      wuerde dann als schwarze Flaeche ueber Spiel und andere NUI-Ressourcen
@@ -45,8 +51,8 @@ button {
 }
 
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 0.5rem;
+  height: 0.5rem;
 }
 
 ::-webkit-scrollbar-track {
@@ -55,8 +61,8 @@ button {
 
 ::-webkit-scrollbar-thumb {
   background: var(--graphite-600);
-  border-radius: 999px;
-  border: 2px solid transparent;
+  border-radius: 62.4375rem;
+  border: 0.125rem solid transparent;
   background-clip: padding-box;
 }
 
@@ -74,26 +80,26 @@ button {
 input[type='range'] {
   -webkit-appearance: none;
   appearance: none;
-  height: 4px;
-  border-radius: 2px;
+  height: 0.25rem;
+  border-radius: 0.125rem;
   background: rgba(255, 255, 255, 0.1);
 }
 
 input[type='range']::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 14px;
-  height: 14px;
+  width: 0.875rem;
+  height: 0.875rem;
   border-radius: 50%;
   background: var(--brass);
   border: none;
   cursor: pointer;
-  box-shadow: 0 0 6px rgba(200, 151, 63, 0.4);
+  box-shadow: 0 0 0.375rem rgba(200, 151, 63, 0.4);
 }
 
 input[type='range']::-moz-range-thumb {
-  width: 14px;
-  height: 14px;
+  width: 0.875rem;
+  height: 0.875rem;
   border-radius: 50%;
   background: var(--brass);
   border: none;
@@ -101,8 +107,8 @@ input[type='range']::-moz-range-thumb {
 }
 
 input[type='range']::-moz-range-track {
-  height: 4px;
-  border-radius: 2px;
+  height: 0.25rem;
+  border-radius: 0.125rem;
   background: rgba(255, 255, 255, 0.1);
 }
 
@@ -114,5 +120,5 @@ input[type='range']::-moz-range-track {
      CSS wuerde es ueberschreiben. */
   object-fit: contain;
   /* Uebernimmt den Messing-Schein der frueheren Wortmarke. */
-  filter: drop-shadow(0 0 14px rgba(200, 151, 63, 0.35));
+  filter: drop-shadow(0 0 0.875rem rgba(200, 151, 63, 0.35));
 }
