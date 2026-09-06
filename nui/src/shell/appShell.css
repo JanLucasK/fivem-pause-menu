@@ -105,6 +105,34 @@
 }
 
 .overlay-content--bleed > * {
+  max-width: none;
+  width: 100%;
   flex: 1 1 auto;
   min-height: 0;
+}
+
+@media (max-width: 700px) {
+  .overlay-bar {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    padding: 1rem;
+  }
+
+  .overlay-title {
+    font-size: 1.1rem;
+  }
+
+  .overlay-hint {
+    display: none;
+  }
+
+  .overlay-content:not(.overlay-content--bleed) {
+    padding: 1rem;
+    overflow-wrap: anywhere;
+  }
+
+  .keybinds-row {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
 }

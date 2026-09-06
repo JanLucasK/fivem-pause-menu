@@ -1,3 +1,4 @@
+import { identityLabel } from '../../../state/identityLabels';
 import { UserRound } from 'lucide-react';
 import type { CharacterInfo } from '../../../types';
 import { Card } from './Card';
@@ -16,11 +17,11 @@ export function CharacterCard({ character }: { character: CharacterInfo }) {
       </p>
       <div className="hcard-row">
         <span>Job</span>
-        <span>{character.job ?? 'Ohne Beschäftigung'}</span>
+        <span>{identityLabel(character.job, character.jobLabel) ?? 'Noch nicht bekannt'}</span>
       </div>
       <div className="hcard-row">
         <span>Fraktion</span>
-        <span>{character.faction ?? 'Keine Fraktion'}</span>
+        <span>{identityLabel(character.faction, character.factionLabel) ?? 'Keine Fraktion'}</span>
       </div>
       <div className="hcard-row">
         <span>Spielzeit</span>

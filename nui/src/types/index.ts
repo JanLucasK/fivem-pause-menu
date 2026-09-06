@@ -2,6 +2,8 @@ export interface CharacterInfo {
   firstName: string;
   lastName: string;
   job: string | null;
+  jobLabel?: string | null;
+  factionLabel?: string | null;
   faction: string | null;
   playtimeMinutes: number;
   // Optional-nullable: erscheint erst, wenn der rp_core-Handshake eine

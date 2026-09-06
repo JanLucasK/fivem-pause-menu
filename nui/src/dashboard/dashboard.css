@@ -3,7 +3,9 @@
   inset: 0;
   z-index: 50;
   pointer-events: auto;
-  display: flex;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: block;
   font-family: var(--font-ui);
   color: var(--text);
 }
@@ -11,7 +13,8 @@
 /* Im Spiel liegt das (geblurrte) Gameplay dahinter; im Browser-Dev simulieren
    wir Tiefe mit Messing-Glow + Punktraster statt eines Screenshots. */
 .dashboard-backdrop {
-  position: absolute;
+  position: fixed;
+  overflow: hidden;
   inset: 0;
   background:
     radial-gradient(circle at 50% -10%, rgba(200, 151, 63, 0.1) 0%, transparent 55%),
@@ -77,11 +80,11 @@
   flex: 1 1 auto;
   width: 100%;
   max-width: 110rem;
-  max-height: 63.75rem;
+  min-height: min(100dvh, 60rem);
   margin: auto;
   display: flex;
   flex-direction: column;
-  padding: clamp(1.5rem, 3.5vh, 2.75rem) clamp(2.25rem, 4vw, 4.5rem) clamp(1.25rem, 3vh, 2.25rem);
+  padding: clamp(1rem, 3.5vh, 2.75rem) clamp(1rem, 3vw, 3.5rem);
   gap: clamp(1rem, 2.4vh, 1.625rem);
 }
 
@@ -89,7 +92,8 @@
 /* Kopfzeile bewusst kraeftig: sie traegt Identitaet + alle Kern-Infos und darf
    neben den grossen Kacheln nicht untergehen (Nutzer-Feedback "sehr klein"). */
 .playerbar {
-  display: flex;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
   gap: 1.75rem;
   padding-bottom: 1.5rem;
@@ -150,10 +154,10 @@
 }
 
 .playerbar-stats {
-  display: flex;
-  align-items: center;
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
   gap: 0.75rem;
-  margin-left: auto;
 }
 
 .playerbar-stat {
@@ -178,9 +182,9 @@
   height: 2.375rem;
   flex: 0 0 auto;
   border-radius: 0.625rem;
-  color: var(--graphite-900);
-  background: linear-gradient(135deg, var(--brass) 0%, var(--brass-bright) 100%);
-  box-shadow: 0 0.25rem 0.75rem rgba(200, 151, 63, 0.25);
+  color: var(--brass-bright);
+  background: rgba(200, 151, 63, 0.1);
+  box-shadow: none;
 }
 
 .playerbar-stat > div {
@@ -207,10 +211,12 @@
   letter-spacing: 0.02em;
   font-variant-numeric: tabular-nums;
   color: var(--text);
-  white-space: nowrap;
+  overflow-wrap: anywhere;
 }
 
 .playerbar-disconnect {
+  grid-column: 3;
+  grid-row: 1;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -236,7 +242,7 @@
    der Spalten muss fluchten (Nutzer-Feedback). */
 .dashboard-body {
   display: grid;
-  grid-template-columns: 1.15fr 0.9fr 0.95fr;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.1fr) minmax(0, 0.85fr);
   gap: 1.375rem;
   flex: 1 1 auto;
   min-height: 0;
@@ -253,7 +259,7 @@
 /* Karte + Einstellungen teilen sich die linke Spalte zu gleichen Teilen. */
 .dashboard-col--menu .action-card {
   flex: 1 1 0;
-  min-height: 0;
+  min-height: 13rem;
 }
 
 /* Mitte: Discord dehnt sich, die kleinen Kacheln bleiben kompakt am
@@ -265,7 +271,7 @@
 
 .dashboard-tile-row {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1.375rem;
   flex: 0 0 auto;
 }
@@ -584,6 +590,7 @@
   flex-direction: column;
   gap: 0.875rem;
   overflow-y: auto;
+  max-height: 32rem;
   padding-right: 0.25rem;
 }
 
@@ -735,4 +742,115 @@
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid var(--graphite-line);
   border-radius: 0.375rem;
+}
+
+/* Content determines height. Long names remain readable at every aspect ratio. */
+.playerbar-identity-text,
+.playerbar-stat > div {
+  min-width: 0;
+}
+
+.playerbar-name,
+.playerbar-job,
+.action-card-title,
+.announcement-title,
+.announcement-body,
+.promo-banner-text {
+  overflow-wrap: anywhere;
+}
+
+.playerbar-stat--faction {
+  grid-column: span 2;
+}
+
+.playerbar-job-label {
+  color: var(--brass);
+}
+
+
+.playerbar-stat-label {
+  text-transform: none;
+  letter-spacing: 0.02em;
+}
+
+.action-card-title {
+  text-wrap: balance;
+}
+
+.action-card:active,
+.discord-panel-btn:active,
+.promo-banner-btn:active {
+  transform: translateY(1px);
+}
+
+@media (max-width: 1150px) {
+  .dashboard-body {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .dashboard-col--news {
+    grid-column: 1 / -1;
+  }
+
+  .announcements-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-height: none;
+  }
+}
+
+@media (max-width: 700px) {
+  .dashboard-body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .dashboard-frame {
+    margin-block: 0;
+  }
+
+  .playerbar {
+    gap: 1rem;
+  }
+
+  .playerbar-brand {
+    display: none;
+  }
+
+  .playerbar-identity {
+    grid-column: 1 / 3;
+    border: 0;
+    padding-left: 0;
+  }
+
+  .playerbar-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .playerbar-stat {
+    padding-right: 0.5rem;
+    gap: 0.5rem;
+  }
+
+  .announcements-list {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .promo-banner {
+    flex-wrap: wrap;
+  }
+
+  .promo-banner-text {
+    flex: 1 1 12rem;
+  }
+
+  .promo-banner-btn {
+    margin-left: 0;
+    width: 100%;
+  }
+}
+
+@media (max-width: 380px) {
+  .dashboard-tile-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }

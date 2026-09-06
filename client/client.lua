@@ -1,6 +1,4 @@
--- Stub für die spätere FiveM-Anbindung des Prototyps. Der Fokus lag bisher auf
--- dem NUI-Frontend (siehe nui/); dieser Teil wird erst verdrahtet, wenn das
--- Design final ist.
+-- FiveM-Pausemenü mit lesender CoreRP-Anbindung.
 
 local isMenuOpen = false
 
@@ -63,8 +61,8 @@ local corerpHomeData = {
 }
 
 -- Identitaet ueber Ressourcen-Neustarts/Reconnects hinweg cachen: corerp liefert
--- den Namen nur UI-frei ueber rp:character:spawned (einmalig beim Spawn) und Job
--- nur ueber die Ausweis-Karte (rp:identity:card, wenn der Spieler /id oeffnet).
+-- Namen und Jobs über die Charakterauswahl / den Spawn und Fraktionen über
+-- rp:faction:state. Ältere Versionen ergänzen Jobs über rp:identity:card.
 -- Beides ist NICHT on-demand ohne UI abrufbar - deshalb den zuletzt gesehenen
 -- Stand im Resource-KVP persistieren und beim Laden daraus seeden, damit der Name
 -- nach einem Restart nicht auf "Unbekannt" faellt.
@@ -76,12 +74,11 @@ local pushHomeData
 
 local function updateIdentity(patch)
     local cur = corerpHomeData.identity or {}
-    corerpHomeData.identity = {
-        firstname = patch.firstname or cur.firstname,
-        lastname = patch.lastname or cur.lastname,
-        job = patch.job or cur.job,
-        faction = patch.faction or cur.faction,
-    }
+    -- Missing fields preserve the current value; explicit JSON null clears it.
+    for _, key in ipairs({ 'id', 'firstname', 'lastname', 'job', 'faction', 'jobLabel', 'factionLabel' }) do
+        if patch[key] ~= nil then cur[key] = patch[key] end
+    end
+    corerpHomeData.identity = cur
     local id = corerpHomeData.identity
     if id.firstname or id.lastname then
         SetResourceKvp(IDENTITY_KVP, json.encode(id))
@@ -133,12 +130,13 @@ local function buildHomeData()
     return {
         character = {
             -- Name/Job aus dem bestbekannten, im KVP gecachten Identitaets-Stand
-            -- (rp:character:spawned fuer den Namen, rp:identity:card fuer Job/Faction,
-            -- falls der Spieler seinen Ausweis geoeffnet hat).
+            -- (Charakterauswahl, Spawn, Fraktionszustand und ältere Ausweis-Events).
             firstName = identity.firstname or '',
             lastName = identity.lastname or '',
             job = identity.job,
             faction = identity.faction,
+            jobLabel = identity.jobLabel,
+            factionLabel = identity.factionLabel,
             playtimeMinutes = progression.playtimeMinutes or 0,
         },
         finance = {
@@ -186,14 +184,41 @@ end)
 RegisterNetEvent('rp:identity:card')
 AddEventHandler('rp:identity:card', function(payloadJson)
     local card = json.decode(payloadJson) or {}
-    updateIdentity({ firstname = card.firstname, lastname = card.lastname, job = card.job, faction = card.faction })
+    updateIdentity({ firstname = card.firstname, lastname = card.lastname, job = card.job, faction = card.faction,
+        jobLabel = card.jobLabel or json.null, factionLabel = card.factionLabel or json.null })
+end)
+
+-- Authoritative faction labels include server-side renames and membership removal.
+RegisterNetEvent('rp:faction:state')
+AddEventHandler('rp:faction:state', function(payloadJson)
+    local state = json.decode(payloadJson) or {}
+    updateIdentity({ faction = state.factionKey or json.null, factionLabel = state.factionLabel or json.null })
+end)
+
+-- The character selection already supplies job labels, without opening the ID UI.
+local characterSummaries = {}
+RegisterNetEvent('rp:character:list')
+AddEventHandler('rp:character:list', function(payloadJson)
+    characterSummaries = json.decode(payloadJson) or {}
 end)
 
 -- Name ohne UI-Folge: corerp pusht den gespawnten Charakter beim Charakter-Laden.
 RegisterNetEvent('rp:character:spawned')
 AddEventHandler('rp:character:spawned', function(payloadJson)
     local sp = json.decode(payloadJson) or {}
-    updateIdentity({ firstname = sp.firstname, lastname = sp.lastname })
+    local current = corerpHomeData.identity or {}
+    if current.id ~= sp.id then corerpHomeData.identity = {} end
+    local patch = { id = sp.id, firstname = sp.firstname, lastname = sp.lastname }
+    for _, summary in ipairs(characterSummaries) do
+        if summary.id == sp.id and current.id ~= sp.id then
+            patch.job = summary.job
+            patch.jobLabel = summary.jobLabel or json.null
+            patch.faction = summary.faction or json.null
+            patch.factionLabel = summary.factionLabel or json.null
+            break
+        end
+    end
+    updateIdentity(patch)
 end)
 
 RegisterNetEvent('rp:progression:update')
@@ -274,8 +299,8 @@ local function setMenuVisible(visible)
         TriggerServerEvent('rp:money:request', '{}')
         -- Bewusst KEIN rp:identity:request: das ist corerps /id-Handler und oeffnet
         -- den Personalausweis (corerps Client zeigt bei rp:identity:card ein Modal).
-        -- Name/Job holen wir stattdessen ohne UI-Folge aus rp:character:spawned bzw.
-        -- passiv aus rp:identity:card, falls der Spieler seinen Ausweis selbst oeffnet.
+        -- Name/Job kommen aus Charakterauswahl und Spawn, Fraktionen aus
+        -- rp:faction:state; ältere Ausweis-Events werden nur passiv gelesen.
     else
         -- Headshot-Slot freigeben; die NUI faellt auf die Initialen zurueck.
         releaseHeadshot()

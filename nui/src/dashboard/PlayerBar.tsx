@@ -1,3 +1,4 @@
+import { identityLabel } from '../state/identityLabels';
 import { Banknote, CloudSun, Landmark, LogOut, CalendarClock, Smartphone, Users } from 'lucide-react';
 import type { HomeData } from '../types';
 import { BrandMark } from '../components/BrandMark';
@@ -51,7 +52,7 @@ export function PlayerBar({ data, avatarUrl, onDisconnect }: PlayerBarProps) {
         </div>
         <div className="playerbar-identity-text">
           <p className="playerbar-name">{fullName}</p>
-          <p className="playerbar-job">{character.job ?? 'Ohne Beschäftigung'}</p>
+          <p className="playerbar-job"><span className="playerbar-job-label">Job · </span>{identityLabel(character.job, character.jobLabel) ?? 'Noch nicht bekannt'}</p>
         </div>
       </div>
 
@@ -108,11 +109,11 @@ export function PlayerBar({ data, avatarUrl, onDisconnect }: PlayerBarProps) {
           </div>
         )}
         {character.faction && (
-          <div className="playerbar-stat">
+          <div className="playerbar-stat playerbar-stat--faction">
             <span className="playerbar-stat-icon"><Users size="1rem" /></span>
             <div>
               <span className="playerbar-stat-label">Fraktion</span>
-              <span className="playerbar-stat-value">{character.faction}</span>
+              <span className="playerbar-stat-value">{identityLabel(character.faction, character.factionLabel)}</span>
             </div>
           </div>
         )}
