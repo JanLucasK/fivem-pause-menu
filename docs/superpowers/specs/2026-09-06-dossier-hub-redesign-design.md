@@ -9,8 +9,8 @@ Mockup: https://claude.ai/code/artifact/cf53796e-08c1-4f9d-b2cc-eafee4e327a1
 Der Hub aus dem Dashboard-Shell-Redesign (Spec 2026-08-01) wird zur
 „Dossier"-Ansicht umgebaut: eine Navigations-Rail links, das Charakter-Dossier
 in der Mitte, eine schlanke „Jetzt auf NeoV"-Spalte rechts. Der Hub wirkt wie
-ein Blick in die Akte des Charakters statt wie ein Website-Dashboard. Das Spiel
-bleibt rechts sichtbar; das Menü lebt links.
+ein Blick in die Akte des Charakters statt wie ein Website-Dashboard. Der
+Hintergrund ist statisch und deckend; das Spiel ist nicht zu sehen.
 
 Was gegenüber heute wegfällt: die Reihe aus sechs gleichförmigen Stat-Chips,
 die vier Aktions-Kacheln, das große Discord-Panel, das Promo-Banner unten und
@@ -25,8 +25,8 @@ das Logomark-Kachelmuster im Hintergrund.
 - Overlays (Karte, Tastenbelegung, Regeln), Exit-Dialog und die ESC-Kette in
   AppShell bleiben, wie sie sind. Einstellungen öffnet weiterhin das native
   GTA-Menü.
-- Kein Kamera-Rig, kein Blur per backdrop-filter über dem Spiel (CEF kann das
-  Spiel dahinter nicht sehen).
+- Kein Kamera-Rig, kein Spiel-Blur, kein Durchscheinen des Spiels: der
+  Hintergrund ist deckend (Nutzer-Vorgabe).
 
 ## Layout (eine Seite, 100vh, kein Scroll)
 
@@ -61,8 +61,9 @@ wie bisher.
   Announcements, PromoConfig, avatarUrl, Handler) plus `hubExtras`
   (siehe Datenfluss). Rendert Backdrop, TopBar, NavRail, Dossier, NowPanel,
   PromptBar.
-- **Backdrop**: Vignette von links (0,97 → 0,3 Deckung nach rechts), eine
-  3 px Messing-Lichtkante am linken Rand, und **eine** große Logomark
+- **Backdrop**: deckende Graphit-Fläche (`--graphite-900`) mit einem weichen,
+  dunkleren Radialverlauf rechts oben als einzigem Lichtakzent, eine 3 px
+  Messing-Lichtkante am linken Rand, und **eine** große Logomark
   (`public/img/logomark.svg`, messingfarben, 5 % Deckung, ca. 1000 px, rechts
   oben, teils außerhalb des Bildes) als Wasserzeichen. Das Kachelmuster und die
   treibenden Lichtflecken aus `dashboard.css` entfallen.
@@ -124,9 +125,8 @@ wie bisher.
 Rail gleitet 220 ms von links ein (Transform + Opacity), Dossier, rechte
 Spalte und Fußzeile steigen mit 60 ms Versatz je 260 ms nach oben. Nur
 Transform und Opacity, Kurve `cubic-bezier(.2,.8,.2,1)`. Bei
-`prefers-reduced-motion` keine Animation. Beim Öffnen setzt der Client den
-Spiel-Blur (`SetTimecycleModifier('hud_def_blur')`), beim Schließen räumt er
-ihn (`ClearTimecycleModifier`).
+`prefers-reduced-motion` keine Animation. Der Client setzt keinen Spiel-Blur
+und keinen Timecycle-Modifier; der Hintergrund ist im NUI deckend.
 
 ## Datenfluss / Lua
 
