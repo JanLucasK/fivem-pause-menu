@@ -1,31 +1,38 @@
 # NeoV Pause Menu
 
 Custom NUI-Pause-Menü für NeoV. Ersetzt das native GTA-Pause-Menü durch ein
-schlankes **Zwischenmenü** im NeoV-Look (Graphit + Messing): oben eine
-Spielerleiste (Name/Job/Bargeld/Bank/Online/Beigetreten aus corerp), darunter
-drei Spalten – **Karte & Einstellungen** links, **Discord** in der Mitte,
-**Ankündigungen** rechts.
+**Dossier**-Menü im NeoV-Look (Graphit + Messing, deckender Hintergrund):
+links eine **Navigations-Rail** (Fortsetzen, Karte, Einstellungen, Tasten,
+Regeln, Discord, Verlassen), in der Mitte das **Charakter-Dossier** (Headshot,
+Name, Job/Fraktion, Kennzahl-Zeile, Kartenstreifen), rechts **Event-Karte,
+Ankündigungen und Discord**. Design-Spec:
+`docs/superpowers/specs/2026-09-06-dossier-hub-redesign-design.md`.
 
 Das Menü hat bewusst wenig Eigenlogik – es ruft vorhandene Funktionen auf statt
 sie nachzubauen:
 
-- **Karte** öffnet nicht eine eigene Karte, sondern die corerp-Vollbildkarte
-  (Command `rp_map`, standardmäßig Taste **M**). Das Menü schließt sich dafür
-  zuerst, corerp übernimmt Fokus/Anzeige selbst.
+- **Karte** (Rail-Eintrag, Kartenstreifen oder Taste **M** im Hub) öffnet das
+  interne Karten-Overlay (`nui/src/tabs/map/`). Der Client hält daneben den
+  `openMap`-Callback für die corerp-Vollbildkarte (`rp_map`) bereit.
 - **Einstellungen** öffnet das **native GTA-Pausenmenü** (dort liegen die
   GTA-Settings). Das Menü schließt sich dafür zuerst, sodass ein anschließendes
   **ESC** das GTA-Menü schließt und normal ins Spiel zurückführt – **nicht**
   zurück in dieses Menü.
-- **Discord** (Mock) zeigt eine „Discord beitreten"-Schaltfläche; die
-  **Ankündigungen** rechts sind ebenfalls Mock (`nui/src/state/mockAnnouncements.ts`).
+- **Discord** ist eine Zeile mit Einladungs-URL (Convar) und Hinweistext; die
+  **Ankündigungen** rechts sind Mock (`nui/src/state/mockAnnouncements.ts`),
+  ein `setAnnouncements`-Listener steht für einen echten Feed bereit. Mehr als
+  drei Einträge -> „Alle ansehen" öffnet ein Overlay mit der ganzen Liste.
+- Die **Navigations-Rail** ist mit ↑/↓, Enter und Maus bedienbar (ein
+  Fokusmodell, die goldene Logomark ist der Cursor); Tasten-Hinweise stehen
+  in der Fußzeile.
 
 Die Spielerdaten oben kommen live aus corerp (`client/client.lua` hängt sich
 lesend an dessen Charakter-/Kontostand-/Progression-Events, siehe unten).
 
-> Hinweis: Frühere Tab-Ansichten (interne Karte, interner Einstellungen-/
-> Keybinds-/Regeln-Tab) liegen noch im Quellcode (`nui/src/tabs/`, `nui/src/shell/`),
-> werden aber **nicht mehr gemountet** und landen nicht im Build-Bundle. Sie
-> können bei einer späteren Aufräum-Iteration entfernt werden.
+Kopfzeile und Fußzeile zeigen zusätzlich Ort (Straße, Gebiet), Wetter,
+Spielzeit-Uhr, Online-Zahl, Beitrittszeit und Server-ID - alles clientseitig
+aus GTA-Natives, jedes Feld optional (fehlt der Wert, fällt das Element weg).
+Während das Menü offen ist, pusht der Client `setHomeData` alle 30 s neu.
 
 ## Convars
 
@@ -38,8 +45,16 @@ läuft das Menü unverändert):
   abhängig**; landet der Klick nicht auf dem gewünschten Tab, hier den zum Build
   passenden Wert setzen – kein NUI-Rebuild nötig.
 - `neov_pausemenu_map_default_style` / `neov_pausemenu_map_show_style_switcher` –
-  Kartenstil-Convars der (aktuell nicht gemounteten) internen Karte, siehe
-  Abschnitt „Map-Tab".
+  Kartenstil-Convars der internen Karte, siehe Abschnitt „Map-Tab".
+- `neov_pausemenu_promo_title` / `_subtitle` / `_button` – Event-Karte rechts
+  oben; leerer Titel blendet die Karte aus, leerer Button-Text den Button. Der
+  Button feuert den `promoAction`-Callback (Hook `OnPromoAction` in
+  `client/client.lua`).
+- `neov_pausemenu_promo_progress` (0–100, Default leer) – Fortschrittsbalken in
+  der Event-Karte; ohne Wert kein Balken.
+- `neov_pausemenu_discord_url` (Default `https://discord.gg/neov`) und
+  `neov_pausemenu_discord_hint` (Default leer, z. B. „1.240 Mitglieder") –
+  Discord-Zeile rechts unten.
 
 ## Entwickeln (Browser, ohne FiveM)
 
@@ -91,10 +106,12 @@ fehlen. Deshalb ist das Asset auf 128×128 verkleinert — angezeigt wird es mit
 
 ## Architektur
 
-- `nui/src/shell/` – AppShell, TopBar, Sidebar (linke Navigation), zentrale
-  Tab-Registrierung (`tabs.config.ts`). Neue Tabs: hier eintragen, Rest
-  verdrahtet sich selbst.
-- `nui/src/tabs/<tab>/` – ein Ordner pro Tab, eigenständig.
+- `nui/src/shell/` – AppShell (View-State `hub | map | keybinds | rules |
+  announcements`, ESC-Kette, Hotkey M) und OverlayView (Vollbild-Overlay mit
+  Zurück-Leiste).
+- `nui/src/hub/` – der Hub: HubView, TopBar, NavRail, Dossier, StatStrip,
+  MapStrip, EventCard, AnnouncementsFeed, DiscordRow, PromptBar, `hub.css`.
+- `nui/src/tabs/<tab>/` – Overlays (map, keybinds, rules) und der Exit-Dialog.
 - `nui/src/bridge/nui.ts` – einzige Schnittstelle zum Client-Skript
   (`fetchNui`, `onNuiMessage`). Läuft die App ausserhalb von FiveM, liefert
   `fetchNui` leere Mock-Antworten statt echter Requests.

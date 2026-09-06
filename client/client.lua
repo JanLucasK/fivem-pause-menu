@@ -113,7 +113,35 @@ local function getPromoConfig()
         title = GetConvar('neov_pausemenu_promo_title', ''),
         subtitle = GetConvar('neov_pausemenu_promo_subtitle', ''),
         buttonLabel = GetConvar('neov_pausemenu_promo_button', ''),
+        -- 0..100 -> Fortschrittsbalken in der Event-Karte; leer -> kein Balken.
+        progress = tonumber(GetConvar('neov_pausemenu_promo_progress', '')) or json.null,
     }
+end
+
+-- Ort als "Strasse, Gebiet" (leer, wenn nichts bekannt) fuer die Kopfzeile.
+local function getLocationLabel()
+    local coords = GetEntityCoords(PlayerPedId())
+    local streetHash = GetStreetNameAtCoord(coords.x, coords.y, coords.z)
+    local street = streetHash and streetHash ~= 0 and GetStreetNameFromHashKey(streetHash) or ''
+    local zoneLabel = GetLabelText(GetNameOfZone(coords.x, coords.y, coords.z))
+    if zoneLabel == 'NULL' then zoneLabel = '' end
+    if street ~= '' and zoneLabel ~= '' then return street .. ', ' .. zoneLabel end
+    return street ~= '' and street or zoneLabel
+end
+
+-- Spielzeit-Uhr "HH:MM".
+local function getClockLabel()
+    return ('%02d:%02d'):format(GetClockHours(), GetClockMinutes())
+end
+
+-- Distanz zum Wegpunkt (Blip-Sprite 8) in Metern, json.null ohne Wegpunkt.
+local function getWaypointDistance()
+    local blip = GetFirstBlipInfoId(8)
+    if not DoesBlipExist(blip) then return json.null end
+    local target = GetBlipInfoIdCoord(blip)
+    local coords = GetEntityCoords(PlayerPedId())
+    -- 2D-Distanz: der Wegpunkt-Blip traegt keine Hoehe.
+    return #(vector2(coords.x, coords.y) - vector2(target.x, target.y))
 end
 
 -- Hook fuer den Promo-Banner-Button ("promoAction"-NUI-Callback). Bewusst leer:
@@ -138,6 +166,7 @@ local function buildHomeData()
             jobLabel = identity.jobLabel,
             factionLabel = identity.factionLabel,
             playtimeMinutes = progression.playtimeMinutes or 0,
+            serverId = GetPlayerServerId(PlayerId()),
         },
         finance = {
             cash = (balances.cash or 0) / 100,
@@ -146,6 +175,9 @@ local function buildHomeData()
             -- komplett, das Frontend erwartet aber explizit "null" (siehe
             -- FinanceCard.tsx: `finance.lastPayday !== null`).
             lastPayday = corerpHomeData.lastPaydayNetCents and (corerpHomeData.lastPaydayNetCents / 100) or json.null,
+            -- Reserviert fuer einen spaeteren corerp-Countdown; das NUI zeigt
+            -- solange "Letzter Payday".
+            nextPaydayMinutes = json.null,
         },
         -- Server-/Standort-Info kommt (noch) nicht aus corerp - unveraendert
         -- gegenueber dem bisherigen Prototyp-Stand, siehe TODO unten.
@@ -153,14 +185,21 @@ local function buildHomeData()
             serverName = 'NeoV',
             onlinePlayers = NetworkGetNumConnectedPlayers(),
             maxPlayers = tonumber(GetConvar('sv_maxclients', '48')) or 48,
-            discordUrl = 'https://discord.gg/neov',
+            discordUrl = GetConvar('neov_pausemenu_discord_url', 'https://discord.gg/neov'),
+            -- Hinweiszeile unter der Discord-URL; leer -> keine Zeile.
+            discordHint = (function()
+                local hint = GetConvar('neov_pausemenu_discord_hint', '')
+                return hint ~= '' and hint or json.null
+            end)(),
             -- json.null statt nil: ein Lua-nil-Wert wuerde den Key ganz entfernen,
             -- das Frontend erwartet aber explizit number|null (siehe PlayerBar).
             joinedAtUnix = joinedAtUnix or json.null,
             -- json.null statt nil (Key wuerde sonst fehlen; NUI erwartet string|null).
             weather = weatherLabels[GetPrevWeatherTypeHashName()] or json.null,
+            clock = getClockLabel(),
         },
-        location = '',
+        location = getLocationLabel(),
+        map = { waypointDistanceMeters = getWaypointDistance() },
     }
 end
 
@@ -171,6 +210,15 @@ function pushHomeData()
         SendNUIMessage({ action = 'setHomeData', payload = buildHomeData() })
     end
 end
+
+-- Uhrzeit, Ort und Wegpunkt-Distanz aendern sich auch bei offenem Menue -
+-- alle 30 s neu pushen (die Event-getriebenen Pushes bleiben unberuehrt).
+CreateThread(function()
+    while true do
+        Wait(30000)
+        pushHomeData()
+    end
+end)
 
 RegisterNetEvent('rp:money:balances')
 AddEventHandler('rp:money:balances', function(payloadJson)

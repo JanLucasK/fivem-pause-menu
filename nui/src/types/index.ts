@@ -9,12 +9,18 @@ export interface CharacterInfo {
   // Optional-nullable: erscheint erst, wenn der rp_core-Handshake eine
   // Telefonnummer liefert - fehlt das Feld, rendert die PlayerBar keinen Chip.
   phone?: string | null;
+  // Server-Slot-ID (GetPlayerServerId). Optional-nullable: fehlt das Feld,
+  // rendert das Dossier kein ID-Badge.
+  serverId?: number | null;
 }
 
 export interface FinanceInfo {
   cash: number;
   bank: number;
   lastPayday: number | null;
+  // Reserviert fuer einen spaeteren corerp-Countdown; solange null, zeigt die
+  // StatStrip "Letzter Payday" (lastPayday) statt "Naechster Payday".
+  nextPaydayMinutes?: number | null;
 }
 
 export interface ServerInfo {
@@ -29,6 +35,10 @@ export interface ServerInfo {
   // Deutsches Wetter-Label (client/client.lua, GetPrevWeatherTypeHashName).
   // Optional-nullable, damit aeltere Payloads ohne Feld valid bleiben.
   weather?: string | null;
+  // Spielzeit-Uhr "HH:MM" (GetClockHours/GetClockMinutes), optional-nullable.
+  clock?: string | null;
+  // Hinweiszeile unter der Discord-URL (Convar neov_pausemenu_discord_hint).
+  discordHint?: string | null;
 }
 
 // Promo-/Event-Banner unten im Hub. Komplett Convar-getrieben
@@ -38,6 +48,8 @@ export interface PromoConfig {
   title: string;
   subtitle: string;
   buttonLabel: string;
+  // 0..100 (Convar neov_pausemenu_promo_progress); null/undefined -> kein Balken.
+  progress?: number | null;
 }
 
 // Eine Ankündigung/News-Karte für die rechte Spalte des Menüs. Aktuell reiner
@@ -55,7 +67,10 @@ export interface HomeData {
   character: CharacterInfo;
   finance: FinanceInfo;
   server: ServerInfo;
+  // "Strasse, Gebiet" (GetStreetNameFromCoord + Zonen-Label); leer -> kein Ort.
   location: string;
+  // Wegpunkt-Info fuer den Kartenstreifen; null/fehlend -> keine Wegpunkt-Zeile.
+  map?: { waypointDistanceMeters: number | null } | null;
 }
 
 export interface MapPlayerPosition {
