@@ -1,0 +1,699 @@
+/* Hub "Dossier" (Spec docs/superpowers/specs/2026-09-06-dossier-hub-redesign-design.md).
+   Alle Masse in rem: die Root-Schrift skaliert in global.css mit der
+   Aufloesung, so behaelt das Layout auf 1440p/4K die 1080p-Proportionen. */
+
+.hub {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  overflow: hidden;
+  font-family: var(--font-ui);
+  color: var(--text);
+}
+
+/* === Backdrop: deckend, ein Lichtakzent, Messing-Kante, eine Logomark === */
+.hub-backdrop {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: radial-gradient(ellipse 55% 50% at 78% 18%, var(--graphite-700) 0%, var(--graphite-900) 70%);
+}
+
+.hub-backdrop::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 0.1875rem;
+  background: linear-gradient(180deg, transparent 0%, var(--brass) 30%, var(--brass-bright) 50%, var(--brass) 70%, transparent 100%);
+  opacity: 0.9;
+}
+
+.hub-watermark {
+  position: absolute;
+  right: -11rem;
+  top: 3.75rem;
+  width: 62.5rem;
+  height: 62.5rem;
+  color: var(--brass);
+  opacity: 0.05;
+}
+
+/* === Rahmen: Safe-Zone 5 %, drei Spalten, Kopf/Body/Fuss === */
+.hub-frame {
+  position: absolute;
+  inset: 5vh 5vw;
+  max-width: 110rem;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 18.75rem minmax(0, 1fr) 26.25rem;
+  grid-template-rows: 4rem minmax(0, 1fr) 3.5rem;
+  column-gap: 3.5rem;
+  row-gap: 2.25rem;
+}
+
+.hub-mono {
+  font-family: var(--font-mono);
+}
+
+.hub-overline {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.8125rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.hub-overline--brass {
+  font-weight: 500;
+  font-size: 0.9375rem;
+  color: var(--brass);
+}
+
+.hub-key {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-radius: 0.25rem;
+  padding: 0.1875rem 0.4375rem;
+}
+
+/* === Kopfzeile === */
+.hub-topbar {
+  grid-column: 1 / 4;
+  grid-row: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.hub-topbar-meta {
+  display: flex;
+  align-items: center;
+  gap: 1.75rem;
+  font-size: 0.9375rem;
+  color: var(--muted);
+}
+
+.hub-topbar-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.hub-topbar-clock {
+  color: var(--text);
+}
+
+.hub-online {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.5rem 0.875rem;
+  border: 1px solid rgba(200, 151, 63, 0.35);
+  border-radius: 999px;
+  background: rgba(200, 151, 63, 0.08);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1rem;
+  letter-spacing: 0.04em;
+  color: var(--text);
+}
+
+.hub-online-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: #5ac26b;
+  box-shadow: 0 0 0.625rem #5ac26b;
+}
+
+/* === Navigations-Rail === */
+.hub-rail-col {
+  grid-column: 1;
+  grid-row: 2;
+  align-self: start;
+  animation: hub-rail-in 220ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.hub-rail {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.hub-rail-divider {
+  height: 1px;
+  margin: 0.875rem 1.125rem;
+  background: var(--graphite-line);
+}
+
+.hub-rail-item {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  width: 100%;
+  height: 3.75rem;
+  padding: 0 1.125rem 0 0.875rem;
+  border: 1px solid transparent;
+  border-radius: 0.625rem;
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+  text-align: left;
+}
+
+/* Fokus = Logomark-Cursor + Messing-Flaeche; kein zweiter Hover-Zustand. */
+.hub-rail-item--active {
+  background: linear-gradient(90deg, rgba(200, 151, 63, 0.18) 0%, rgba(200, 151, 63, 0.06) 100%);
+  border-color: rgba(200, 151, 63, 0.35);
+}
+
+.hub-rail-item--active:focus-visible {
+  box-shadow: none;
+}
+
+.hub-rail-item--danger {
+  color: var(--muted);
+}
+
+.hub-rail-item--danger .hub-rail-icon {
+  color: var(--danger);
+}
+
+.hub-rail-icon {
+  display: flex;
+  justify-content: center;
+  width: 1.625rem;
+  color: var(--muted);
+}
+
+.hub-rail-cursor {
+  width: 1.625rem;
+  height: 1.625rem;
+  filter: drop-shadow(0 0 0.5rem rgba(224, 180, 84, 0.5));
+}
+
+.hub-rail-label {
+  flex: 1;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.625rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.hub-rail-item--active .hub-rail-label {
+  font-weight: 700;
+}
+
+.hub-rail-item--active .hub-key {
+  color: var(--brass-bright);
+  border-color: rgba(200, 151, 63, 0.4);
+}
+
+/* === Mitte: Dossier === */
+.hub-center {
+  grid-column: 2;
+  grid-row: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  min-height: 0;
+  animation: hub-rise 260ms 60ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.hub-dossier {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.hub-avatar {
+  position: relative;
+  width: 10.5rem;
+  height: 10.5rem;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 1rem;
+  border: 1px solid rgba(200, 151, 63, 0.35);
+  background: linear-gradient(180deg, var(--graphite-600) 0%, var(--graphite-800) 100%);
+  box-shadow: 0 1.5rem 3rem rgba(0, 0, 0, 0.5);
+}
+
+.hub-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hub-avatar-initials {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 3rem;
+  letter-spacing: 0.04em;
+  color: var(--brass-bright);
+}
+
+.hub-avatar-id {
+  position: absolute;
+  left: 0.625rem;
+  top: 0.625rem;
+  padding: 0.1875rem 0.4375rem;
+  border-radius: 0.25rem;
+  background: rgba(12, 13, 18, 0.7);
+  font-size: 0.75rem;
+  color: var(--brass-bright);
+}
+
+.hub-dossier-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  min-width: 0;
+}
+
+.hub-name {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 4.5rem;
+  line-height: 0.95;
+  letter-spacing: 0.01em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.hub-chips {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.375rem;
+}
+
+.hub-chip {
+  padding: 0.375rem 0.75rem;
+  border-radius: 0.375rem;
+  border: 1px solid var(--graphite-line);
+  background: rgba(255, 255, 255, 0.04);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.0625rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.hub-chip--brass {
+  border-color: rgba(200, 151, 63, 0.3);
+  background: rgba(200, 151, 63, 0.12);
+  color: var(--brass-bright);
+}
+
+.hub-phone {
+  font-size: 0.9375rem;
+  color: var(--muted);
+}
+
+.hub-phone .hub-mono {
+  color: var(--text);
+}
+
+/* Kennzahl-Zeile */
+.hub-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border-top: 1px solid var(--graphite-line);
+  border-bottom: 1px solid var(--graphite-line);
+}
+
+.hub-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  padding: 1.25rem 1.5rem;
+  border-right: 1px solid var(--graphite-line);
+  min-height: 5.75rem;
+}
+
+.hub-stat:first-child {
+  padding-left: 0;
+}
+
+.hub-stat:last-child {
+  padding-right: 0;
+  border-right: none;
+}
+
+.hub-stat-label {
+  font-size: 0.8125rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.hub-stat-value {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 2.5rem;
+  line-height: 1;
+  letter-spacing: 0.01em;
+}
+
+.hub-stat-unit {
+  font-size: 1.375rem;
+  color: var(--muted);
+}
+
+.hub-stat-unit--brass {
+  color: var(--brass);
+}
+
+/* Kartenstreifen */
+.hub-map {
+  position: relative;
+  flex: 1;
+  min-height: 8rem;
+  overflow: hidden;
+  border: 1px solid var(--graphite-line);
+  border-radius: 0.875rem;
+  background: var(--graphite-800);
+  color: var(--text);
+  cursor: pointer;
+  padding: 0;
+  text-align: left;
+}
+
+.hub-map-media {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  /* Kontur-Filterkette aus der bisherigen Karten-Kachel. */
+  filter: grayscale(1) brightness(0.55) contrast(2.1) sepia(0.95) saturate(2.4) hue-rotate(-12deg);
+}
+
+.hub-map-media::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(12, 13, 18, 0.92) 0%, rgba(12, 13, 18, 0.55) 40%, rgba(12, 13, 18, 0.2) 100%),
+    linear-gradient(0deg, rgba(12, 13, 18, 0.85) 0%, transparent 45%);
+}
+
+.hub-map-text {
+  position: absolute;
+  left: 1.75rem;
+  bottom: 1.625rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.hub-map-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.875rem;
+  letter-spacing: 0.04em;
+}
+
+.hub-map-sub {
+  font-size: 0.9375rem;
+  color: var(--muted);
+}
+
+.hub-map-arrow {
+  position: absolute;
+  right: 1.75rem;
+  bottom: 1.625rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  border: 1px solid rgba(200, 151, 63, 0.5);
+  color: var(--brass-bright);
+}
+
+.hub-map:hover .hub-map-arrow,
+.hub-map:focus-visible .hub-map-arrow {
+  background: rgba(200, 151, 63, 0.14);
+}
+
+/* === Rechts: Jetzt auf NeoV === */
+.hub-now {
+  grid-column: 3;
+  grid-row: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  min-height: 0;
+  animation: hub-rise 260ms 120ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.hub-event {
+  display: flex;
+  flex-direction: column;
+  padding: 1.375rem 1.5rem;
+  border-radius: 0.875rem;
+  border: 1px solid rgba(200, 151, 63, 0.3);
+  background: rgba(200, 151, 63, 0.07);
+}
+
+.hub-event-title {
+  margin: 0.5rem 0 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.875rem;
+  line-height: 1;
+}
+
+.hub-event-sub {
+  margin: 0.375rem 0 0;
+  font-size: 0.9375rem;
+  color: #c9cdd6;
+}
+
+.hub-event-bar {
+  margin-top: 1rem;
+  height: 0.25rem;
+  border-radius: 0.125rem;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.hub-event-bar-fill {
+  height: 100%;
+  border-radius: 0.125rem;
+  background: var(--brass-bright);
+}
+
+.hub-event-btn {
+  align-self: flex-start;
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid rgba(200, 151, 63, 0.5);
+  border-radius: 0.5rem;
+  background: rgba(200, 151, 63, 0.14);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.9375rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--brass-bright);
+  cursor: pointer;
+}
+
+.hub-event-btn:hover {
+  background: rgba(200, 151, 63, 0.24);
+}
+
+/* Ankuendigungen: keine Box, nur Hairlines */
+.hub-feed {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.hub-feed--full {
+  flex: none;
+  overflow: visible;
+}
+
+.hub-feed-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 0.75rem;
+}
+
+.hub-link {
+  padding: 0;
+  border: none;
+  background: none;
+  font: inherit;
+  font-size: 0.8125rem;
+  color: var(--brass-bright);
+  cursor: pointer;
+}
+
+.hub-link:hover {
+  color: var(--brass);
+}
+
+.hub-feed-item {
+  display: flex;
+  gap: 0.875rem;
+  padding: 0.875rem 0;
+  border-top: 1px solid var(--graphite-line);
+}
+
+.hub-feed-marker {
+  flex: 0 0 auto;
+  width: 0.375rem;
+  border-radius: 0.1875rem;
+  background: var(--line);
+}
+
+.hub-feed-marker--brass {
+  background: var(--brass-bright);
+}
+
+.hub-feed-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.hub-feed-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.hub-feed-title--strong {
+  font-weight: 600;
+}
+
+.hub-feed-text {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  color: var(--muted);
+}
+
+.hub-feed-meta {
+  font-size: 0.8125rem;
+  color: #6f7582;
+}
+
+/* Discord-Zeile */
+.hub-discord {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--text);
+  cursor: pointer;
+  text-align: left;
+}
+
+.hub-discord-icon {
+  color: var(--muted);
+}
+
+.hub-discord-text {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.hub-discord-url {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.1875rem;
+  letter-spacing: 0.04em;
+}
+
+.hub-discord-hint {
+  font-size: 0.8125rem;
+  color: var(--muted);
+}
+
+.hub-discord-arrow {
+  color: var(--brass-bright);
+}
+
+/* === Fusszeile === */
+.hub-prompts {
+  grid-column: 1 / 4;
+  grid-row: 3;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 1rem;
+  border-top: 1px solid var(--graphite-line);
+  font-size: 0.875rem;
+  color: var(--muted);
+  animation: hub-rise 260ms 180ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.hub-prompts-keys {
+  display: flex;
+  gap: 1.75rem;
+}
+
+.hub-prompts-keys span {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.hub-prompts-right {
+  font-size: 0.8125rem;
+}
+
+/* === Motion === */
+@keyframes hub-rail-in {
+  from {
+    opacity: 0;
+    transform: translateX(-1.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes hub-rise {
+  from {
+    opacity: 0;
+    transform: translateY(0.875rem);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hub-rail-col,
+  .hub-center,
+  .hub-now,
+  .hub-prompts {
+    animation: none;
+  }
+}

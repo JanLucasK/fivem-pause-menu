@@ -13,7 +13,8 @@ import { mockHomeData, mockPromoConfig } from '../state/mockHomeData';
 import { mockAnnouncements } from '../state/mockAnnouncements';
 import { mockMapBlips, mockMapConfig, mockPlayerPosition } from '../state/mockMapData';
 import { mockKeybinds } from '../tabs/keybinds/keybinds.data';
-import { Dashboard } from '../dashboard/Dashboard';
+import { HubView } from '../hub/HubView';
+import { AnnouncementsList } from '../hub/AnnouncementsFeed';
 import { ExitConfirmDialog } from '../tabs/exit/ExitConfirmDialog';
 import { OverlayView } from './OverlayView';
 import { MapTab } from '../tabs/map/MapTab';
@@ -24,13 +25,13 @@ import { faqEntries, ruleSections } from '../tabs/rules/rules.data';
 // Der Hub ist die einzige "Seite"; Karte/Tastenbelegung/Regeln liegen als
 // Vollbild-Overlays darueber. ESC steigt die Kette ab: ExitDialog -> Overlay
 // -> Menue schliessen.
-type HubView = 'hub' | 'map' | 'keybinds' | 'rules';
+type HubViewState = 'hub' | 'map' | 'keybinds' | 'rules' | 'announcements';
 
 export function AppShell() {
   // Im Browser-Dev direkt sichtbar (zum Durchklicken); in FiveM startet die
   // NUI unsichtbar und wird per 'setVisible'-Message vom Client eingeblendet.
   const [visible, setVisible] = useState(!isInFivem);
-  const [view, setView] = useState<HubView>('hub');
+  const [view, setView] = useState<HubViewState>('hub');
   const [homeData, setHomeData] = useState<HomeData>(mockHomeData);
   // Ankündigungen sind bewusst nur Mock (siehe state/mockAnnouncements.ts). Ein
   // 'setAnnouncements'-Listener steht für einen späteren echten Feed bereit,
@@ -73,20 +74,30 @@ export function AppShell() {
   useEffect(() => {
     if (!visible) return;
     const handler = (event: KeyboardEvent) => {
+      // Hotkey "M" im Hub oeffnet die Karte (das Badge in der Rail verspricht es).
+      if (view === 'hub' && !exitDialogOpen && (event.key === 'm' || event.key === 'M')) {
+        setView('map');
+        return;
+      }
       if (event.key !== 'Escape') return;
       if (exitDialogOpen) return; // ESC schliesst erst den Bestätigungsdialog
       if (view !== 'hub') {
         setView('hub');
         return;
       }
-      if (isInFivem) fetchNui('closeMenu');
-      else setVisible(false);
+      closeMenu();
     };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
   }, [visible, exitDialogOpen, view]);
 
   if (!visible) return null;
+
+  // "Fortsetzen" und ESC im Hub laufen ueber denselben Pfad.
+  function closeMenu() {
+    if (isInFivem) fetchNui('closeMenu');
+    else setVisible(false);
+  }
 
   // Einstellungen: öffnet das native GTA-Pausenmenü (Einstellungen); der Client
   // schliesst dazu erst dieses Menü, sodass ESC danach das GTA-Menü schliesst und
@@ -123,16 +134,18 @@ export function AppShell() {
 
   return (
     <>
-      <Dashboard
+      <HubView
         data={homeData}
         announcements={announcements}
         promo={promo}
         avatarUrl={avatarUrl}
+        onResume={closeMenu}
         onOpenMap={() => setView('map')}
         onOpenSettings={handleOpenSettings}
         onOpenKeybinds={() => setView('keybinds')}
         onOpenRules={() => setView('rules')}
         onOpenDiscord={handleOpenDiscord}
+        onShowAnnouncements={() => setView('announcements')}
         onPromoAction={handlePromoAction}
         onDisconnect={() => setExitDialogOpen(true)}
       />
@@ -160,6 +173,12 @@ export function AppShell() {
       {view === 'rules' && (
         <OverlayView title="Regeln & Hilfe" onBack={() => setView('hub')}>
           <RulesTab sections={ruleSections} faq={faqEntries} />
+        </OverlayView>
+      )}
+
+      {view === 'announcements' && (
+        <OverlayView title="Ankündigungen" onBack={() => setView('hub')}>
+          <AnnouncementsList announcements={announcements} />
         </OverlayView>
       )}
 
