@@ -86,9 +86,9 @@ wie bisher.
   „Nächster Payday" in Minuten wenn `nextPaydayMinutes` vorhanden, sonst
   „Letzter Payday" mit `finance.lastPayday`, sonst Zelle leer; Spielzeit in
   Stunden (gerundet, aus playtimeMinutes).
-- **MapStrip**: Klickfläche mit der Atlas-Kachel `mapStyles/styleAtlas/3/3/5.jpg`
-  und der bestehenden Kontur-Filterkette (`action-card-media--contour` wird
-  übernommen). Unten links „Karte öffnen" und die Wegpunkt-Zeile
+- **MapStrip**: Klickfläche mit dem Stadt-Ausschnitt `public/img/map-preview.jpg`
+  (aus `mapStyles/styleAtlas/map.png` geschnitten, wie im Mockup) und der
+  Kontur-Filterkette des Mockups (invertiert, messing-getönt). Unten links „Karte öffnen" und die Wegpunkt-Zeile
   „Wegpunkt gesetzt · 2,4 km" (nur bei waypointDistanceMeters), rechts ein
   runder Pfeil-Button. Kein Positionspunkt: die Kachel ist ein fester
   Ausschnitt, eine exakte Spielerposition darauf wäre falsch.

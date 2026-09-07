@@ -7,13 +7,14 @@ interface MapStripProps {
   onOpen: () => void;
 }
 
-// Kartenstreifen: Atlas-Kachel mit Kontur-Filter als Einstieg in die Karte.
-// Kein Positionspunkt - die Kachel ist ein fester Ausschnitt.
+// Kartenstreifen: Stadt-Ausschnitt der Atlas-Karte (public/img/map-preview.jpg,
+// aus mapStyles/styleAtlas/map.png geschnitten) mit Kontur-Filter als Einstieg
+// in die Karte. Kein Positionspunkt - die Kachel ist ein fester Ausschnitt.
 export function MapStrip({ data, onOpen }: MapStripProps) {
   const distance = data.map?.waypointDistanceMeters;
   return (
     <button type="button" className="hub-map" onClick={onOpen}>
-      <span className="hub-map-media" style={{ backgroundImage: 'url(mapStyles/styleAtlas/3/3/5.jpg)' }} />
+      <span className="hub-map-media" style={{ backgroundImage: 'url(img/map-preview.jpg)' }} />
       <span className="hub-map-text">
         <span className="hub-map-title">Karte öffnen</span>
         {distance != null && <span className="hub-map-sub">Wegpunkt gesetzt · {formatDistance(distance)}</span>}
