@@ -139,6 +139,7 @@ export function AppShell() {
         announcements={announcements}
         promo={promo}
         avatarUrl={avatarUrl}
+        playerPosition={playerPosition}
         onResume={closeMenu}
         onOpenMap={() => setView('map')}
         onOpenSettings={handleOpenSettings}
