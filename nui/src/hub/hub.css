@@ -415,6 +415,18 @@
     linear-gradient(0deg, rgba(12, 13, 18, 0.85) 0%, transparent 45%);
 }
 
+/* Spielerposition: Messing-Punkt mit Ring und Glow (wie im Mockup). */
+.hub-map-dot {
+  position: absolute;
+  z-index: 2;
+  width: 0.75rem;
+  height: 0.75rem;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: var(--brass-bright);
+  box-shadow: 0 0 0 0.3125rem rgba(224, 180, 84, 0.25), 0 0 1.125rem var(--brass-bright);
+}
+
 .hub-map-text {
   position: absolute;
   z-index: 2;

@@ -90,8 +90,10 @@ wie bisher.
   (aus `mapStyles/styleAtlas/map.png` geschnitten, wie im Mockup) und der
   Kontur-Filterkette des Mockups (invertiert, messing-getönt). Unten links „Karte öffnen" und die Wegpunkt-Zeile
   „Wegpunkt gesetzt · 2,4 km" (nur bei waypointDistanceMeters), rechts ein
-  runder Pfeil-Button. Kein Positionspunkt: die Kachel ist ein fester
-  Ausschnitt, eine exakte Spielerposition darauf wäre falsch.
+  runder Pfeil-Button. Ein Messing-Punkt (Ring + Glow) zeigt die echte
+  Spielerposition aus `setPlayerPosition`, projiziert über die CRS-Konstanten
+  des vendorten gta-v-map auf den bekannten Pixel-Ausschnitt (`hub/mapPreview.ts`,
+  rechnet auch den `cover`-Beschnitt mit); außerhalb des Ausschnitts kein Punkt.
 - **EventCard**: ersetzt PromoBanner. Overline „EVENT · LÄUFT", Titel,
   Untertitel, optional ein Fortschrittsbalken (`promo.progress`, 0 bis 100).
   Flache Fläche (Messing 7 % Deckung, Messing-Rand 30 %), kein Verlauf, kein
