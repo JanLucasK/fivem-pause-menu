@@ -396,14 +396,20 @@
   inset: 0;
   background-size: cover;
   background-position: center;
-  /* Kontur-Filterkette aus der bisherigen Karten-Kachel. */
-  filter: grayscale(1) brightness(0.55) contrast(2.1) sepia(0.95) saturate(2.4) hue-rotate(-12deg);
+  /* Kontur-Look wie im freigegebenen Mockup: helle Karte invertiert, dann
+     messing-getoent - Strassen werden zu goldenen Linien auf Dunkel. */
+  filter: grayscale(1) invert(1) contrast(1.35) brightness(0.5) sepia(1) saturate(2.4) hue-rotate(-8deg);
+  opacity: 0.85;
+  z-index: 0;
 }
 
-.hub-map-media::after {
+/* Abdunklung als eigenes Element ueber der Kachel - als ::after im gefilterten
+   Element wuerde invert() den dunklen Verlauf mit umkehren. */
+.hub-map::after {
   content: '';
   position: absolute;
   inset: 0;
+  z-index: 1;
   background:
     linear-gradient(90deg, rgba(12, 13, 18, 0.92) 0%, rgba(12, 13, 18, 0.55) 40%, rgba(12, 13, 18, 0.2) 100%),
     linear-gradient(0deg, rgba(12, 13, 18, 0.85) 0%, transparent 45%);
@@ -411,6 +417,7 @@
 
 .hub-map-text {
   position: absolute;
+  z-index: 2;
   left: 1.75rem;
   bottom: 1.625rem;
   display: flex;
@@ -432,6 +439,7 @@
 
 .hub-map-arrow {
   position: absolute;
+  z-index: 2;
   right: 1.75rem;
   bottom: 1.625rem;
   display: flex;

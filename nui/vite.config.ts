@@ -13,6 +13,9 @@ export default defineConfig({
     // die Bytes nicht ins resource.rpf gepackt) - eingebettet kann nichts fehlen.
     // Betrifft nur importierte Assets; alles unter public/ (Fonts, Blips, Map-Tiles)
     // laeuft weiter als Datei.
-    assetsInlineLimit: 32768,
+    // 128 KiB: die Wortmarke (~34 KiB) lag ueber der alten 32-KiB-Grenze und
+    // landete als eigene Datei in dist/assets/, die FiveM nicht ausliefert
+    // (Broken-Image im Spiel). Alles Importierte bleibt so sicher im Bundle.
+    assetsInlineLimit: 131072,
   },
 });
