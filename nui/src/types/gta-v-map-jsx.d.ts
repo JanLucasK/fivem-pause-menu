@@ -10,6 +10,9 @@ declare global {
         zoom?: string | number;
         'default-style'?: string;
         'tile-base-url'?: string;
+        'atlas-url'?: string;
+        'grid-url'?: string;
+        'satellite-url'?: string;
         'blips-url'?: string;
         'show-layer-control'?: boolean;
         'show-heatmap'?: boolean;

@@ -30,10 +30,13 @@ const PLAYER_MARKER_ID = 'player';
 const WAYPOINT_MARKER_ID = 'waypoint';
 const POI_GROUP = 'POI';
 
-// Blips bleiben Teil des Pausenmenüs. Die selten geänderten Atlas-Kacheln
+// Blips bleiben Teil des Pausenmenüs. Alle selten geänderten Kartenkacheln
 // liefert dagegen die eigenständige FiveM-Resource rp_atlas.
 const BASE = import.meta.env.BASE_URL;
-const ATLAS_TILE_BASE = 'https://cfx-nui-rp_atlas/mapStyles';
+const MAP_TILE_BASE = 'https://cfx-nui-rp_atlas/mapStyles';
+const ATLAS_TILE_URL = `${MAP_TILE_BASE}/styleAtlas/{z}/{x}/{y}.jpg`;
+const GRID_TILE_URL = `${MAP_TILE_BASE}/styleGrid/{z}/{x}/{y}.webp`;
+const SATELLITE_TILE_URL = `${MAP_TILE_BASE}/styleSatelite/{z}/{x}/{y}.webp`;
 
 // Wiederverwendbarer Kern des <gta-v-map>-Web-Components (vendored, siehe
 // nui/vendor/gta-v-map/): Spieler-/POI-Marker-Sync und Klick-Weiterleitung an
@@ -143,7 +146,9 @@ export function GtaMap({
       ref={mapRef}
       zoom={zoom}
       default-style={defaultStyle}
-      tile-base-url={ATLAS_TILE_BASE}
+      atlas-url={ATLAS_TILE_URL}
+      grid-url={GRID_TILE_URL}
+      satellite-url={SATELLITE_TILE_URL}
       blips-url={`${BASE}blips`}
       leaflet-css-url={leafletCssUrl}
       disable-clustering

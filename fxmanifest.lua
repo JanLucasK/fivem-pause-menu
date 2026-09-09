@@ -27,6 +27,4 @@ files {
     -- Kachel-Artwork (public/img/, z.B. NeoV-Logomark der Einstellungen-Kachel).
     'nui/dist/img/*',
     'nui/dist/blips/*.png',
-    -- Grid/Satellite bleiben lokal; Atlas kommt aus der Resource rp_atlas.
-    'nui/dist/mapStyles/**/*',
 }

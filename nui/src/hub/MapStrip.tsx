@@ -10,10 +10,10 @@ interface MapStripProps {
   onOpen: () => void;
 }
 
-// Kartenstreifen: Stadt-Ausschnitt der Atlas-Karte (public/img/map-preview.jpg,
-// aus mapStyles/styleAtlas/map.png geschnitten) mit Kontur-Filter als Einstieg
-// in die Karte. Der Messing-Punkt ist die echte Spielerposition (setPlayerPosition
-// vom Client), auf den Ausschnitt projiziert; ausserhalb -> kein Punkt.
+// Kartenstreifen: vorab erzeugter Stadt-Ausschnitt der Atlas-Karte
+// (public/img/map-preview.jpg) mit Kontur-Filter als Einstieg in die Karte.
+// Der Messing-Punkt ist die echte Spielerposition (setPlayerPosition vom
+// Client), auf den Ausschnitt projiziert; ausserhalb -> kein Punkt.
 export function MapStrip({ data, playerPosition, onOpen }: MapStripProps) {
   const distance = data.map?.waypointDistanceMeters;
   const ref = useRef<HTMLButtonElement | null>(null);

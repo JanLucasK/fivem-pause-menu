@@ -198,12 +198,11 @@ GTA-V-Koordinatentransformation und 3 Kartenstilen (Atlas/Grid/Satellite).
   `nui/package.json`. `nui/src/types/gta-v-map-jsx.d.ts` liefert die
   JSX-Typisierung fürs `<gta-v-map>`-Element (im Original-Repo in
   `src/jsx.d.ts`, aber nicht Teil des veröffentlichten `dist/`).
-- **Atlas separat:** Die Atlas-Kacheln liegen ausschließlich in der privaten
-  FiveM-Resource `VanChanhMC/rp_atlas`. Das Pausenmenü lädt sie über
-  `https://cfx-nui-rp_atlas/mapStyles/styleAtlas/...`; `fxmanifest.lua`
-  erzwingt die Resource-Abhängigkeit. `styleGrid` und `styleSatelite` können
-  weiterhin lokal unter `nui/public/mapStyles/` liegen und werden beim Build
-  nach `nui/dist/mapStyles/` kopiert.
+- **Kartenkacheln separat:** Atlas, Grid und Satellite liegen ausschließlich in
+  der privaten FiveM-Resource `VanChanhMC/rp_atlas`. Das Pausenmenü lädt alle
+  drei Stile über `https://cfx-nui-rp_atlas/mapStyles/...`; `fxmanifest.lua`
+  erzwingt die Resource-Abhängigkeit. Im Pausemenü-Repository selbst liegen
+  keine Kartenkacheln mehr.
 - **Blip-Icons:** `nui/public/blips/` – PNG pro Icon-Nummer (`<n>.png`,
   referenziert über `GtaMarker.icon`). `0.png`/`1.png` sind selbst erzeugte
   Platzhalter (Spieler-Pfeil / generischer POI-Punkt), kein Fremdmaterial.

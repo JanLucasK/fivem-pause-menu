@@ -1,14 +1,16 @@
 // Projektion Spielwelt -> Kartenstreifen. Der Streifen zeigt einen festen
-// Ausschnitt aus public/mapStyles/styleAtlas/map.png (8192 x 8192 px, das ist
-// Zoomstufe 5 der Leaflet-Kacheln). Die Weltkoordinaten-Transformation ist
-// dieselbe wie im vendorten gta-v-map (GTA_CRS_CONFIG): px = (scaleX*x +
-// centerX) * 2^zoom, py = (-scaleY*y + centerY) * 2^zoom.
+// Ausschnitt aus dem vorab erzeugten public/img/map-preview.jpg. Seine
+// Koordinaten beziehen sich auf das 8192 x 8192 Pixel grosse Atlas-Gesamtbild
+// der Zoomstufe 5; dieses Gesamtbild wird nicht mit dem Pausemenü ausgeliefert.
+// Die Weltkoordinaten-Transformation ist dieselbe wie im vendorten gta-v-map
+// (GTA_CRS_CONFIG): px = (scaleX*x + centerX) * 2^zoom,
+// py = (-scaleY*y + centerY) * 2^zoom.
 
 const CRS = { centerX: 117.3, centerY: 172.8, scaleX: 0.02072, scaleY: 0.0205 };
 const ATLAS_ZOOM_SCALE = 32; // 2^5
 
-// Pixel-Rechteck des Ausschnitts in map.png, aus dem public/img/map-preview.jpg
-// geschnitten wurde (Mitte 52 % / 72 %, Breite 42 %, Seitenverhaeltnis 2,1:1).
+// Pixel-Rechteck, aus dem public/img/map-preview.jpg erzeugt wurde
+// (Mitte 52 % / 72 %, Breite 42 %, Seitenverhaeltnis 2,1:1).
 export const PREVIEW_CROP = { left: 2539, top: 5079, width: 3440, height: 1638 };
 export const PREVIEW_ASPECT = PREVIEW_CROP.width / PREVIEW_CROP.height;
 
