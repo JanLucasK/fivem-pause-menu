@@ -7,6 +7,8 @@ author 'NeoV'
 description 'Custom Pause-Menu (Home/Map/Settings/Keybinds/Discord/Exit)'
 version '0.1.0'
 
+dependency 'rp_atlas'
+
 client_scripts {
     'client/keybinds.lua',
     'client/settings.lua',
@@ -25,7 +27,6 @@ files {
     -- Kachel-Artwork (public/img/, z.B. NeoV-Logomark der Einstellungen-Kachel).
     'nui/dist/img/*',
     'nui/dist/blips/*.png',
-    -- Kartenkacheln (Atlas/Grid/Satellite), siehe README "Map-Tab" - leer bis
-    -- echte Tiles unter nui/public/mapStyles/ abgelegt und gebaut wurden.
+    -- Grid/Satellite bleiben lokal; Atlas kommt aus der Resource rp_atlas.
     'nui/dist/mapStyles/**/*',
 }

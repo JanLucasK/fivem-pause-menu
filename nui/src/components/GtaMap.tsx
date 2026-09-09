@@ -30,10 +30,10 @@ const PLAYER_MARKER_ID = 'player';
 const WAYPOINT_MARKER_ID = 'waypoint';
 const POI_GROUP = 'POI';
 
-// import.meta.env.BASE_URL spiegelt vite.config.ts' base:'./' zur Laufzeit -
-// noetig, damit tile-base-url/blips-url in FiveMs CEF (kein Root-Server)
-// genauso funktionieren wie im Browser-Dev. Siehe README "Map-Tab".
+// Blips bleiben Teil des Pausenmenüs. Die selten geänderten Atlas-Kacheln
+// liefert dagegen die eigenständige FiveM-Resource rp_atlas.
 const BASE = import.meta.env.BASE_URL;
+const ATLAS_TILE_BASE = 'https://cfx-nui-rp_atlas/mapStyles';
 
 // Wiederverwendbarer Kern des <gta-v-map>-Web-Components (vendored, siehe
 // nui/vendor/gta-v-map/): Spieler-/POI-Marker-Sync und Klick-Weiterleitung an
@@ -143,7 +143,7 @@ export function GtaMap({
       ref={mapRef}
       zoom={zoom}
       default-style={defaultStyle}
-      tile-base-url={`${BASE}mapStyles`}
+      tile-base-url={ATLAS_TILE_BASE}
       blips-url={`${BASE}blips`}
       leaflet-css-url={leafletCssUrl}
       disable-clustering

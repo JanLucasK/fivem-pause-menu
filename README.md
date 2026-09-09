@@ -198,20 +198,12 @@ GTA-V-Koordinatentransformation und 3 Kartenstilen (Atlas/Grid/Satellite).
   `nui/package.json`. `nui/src/types/gta-v-map-jsx.d.ts` liefert die
   JSX-Typisierung fürs `<gta-v-map>`-Element (im Original-Repo in
   `src/jsx.d.ts`, aber nicht Teil des veröffentlichten `dist/`).
-- **Keine echten Kartenkacheln enthalten.** Die Tile-Bilder selbst werden im
-  Original-Repo separat per Mega.nz-Link verteilt (Rockstar-Texturmaterial,
-  Lizenz-/Asset-Frage – nicht Teil dieses Repos oder automatisiert
-  heruntergeladen). **Einbinden:**
-  1. Archiv aus dem Original-Repo-README besorgen (Link dort, wechselt
-     gelegentlich) und entpacken.
-  2. Ordner nach `nui/public/mapStyles/` legen, genau 3 Unterordner
-     (Platzhalter mit `.gitkeep` bereits angelegt):
-     `styleAtlas/{z}/{x}/{y}.jpg`, `styleGrid/{z}/{x}/{y}.png`,
-     `styleSatelite/{z}/{x}/{y}.jpg`.
-  3. `npm run build` – Tiles landen automatisch in `nui/dist/mapStyles/`
-     (siehe `fxmanifest.lua`, `files`-Glob `nui/dist/mapStyles/**/*`).
-  4. Solange keine Tiles vorhanden sind, rendert die Karte einfach Wasserblau
-     (`errorTileUrl`-Fallback der Library) – kein Crash, kein Broken-Image.
+- **Atlas separat:** Die Atlas-Kacheln liegen ausschließlich in der privaten
+  FiveM-Resource `VanChanhMC/rp_atlas`. Das Pausenmenü lädt sie über
+  `https://cfx-nui-rp_atlas/mapStyles/styleAtlas/...`; `fxmanifest.lua`
+  erzwingt die Resource-Abhängigkeit. `styleGrid` und `styleSatelite` können
+  weiterhin lokal unter `nui/public/mapStyles/` liegen und werden beim Build
+  nach `nui/dist/mapStyles/` kopiert.
 - **Blip-Icons:** `nui/public/blips/` – PNG pro Icon-Nummer (`<n>.png`,
   referenziert über `GtaMarker.icon`). `0.png`/`1.png` sind selbst erzeugte
   Platzhalter (Spieler-Pfeil / generischer POI-Punkt), kein Fremdmaterial.
