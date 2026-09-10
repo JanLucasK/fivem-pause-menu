@@ -289,45 +289,86 @@ end)
 -- Deshalb beim Oeffnen erzeugen, beim Schliessen freigeben (Engine-Limit ~34
 -- Headshot-Slots, ein haengender Slot wuerde irgendwann alle UIs treffen).
 local headshotHandle = 0
+local headshotRequest = 0
+local avatarRetryCount = 0
+local lastAvatarRetry = 0
+local MAX_HEADSHOT_ATTEMPTS = 3
+local MAX_AVATAR_RETRIES = 2
+local HEADSHOT_TIMEOUT_MS = 3000
 
 local function releaseHeadshot()
-    if headshotHandle ~= 0 then
+    headshotRequest = headshotRequest + 1
+    if headshotHandle > 0 then
         UnregisterPedheadshot(headshotHandle)
-        headshotHandle = 0
     end
+    headshotHandle = 0
 end
 
 local function pushHeadshot()
     releaseHeadshot()
-    local handle = RegisterPedheadshotTransparent(PlayerPedId())
-    headshotHandle = handle
+    local request = headshotRequest
     CreateThread(function()
-        local deadline = GetGameTimer() + 3000
-        while headshotHandle == handle and GetGameTimer() < deadline do
-            if IsPedheadshotValid(handle) and IsPedheadshotReady(handle) then
-                -- Nur senden, wenn dieser Handle noch aktuell und das Menue
-                -- weiterhin offen ist (Spieler koennte schnell zugemacht haben).
-                if headshotHandle == handle and isMenuOpen then
-                    local txd = GetPedheadshotTxdString(handle)
-                    SendNUIMessage({
-                        action = 'setAvatar',
-                        payload = ('https://nui-img/%s/%s'):format(txd, txd),
-                    })
-                end
-                return
+        for attempt = 1, MAX_HEADSHOT_ATTEMPTS do
+            if request ~= headshotRequest or not isMenuOpen then return end
+
+            -- Transparent ist der bevorzugte Passfoto-Look. Der letzte Versuch
+            -- nutzt den normalen Headshot als robusten Engine-Fallback.
+            local handle
+            if attempt == MAX_HEADSHOT_ATTEMPTS then
+                handle = RegisterPedheadshot(PlayerPedId())
+            else
+                handle = RegisterPedheadshotTransparent(PlayerPedId())
             end
-            Wait(50)
+
+            if handle ~= nil and handle > 0 then
+                headshotHandle = handle
+                local deadline = GetGameTimer() + HEADSHOT_TIMEOUT_MS
+                while request == headshotRequest and headshotHandle == handle
+                    and isMenuOpen and GetGameTimer() < deadline do
+                    if not IsPedheadshotValid(handle) then break end
+                    if IsPedheadshotReady(handle) then
+                        local txd = GetPedheadshotTxdString(handle)
+                        if txd ~= nil and txd ~= '' then
+                            SendNUIMessage({
+                                action = 'setAvatar',
+                                payload = ('https://nui-img/%s/%s'):format(txd, txd),
+                            })
+                            return
+                        end
+                        break
+                    end
+                    Wait(50)
+                end
+
+                if headshotHandle ~= handle then return end
+                UnregisterPedheadshot(handle)
+                headshotHandle = 0
+            end
+
+            if attempt < MAX_HEADSHOT_ATTEMPTS then Wait(150) end
         end
-        -- Timeout (z.B. Ped nicht geladen): Slot nicht dauerhaft blockieren.
-        if headshotHandle == handle then releaseHeadshot() end
     end)
 end
+
+RegisterNUICallback('retryAvatar', function(_, cb)
+    local now = GetGameTimer()
+    if isMenuOpen and avatarRetryCount < MAX_AVATAR_RETRIES
+        and (lastAvatarRetry == 0 or now - lastAvatarRetry >= 500) then
+        avatarRetryCount = avatarRetryCount + 1
+        lastAvatarRetry = now
+        pushHeadshot()
+    end
+    cb({})
+end)
 
 local function setMenuVisible(visible)
     isMenuOpen = visible
     SetNuiFocus(visible, visible)
     SendNUIMessage({ action = 'setVisible', payload = visible })
     if visible then
+        avatarRetryCount = 0
+        lastAvatarRetry = 0
+        SendNUIMessage({ action = 'setAvatar', payload = json.null })
         SendNUIMessage({ action = 'setMapConfig', payload = getMapConfig() })
         SendNUIMessage({ action = 'setPromoConfig', payload = getPromoConfig() })
         pushHeadshot()

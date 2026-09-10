@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from 'react';
 import type { KeyboardEvent as ReactKeyboardEvent } from 'react';
 import type { LucideIcon } from 'lucide-react';
 import { BookOpenText, Keyboard, LogOut, Map as MapIcon, MessageCircle, Play, Settings } from 'lucide-react';
-import logoUrl from '../assets/logo.png';
 
 export type NavAction = 'resume' | 'map' | 'settings' | 'keybinds' | 'rules' | 'discord' | 'exit';
 
@@ -29,8 +28,9 @@ interface NavRailProps {
 }
 
 // Navigations-Rail mit Roving Tabindex: ein Fokusmodell fuer Tastatur, Gamepad
-// und Maus (Hover setzt den Fokus). Der fokussierte Eintrag traegt die goldene
-// Logomark als Cursor; Pfeil hoch/runter laufen zyklisch, Enter/Space waehlen.
+// und Maus (Hover setzt den Fokus). Die Messing-Flaeche markiert den Fokus,
+// waehrend jedes Symbol an seinem festen Platz bleibt; Pfeil hoch/runter laufen
+// zyklisch, Enter/Space waehlen.
 export function NavRail({ onSelect }: NavRailProps) {
   const [focused, setFocused] = useState(0);
   const refs = useRef<Array<HTMLButtonElement | null>>([]);
@@ -76,7 +76,7 @@ export function NavRail({ onSelect }: NavRailProps) {
               onClick={() => onSelect(entry.id)}
             >
               <span className="hub-rail-icon">
-                {active ? <img src={logoUrl} alt="" className="hub-rail-cursor" /> : <Icon size="1.375rem" />}
+                <Icon size="1.375rem" />
               </span>
               <span className="hub-rail-label">{entry.label}</span>
               {entry.hint && <kbd className="hub-key">{entry.hint}</kbd>}

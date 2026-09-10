@@ -13,7 +13,9 @@ sie nachzubauen:
 
 - **Karte** (Rail-Eintrag, Kartenstreifen oder Taste **M** im Hub) öffnet das
   interne Karten-Overlay (`nui/src/tabs/map/`). Der Client hält daneben den
-  `openMap`-Callback für die corerp-Vollbildkarte (`rp_map`) bereit.
+  `openMap`-Callback für die corerp-Vollbildkarte (`rp_map`) bereit. Der
+  Kartenstreifen ist eine echte, passive Atlas-Karte und bleibt auf der
+  aktuellen Spielerposition zentriert.
 - **Einstellungen** öffnet das **native GTA-Pausenmenü** (dort liegen die
   GTA-Settings). Das Menü schließt sich dafür zuerst, sodass ein anschließendes
   **ESC** das GTA-Menü schließt und normal ins Spiel zurückführt – **nicht**
@@ -23,8 +25,11 @@ sie nachzubauen:
   ein `setAnnouncements`-Listener steht für einen echten Feed bereit. Mehr als
   drei Einträge -> „Alle ansehen" öffnet ein Overlay mit der ganzen Liste.
 - Die **Navigations-Rail** ist mit ↑/↓, Enter und Maus bedienbar (ein
-  Fokusmodell, die goldene Logomark ist der Cursor); Tasten-Hinweise stehen
-  in der Fußzeile.
+  Fokusmodell, ruhige Messing-Hervorhebung und ortsfeste Symbole);
+  Tasten-Hinweise stehen in der Fußzeile.
+- Das **Charakterbild** wird beim Öffnen aus dem lokalen Ped gerendert. Native
+  Timeouts und NUI-Ladefehler führen zu begrenzten Neuversuchen; bis ein Bild
+  bereitsteht, bleiben die Initialen als stabiler Fallback sichtbar.
 
 Die Spielerdaten oben kommen live aus corerp (`client/client.lua` hängt sich
 lesend an dessen Charakter-/Kontostand-/Progression-Events, siehe unten).

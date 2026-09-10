@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type {
   Announcement,
   HomeData,
@@ -40,6 +40,7 @@ export function AppShell() {
   const [promo, setPromo] = useState<PromoConfig>(isInFivem ? { title: '', subtitle: '', buttonLabel: '' } : mockPromoConfig);
   // Spielerfoto (nui-img-Textur vom Client); null -> Initialen-Fallback.
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const avatarUrlRef = useRef<string | null>(null);
   const [mapConfig, setMapConfig] = useState<MapConfig>(mockMapConfig);
   const [playerPosition, setPlayerPosition] = useState<MapPlayerPosition>(mockPlayerPosition);
   const [mapBlips, setMapBlips] = useState<MapBlip[]>(mockMapBlips);
@@ -57,7 +58,10 @@ export function AppShell() {
       onNuiMessage<HomeData>('setHomeData', setHomeData),
       onNuiMessage<Announcement[]>('setAnnouncements', setAnnouncements),
       onNuiMessage<PromoConfig>('setPromoConfig', setPromo),
-      onNuiMessage<string | null>('setAvatar', setAvatarUrl),
+      onNuiMessage<string | null>('setAvatar', (value) => {
+        avatarUrlRef.current = value;
+        setAvatarUrl(value);
+      }),
       onNuiMessage<MapConfig>('setMapConfig', setMapConfig),
       onNuiMessage<MapPlayerPosition>('setPlayerPosition', setPlayerPosition),
       onNuiMessage<MapBlip[]>('setMapBlips', setMapBlips),
@@ -117,6 +121,15 @@ export function AppShell() {
     if (isInFivem) fetchNui('promoAction');
   }
 
+  function handleAvatarError(failedUrl: string) {
+    // Ein spaeter Fehler eines alten <img> darf keinen inzwischen gelieferten
+    // neuen Headshot loeschen. Der Client begrenzt und drosselt die Neuversuche.
+    if (avatarUrlRef.current !== failedUrl) return;
+    avatarUrlRef.current = null;
+    setAvatarUrl(null);
+    if (isInFivem) fetchNui('retryAvatar');
+  }
+
   // Optimistisch aktualisieren: der Lua-Callback (rebindKey/resetKeybind)
   // antwortet nur per cb, pusht aber kein neues setKeybinds - ohne lokales
   // Update bliebe die Liste bis zum naechsten Menue-Oeffnen alt.
@@ -139,6 +152,7 @@ export function AppShell() {
         announcements={announcements}
         promo={promo}
         avatarUrl={avatarUrl}
+        onAvatarError={handleAvatarError}
         playerPosition={playerPosition}
         onResume={closeMenu}
         onOpenMap={() => setView('map')}

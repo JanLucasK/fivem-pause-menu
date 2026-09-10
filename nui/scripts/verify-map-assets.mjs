@@ -31,4 +31,25 @@ for (const template of [
   }
 }
 
+const previewSource = readFileSync(join(nuiRoot, 'src', 'hub', 'MapStrip.tsx'), 'utf8');
+for (const marker of [
+  '<GtaMap',
+  'centerOnPlayer',
+  'interactive={false}',
+  'showPlayerMarker={false}',
+]) {
+  if (!previewSource.includes(marker)) {
+    throw new Error(`Die Hub-Vorschau folgt nicht der echten Spielerposition: ${marker}`);
+  }
+}
+
+for (const obsoletePath of [
+  join(nuiRoot, 'public', 'img', 'map-preview.jpg'),
+  join(nuiRoot, 'src', 'hub', 'mapPreview.ts'),
+]) {
+  if (existsSync(obsoletePath)) {
+    throw new Error(`Feste Kartenvorschau muss entfernt bleiben: ${obsoletePath}`);
+  }
+}
+
 console.log('Kartenkacheln: ausschließlich externe rp_atlas-Pfade.');

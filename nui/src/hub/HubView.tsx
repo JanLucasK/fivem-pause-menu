@@ -17,6 +17,7 @@ interface HubViewProps {
   announcements: Announcement[];
   promo: PromoConfig;
   avatarUrl: string | null;
+  onAvatarError: (failedUrl: string) => void;
   playerPosition: MapPlayerPosition | null;
   onResume: () => void;
   onOpenMap: () => void;
@@ -72,7 +73,7 @@ export function HubView(props: HubViewProps) {
           <NavRail onSelect={handleNav} />
         </div>
         <section className="hub-center">
-          <Dossier data={data} avatarUrl={avatarUrl} />
+          <Dossier data={data} avatarUrl={avatarUrl} onAvatarError={props.onAvatarError} />
           <StatStrip data={data} />
           <MapStrip data={data} playerPosition={playerPosition} onOpen={props.onOpenMap} />
         </section>

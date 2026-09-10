@@ -1,6 +1,6 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useLayoutEffect, useRef } from 'react';
 import 'gta-v-map';
-import type { GtaVMap, MapClickDetail, MapStyle } from 'gta-v-map';
+import type { GtaVMap, MapClickDetail, MapReadyDetail, MapStyle } from 'gta-v-map';
 // eslint-disable-next-line import/no-unresolved -- Vite-Asset-Import, siehe README "Map-Tab".
 import leafletCssUrl from 'leaflet/dist/leaflet.css?url';
 import type { MapBlip, MapPlayerPosition } from '../types';
@@ -12,6 +12,9 @@ interface GtaMapProps {
   showStyleSwitcher: boolean;
   zoom: number;
   className: string;
+  centerOnPlayer?: boolean;
+  interactive?: boolean;
+  showPlayerMarker?: boolean;
   /** Aktuell gesetzter Wegpunkt (Klick auf die Karte), fuer den Pin auf dieser
    *  Karteninstanz. undefined/null blendet den Pin aus. */
   waypoint?: { x: number; y: number } | null;
@@ -33,7 +36,8 @@ const POI_GROUP = 'POI';
 // Blips bleiben Teil des Pausenmenüs. Alle selten geänderten Kartenkacheln
 // liefert dagegen die eigenständige FiveM-Resource rp_atlas.
 const BASE = import.meta.env.BASE_URL;
-const MAP_TILE_BASE = 'https://cfx-nui-rp_atlas/mapStyles';
+const MAP_TILE_BASE = import.meta.env.VITE_MAP_TILE_BASE
+  ?? 'https://cfx-nui-rp_atlas/mapStyles';
 const ATLAS_TILE_URL = `${MAP_TILE_BASE}/styleAtlas/{z}/{x}/{y}.jpg`;
 const GRID_TILE_URL = `${MAP_TILE_BASE}/styleGrid/{z}/{x}/{y}.webp`;
 const SATELLITE_TILE_URL = `${MAP_TILE_BASE}/styleSatelite/{z}/{x}/{y}.webp`;
@@ -50,12 +54,55 @@ export function GtaMap({
   showStyleSwitcher,
   zoom,
   className,
+  centerOnPlayer = false,
+  interactive = true,
+  showPlayerMarker = true,
   waypoint,
   onMapClick,
 }: GtaMapProps) {
   const mapRef = useRef<GtaVMap | null>(null);
+  const leafletMapRef = useRef<MapReadyDetail['map'] | null>(null);
   const onMapClickRef = useRef(onMapClick);
+  const playerPositionRef = useRef(playerPosition);
+  const zoomRef = useRef(zoom);
+  const centerOnPlayerRef = useRef(centerOnPlayer);
+  const interactiveRef = useRef(interactive);
   onMapClickRef.current = onMapClick;
+  playerPositionRef.current = playerPosition;
+  zoomRef.current = zoom;
+  centerOnPlayerRef.current = centerOnPlayer;
+  interactiveRef.current = interactive;
+
+  // map-ready liefert die gekapselte Leaflet-Instanz. Die kompakte
+  // Hub-Vorschau wird damit auf den Spieler gesetzt und komplett passiv
+  // gemacht; der umschliessende Button bleibt ihr einziger Bedienpfad.
+  useLayoutEffect(() => {
+    const el = mapRef.current;
+    if (!el) return;
+    const listener = (event: Event) => {
+      const map = (event as CustomEvent<MapReadyDetail>).detail.map;
+      leafletMapRef.current = map;
+      if (!interactiveRef.current) {
+        map.dragging.disable();
+        map.scrollWheelZoom.disable();
+        map.doubleClickZoom.disable();
+        map.boxZoom.disable();
+        map.keyboard.disable();
+        map.touchZoom.disable();
+        map.zoomControl.remove();
+        map.attributionControl.remove();
+      }
+      if (centerOnPlayerRef.current) {
+        const position = playerPositionRef.current;
+        map.setView([position.y, position.x], zoomRef.current, { animate: false });
+      }
+    };
+    el.addEventListener('map-ready', listener);
+    return () => {
+      el.removeEventListener('map-ready', listener);
+      leafletMapRef.current = null;
+    };
+  }, []);
 
   useEffect(() => {
     const el = mapRef.current;
@@ -71,14 +118,28 @@ export function GtaMap({
   // Spielerposition live nachfuehren (eigene, feste Marker-Id -> Upsert statt
   // Neuanlage, siehe addMarker-Doku im vendorten Package).
   useEffect(() => {
-    mapRef.current?.addMarker({
+    const el = mapRef.current;
+    if (!el) return;
+    if (!showPlayerMarker) {
+      el.removeMarker(PLAYER_MARKER_ID);
+      return;
+    }
+    el.addMarker({
       id: PLAYER_MARKER_ID,
       x: playerPosition.x,
       y: playerPosition.y,
       icon: PLAYER_ICON,
       group: 'Player',
     });
-  }, [playerPosition]);
+  }, [playerPosition, showPlayerMarker]);
+
+  // Im Hub bleibt die echte Spielerposition immer in der Mitte. setView statt
+  // panTo vermeidet eine lange Kartenfahrt, wenn zwischen zwei Updates ein
+  // grosser Weg zurueckgelegt wurde.
+  useEffect(() => {
+    if (!centerOnPlayer) return;
+    leafletMapRef.current?.setView([playerPosition.y, playerPosition.x], zoom, { animate: false });
+  }, [centerOnPlayer, playerPosition, zoom]);
 
   // POI/Icon-Layer aus corerp-Daten neu zeichnen, wenn sich die Blip-Liste
   // aendert (corerp bleibt alleinige Quelle fuer diesen Layer).
@@ -138,8 +199,10 @@ export function GtaMap({
   // sonst nie greifen. element.className setzt zuverlaessig das echte
   // "class"-Attribut.
   useEffect(() => {
-    if (mapRef.current) mapRef.current.className = className;
-  }, [className]);
+    if (!mapRef.current) return;
+    mapRef.current.className = className;
+    mapRef.current.inert = !interactive;
+  }, [className, interactive]);
 
   return (
     <gta-v-map

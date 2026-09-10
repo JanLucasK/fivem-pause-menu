@@ -5,10 +5,11 @@ import { initials } from './format';
 interface DossierProps {
   data: HomeData;
   avatarUrl: string | null;
+  onAvatarError: (failedUrl: string) => void;
 }
 
 // Charakter-Dossier: Headshot, Overline, Name, Job-/Fraktions-Chips, Telefon.
-export function Dossier({ data, avatarUrl }: DossierProps) {
+export function Dossier({ data, avatarUrl, onAvatarError }: DossierProps) {
   const { character } = data;
   const fullName = `${character.firstName} ${character.lastName}`.trim() || 'Unbekannt';
   const job = identityLabel(character.job, character.jobLabel);
@@ -18,7 +19,12 @@ export function Dossier({ data, avatarUrl }: DossierProps) {
     <div className="hub-dossier">
       <div className="hub-avatar">
         {avatarUrl ? (
-          <img className="hub-avatar-img" src={avatarUrl} alt="" />
+          <img
+            className="hub-avatar-img"
+            src={avatarUrl}
+            alt=""
+            onError={() => onAvatarError(avatarUrl)}
+          />
         ) : (
           <span className="hub-avatar-initials">{initials(character.firstName, character.lastName)}</span>
         )}
