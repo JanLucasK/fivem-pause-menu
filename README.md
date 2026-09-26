@@ -192,7 +192,8 @@ Spielerposition und Wegpunkten. Die passive Vorschau zeichnet `rp_atlas`-Kacheln
 auf einem Canvas mit gemeinsam gerundeten Pixelkanten, sodass keine 1-px-Lücken
 zwischen Kacheln entstehen. Der Ausschnitt klemmt an allen Atlas-Grenzen;
 der Spielerpunkt folgt seiner Position im geklemmten Ausschnitt. `fxmanifest.lua`
-verlangt `rp_core` und `rp_atlas`. Für Spieler ohne nutzbare Karte gelten
+verlangt die im Runtime-Checkout als `fivem-corerp` bereitgestellte CoreRP-Resource
+und `rp_atlas`. Für Spieler ohne nutzbare Karte gelten
 die CoreRP-Regeln.
 
 ## Event und Ankündigungen verwalten

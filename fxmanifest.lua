@@ -7,7 +7,7 @@ author 'NeoV'
 description 'Custom Pause-Menu (Home/Settings/Keybinds/Discord/Exit)'
 version '0.1.0'
 
-dependency 'rp_core'
+dependency 'fivem-corerp'
 dependency 'rp_atlas'
 
 client_scripts {
