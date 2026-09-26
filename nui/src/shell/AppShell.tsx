@@ -3,6 +3,7 @@ import type {
   Announcement,
   HomeData,
   KeybindEntry,
+  MapPlayerPosition,
   PromoConfig,
 } from '../types';
 import { fetchNui, isInFivem, onNuiMessage } from '../bridge/nui';
@@ -36,6 +37,9 @@ export function AppShell() {
   // Spielerfoto (nui-img-Textur vom Client); null -> Initialen-Fallback.
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const avatarUrlRef = useRef<string | null>(null);
+  const [playerPosition, setPlayerPosition] = useState<MapPlayerPosition | null>(
+    isInFivem ? null : { x: -200, y: 300 },
+  );
   const [keybinds, setKeybinds] = useState<KeybindEntry[]>(isInFivem ? [] : mockKeybinds);
   const [exitDialogOpen, setExitDialogOpen] = useState(false);
 
@@ -54,6 +58,7 @@ export function AppShell() {
         avatarUrlRef.current = value;
         setAvatarUrl(value);
       }),
+      onNuiMessage<MapPlayerPosition>('setPlayerPosition', setPlayerPosition),
       onNuiMessage<KeybindEntry[]>('setKeybinds', setKeybinds),
     ];
     return () => offs.forEach((off) => off());
@@ -148,6 +153,7 @@ export function AppShell() {
         promo={promo}
         avatarUrl={avatarUrl}
         onAvatarError={handleAvatarError}
+        playerPosition={playerPosition}
         onResume={closeMenu}
         onOpenMap={handleOpenMap}
         onOpenSettings={handleOpenSettings}

@@ -1,4 +1,4 @@
-import type { Announcement, HomeData, PromoConfig } from '../types';
+import type { Announcement, HomeData, MapPlayerPosition, PromoConfig } from '../types';
 import { Logomark } from './Logomark';
 import { TopBar } from './TopBar';
 import { NavRail } from './NavRail';
@@ -18,6 +18,7 @@ interface HubViewProps {
   promo: PromoConfig;
   avatarUrl: string | null;
   onAvatarError: (failedUrl: string) => void;
+  playerPosition: MapPlayerPosition | null;
   onResume: () => void;
   onOpenMap: () => void;
   onOpenSettings: () => void;
@@ -33,7 +34,7 @@ interface HubViewProps {
 // in der Mitte, "Jetzt auf NeoV" rechts, Tasten-Hinweise unten. Deckender
 // Hintergrund, das Spiel ist nicht zu sehen.
 export function HubView(props: HubViewProps) {
-  const { data, announcements, promo, avatarUrl } = props;
+  const { data, announcements, promo, avatarUrl, playerPosition } = props;
 
   function handleNav(action: NavAction) {
     switch (action) {
@@ -74,7 +75,7 @@ export function HubView(props: HubViewProps) {
         <section className="hub-center">
           <Dossier data={data} avatarUrl={avatarUrl} onAvatarError={props.onAvatarError} />
           <StatStrip data={data} />
-          <MapStrip data={data} onOpen={props.onOpenMap} />
+          <MapStrip data={data} playerPosition={playerPosition} onOpen={props.onOpenMap} />
         </section>
         <aside className="hub-now">
           <EventCard config={promo} onAction={props.onPromoAction} />

@@ -350,6 +350,14 @@ RegisterNUICallback('retryAvatar', function(_, cb)
     cb({})
 end)
 
+local function pushPlayerPosition()
+    local coords = GetEntityCoords(PlayerPedId())
+    SendNUIMessage({
+        action = 'setPlayerPosition',
+        payload = { x = coords.x, y = coords.y },
+    })
+end
+
 local function setMenuVisible(visible)
     isMenuOpen = visible
     SetNuiFocus(visible, visible)
@@ -358,6 +366,7 @@ local function setMenuVisible(visible)
         avatarRetryCount = 0
         lastAvatarRetry = 0
         SendNUIMessage({ action = 'setAvatar', payload = json.null })
+        pushPlayerPosition()
         SendNUIMessage({ action = 'setPromoConfig', payload = getPromoConfig() })
         pushHeadshot()
         SendNUIMessage({ action = 'setHomeData', payload = buildHomeData() })
@@ -500,4 +509,13 @@ end)
 RegisterNUICallback('disconnect', function(_, cb)
     ExecuteCommand('disconnect')
     cb({})
+end)
+
+-- Nur die passive Atlas-Vorschau folgt der Spielerposition. Die interaktive
+-- Karte und alle Wegpunkte bleiben in CoreRP. Im geschlossenen Menü kein Push.
+CreateThread(function()
+    while true do
+        Wait(500)
+        if isMenuOpen then pushPlayerPosition() end
+    end
 end)

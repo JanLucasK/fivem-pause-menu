@@ -1,19 +1,22 @@
-import { ArrowRight, Map as MapIcon } from 'lucide-react';
-import type { HomeData } from '../types';
+import { ArrowRight } from 'lucide-react';
+import type { HomeData, MapPlayerPosition } from '../types';
+import { AtlasPreview } from './AtlasPreview';
 import { formatDistance } from './format';
 
 interface MapStripProps {
   data: HomeData;
+  playerPosition: MapPlayerPosition | null;
   onOpen: () => void;
 }
 
-// Dekorativer Einstieg; die interaktive Karte und alle Karten-Items liegen in CoreRP.
-export function MapStrip({ data, onOpen }: MapStripProps) {
+// Die passive Vorschau folgt dem Spieler. Der Klick öffnet CoreRPs M-Karte.
+export function MapStrip({ data, playerPosition, onOpen }: MapStripProps) {
   const distance = data.map?.waypointDistanceMeters;
 
   return (
     <button type="button" className="hub-map" onClick={onOpen}>
-      <span className="hub-map-art" aria-hidden="true"><MapIcon size="7rem" strokeWidth={0.8} /></span>
+      {playerPosition && <AtlasPreview position={playerPosition} />}
+      {playerPosition && <span className="hub-map-dot" aria-hidden="true" />}
       <span className="hub-map-text">
         <span className="hub-map-title">Atlas öffnen</span>
         {distance != null && <span className="hub-map-sub">Wegpunkt gesetzt · {formatDistance(distance)}</span>}

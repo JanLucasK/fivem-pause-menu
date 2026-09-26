@@ -4,17 +4,17 @@ Custom NUI-Pause-Menü für NeoV. Ersetzt das native GTA-Pause-Menü durch ein
 **Dossier**-Menü im NeoV-Look (Graphit + Messing, deckender Hintergrund):
 links eine **Navigations-Rail** (Fortsetzen, Karte, Einstellungen, Tasten,
 Regeln, Discord, Verlassen), in der Mitte das **Charakter-Dossier** (Headshot,
-Name, Job/Fraktion, Kennzahl-Zeile, Atlas-Einstieg), rechts **Event-Karte,
+Name, Job/Fraktion, Kennzahl-Zeile, Atlas-Vorschau), rechts **Event-Karte,
 Ankündigungen und Discord**. Design-Spec:
 `docs/superpowers/specs/2026-09-06-dossier-hub-redesign-design.md`.
 
 Das Menü hat bewusst wenig Eigenlogik – es ruft vorhandene Funktionen auf statt
 sie nachzubauen:
 
-- **Karte** (Rail-Eintrag, Atlas-Einstieg oder Taste **M** im Hub) schließt
+- **Karte** (Rail-Eintrag, Atlas-Vorschau oder Taste **M** im Hub) schließt
   das Pause-Menü und startet über `openMap` den CoreRP-Command `rp_map`.
-  CoreRP übernimmt Fokus, Karten-Item, Wegpunkte und Schließen. Der Streifen
-  im Hub ist nur ein dekorativer Einstieg; er rendert keine eigene Karte.
+  CoreRP übernimmt Fokus, Karten-Item, Wegpunkte und Schließen. Die kleine
+  Vorschau zeigt passiv die Spielerposition auf denselben `rp_atlas`-Kacheln.
 - **Einstellungen** öffnet das **native GTA-Pausenmenü** (dort liegen die
   GTA-Settings). Das Menü schließt sich dafür zuerst, sodass ein anschließendes
   **ESC** das GTA-Menü schließt und normal ins Spiel zurückführt – **nicht**
@@ -186,11 +186,13 @@ oben verhindert nur einen Fehler, falls `neov-pause-menu` nicht läuft.
 
 ## Karte
 
-Das Pause-Menü besitzt keinen eigenen Kartenrenderer. Rail-Eintrag,
-Atlas-Einstieg und Taste M im geöffneten Hub rufen denselben NUI-Callback
+Das Pause-Menü besitzt keine zweite interaktive Karte. Rail-Eintrag,
+Atlas-Vorschau und Taste M im geöffneten Hub rufen denselben NUI-Callback
 `openMap` auf. `client/client.lua` gibt den Pause-Menü-Fokus frei und führt
 `rp_map` aus; CoreRP zeigt dann seine Atlas-Karte mit Karten-Items,
-Spielerposition und Wegpunkten. `fxmanifest.lua` verlangt deshalb `rp_core`.
+Spielerposition und Wegpunkten. Die passive Vorschau zeichnet `rp_atlas`-Kacheln
+auf einem Canvas mit gemeinsam gerundeten Pixelkanten, sodass keine 1-px-Lücken
+zwischen Kacheln entstehen. `fxmanifest.lua` verlangt `rp_core` und `rp_atlas`.
 Für Spieler ohne nutzbare Karte gelten die CoreRP-Regeln.
 
 ## Offene Punkte / nächste Iteration

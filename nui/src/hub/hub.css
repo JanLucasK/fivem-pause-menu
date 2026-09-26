@@ -385,19 +385,18 @@
   text-align: left;
 }
 
-.hub-map-art {
+.hub-map-canvas {
   position: absolute;
   inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  padding-right: 19%;
-  color: var(--brass);
-  opacity: 0.35;
-  background: repeating-linear-gradient(135deg, transparent 0 2.5rem, rgba(200, 151, 63, 0.09) 2.5rem 2.5625rem);
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  filter: grayscale(1) invert(1) contrast(1.35) brightness(0.5) sepia(1) saturate(2.4) hue-rotate(-8deg);
+  opacity: 0.85;
 }
 
-/* Abdunklung haelt Beschriftung vor dem dekorativen Symbol lesbar. */
+/* Abdunklung haelt Beschriftung vor der Atlas-Vorschau lesbar. */
 .hub-map::after {
   content: '';
   position: absolute;
@@ -406,6 +405,19 @@
   background:
     linear-gradient(90deg, rgba(12, 13, 18, 0.92) 0%, rgba(12, 13, 18, 0.55) 40%, rgba(12, 13, 18, 0.2) 100%),
     linear-gradient(0deg, rgba(12, 13, 18, 0.85) 0%, transparent 45%);
+}
+
+.hub-map-dot {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  top: 50%;
+  width: 0.75rem;
+  height: 0.75rem;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: var(--brass-bright);
+  box-shadow: 0 0 0 0.3125rem rgba(224, 180, 84, 0.25), 0 0 1.125rem var(--brass-bright);
 }
 
 .hub-map-text {

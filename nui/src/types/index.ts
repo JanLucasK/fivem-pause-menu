@@ -73,6 +73,11 @@ export interface HomeData {
   map?: { waypointDistanceMeters: number | null } | null;
 }
 
+export interface MapPlayerPosition {
+  x: number;
+  y: number;
+}
+
 // Ein Keybind-Eintrag, wie ihn client/keybinds.lua liefert. `resource` ist die
 // Resource, die den Bind per `RegisterKeybind`-Export angemeldet hat (NeoV
 // selbst oder eine beliebige andere Resource) - rein informativ fürs UI.

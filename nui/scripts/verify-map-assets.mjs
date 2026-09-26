@@ -39,5 +39,8 @@ const manifest = readFileSync(join(repoRoot, 'fxmanifest.lua'), 'utf8');
 if (!manifest.includes("dependency 'rp_core'")) {
   throw new Error('Pause-Menü muss rp_core für die Karte voraussetzen.');
 }
+if (!manifest.includes("dependency 'rp_atlas'")) {
+  throw new Error('Pause-Menü muss rp_atlas für die passive Vorschau voraussetzen.');
+}
 
 console.log('Karte: alle Pause-Menü-Einstiege verwenden CoreRP rp_map.');

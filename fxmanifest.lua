@@ -8,6 +8,7 @@ description 'Custom Pause-Menu (Home/Settings/Keybinds/Discord/Exit)'
 version '0.1.0'
 
 dependency 'rp_core'
+dependency 'rp_atlas'
 
 client_scripts {
     'client/keybinds.lua',
