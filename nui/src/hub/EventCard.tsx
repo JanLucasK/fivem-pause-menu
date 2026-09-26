@@ -5,7 +5,7 @@ interface EventCardProps {
   onAction: () => void;
 }
 
-// Event-Karte (ersetzt das Promo-Banner). Convar-getrieben: kein Titel -> keine
+// Veröffentlichte Event-Karte aus CoreRP: kein Titel -> keine
 // Karte, kein Button-Label -> kein Button, kein progress -> kein Balken.
 export function EventCard({ config, onAction }: EventCardProps) {
   if (!config.title) return null;

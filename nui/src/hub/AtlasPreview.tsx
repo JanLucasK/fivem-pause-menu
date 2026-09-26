@@ -19,6 +19,7 @@ const clamp01 = (value: number) => Math.max(0, Math.min(1, value));
 
 export function AtlasPreview({ position }: AtlasPreviewProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const markerRef = useRef<HTMLSpanElement>(null);
   const positionRef = useRef(position);
   const redrawRef = useRef<() => void>(() => {});
   positionRef.current = position;
@@ -46,13 +47,22 @@ export function AtlasPreview({ position }: AtlasPreviewProps) {
       const { x, y } = positionRef.current;
       const fx = clamp01((x - MIN_X) / (MAX_X - MIN_X));
       const fy = clamp01((MAX_Y - y) / (MAX_Y - MIN_Y));
-      const panX = width / 2 - fx * MAP_SIZE;
-      const panY = height / 2 - fy * MAP_SIZE;
+      // Am Atlasrand den Ausschnitt klemmen: kein leerer Streifen neben den Kacheln.
+      const mapSize = Math.max(MAP_SIZE, width, height);
+      const clampPan = (value: number, viewport: number) =>
+        Math.max(viewport - mapSize, Math.min(0, value));
+      const panX = clampPan(width / 2 - fx * mapSize, width);
+      const panY = clampPan(height / 2 - fy * mapSize, height);
+      if (markerRef.current) {
+        const markerMargin = 8;
+        markerRef.current.style.left = `${Math.max(markerMargin, Math.min(width - markerMargin, panX + fx * mapSize))}px`;
+        markerRef.current.style.top = `${Math.max(markerMargin, Math.min(height - markerMargin, panY + fy * mapSize))}px`;
+      }
 
       // Grobe Kacheln bleiben sichtbar, bis die Detailkacheln geladen sind.
       for (let level = 2; level <= 4; level++) {
         const count = 2 ** level;
-        const tileSize = MAP_SIZE / count;
+        const tileSize = mapSize / count;
         const firstX = Math.max(0, Math.floor(-panX / tileSize));
         const lastX = Math.min(count - 1, Math.floor((width - panX) / tileSize));
         const firstY = Math.max(0, Math.floor(-panY / tileSize));
@@ -94,5 +104,8 @@ export function AtlasPreview({ position }: AtlasPreviewProps) {
 
   useEffect(() => { redrawRef.current(); }, [position.x, position.y]);
 
-  return <canvas ref={canvasRef} className="hub-map-canvas" aria-hidden="true" />;
+  return <>
+    <canvas ref={canvasRef} className="hub-map-canvas" aria-hidden="true" />
+    <span ref={markerRef} className="hub-map-dot" aria-hidden="true" />
+  </>;
 }

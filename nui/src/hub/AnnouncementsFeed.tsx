@@ -10,6 +10,7 @@ interface AnnouncementsFeedProps {
 // Ankuendigungen ohne Box: Overline, maximal drei Eintraege mit Marker-Balken.
 // Mehr als drei -> "Alle ansehen" oeffnet das Overlay mit der ganzen Liste.
 export function AnnouncementsFeed({ announcements, onShowAll }: AnnouncementsFeedProps) {
+  if (announcements.length === 0) return null;
   const visible = announcements.slice(0, FEED_LIMIT);
   return (
     <section className="hub-feed">

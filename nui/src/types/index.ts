@@ -41,26 +41,30 @@ export interface ServerInfo {
   discordHint?: string | null;
 }
 
-// Promo-/Event-Banner unten im Hub. Komplett Convar-getrieben
-// (neov_pausemenu_promo_* in client/client.lua): leerer title versteckt das
-// Banner, leerer buttonLabel den Button - kein NUI-Rebuild fuer Content.
+// Event-Karte aus CoreRPs veröffentlichtem Pause-Menü-Inhalt.
+// Leerer Titel blendet die Karte aus; leerer Button-Text den Button.
 export interface PromoConfig {
   title: string;
   subtitle: string;
   buttonLabel: string;
-  // 0..100 (Convar neov_pausemenu_promo_progress); null/undefined -> kein Balken.
+  // 0..100 aus CoreRPs Veröffentlichung; null/undefined -> kein Balken.
   progress?: number | null;
 }
 
-// Eine Ankündigung/News-Karte für die rechte Spalte des Menüs. Aktuell reiner
-// Mock (siehe state/mockAnnouncements.ts) - später könnte dies aus einem
-// CMS/Discord-Feed kommen, das UI bleibt gleich.
+// Eine veröffentlichte Ankündigung für die rechte Spalte. Im Browser-Dev
+// liefert mockAnnouncements Beispieldaten; im Spiel ist CoreRP die Quelle.
 export interface Announcement {
   id: string;
   tag: string;
   date: string;
   title: string;
   body: string;
+}
+
+export interface PauseMenuPublicContent {
+  revision: number;
+  event: PromoConfig & { enabled: boolean };
+  announcements: Announcement[];
 }
 
 export interface HomeData {

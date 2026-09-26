@@ -4,6 +4,7 @@ import type {
   HomeData,
   KeybindEntry,
   MapPlayerPosition,
+  PauseMenuPublicContent,
   PromoConfig,
 } from '../types';
 import { fetchNui, isInFivem, onNuiMessage } from '../bridge/nui';
@@ -29,14 +30,13 @@ export function AppShell() {
   const [visible, setVisible] = useState(!isInFivem);
   const [view, setView] = useState<HubViewState>('hub');
   const [homeData, setHomeData] = useState<HomeData>(mockHomeData);
-  // Ankündigungen sind bewusst nur Mock (siehe state/mockAnnouncements.ts). Ein
-  // 'setAnnouncements'-Listener steht für einen späteren echten Feed bereit,
-  // ohne das UI zu ändern - solange der Client nichts pusht, bleibt der Mock.
-  const [announcements, setAnnouncements] = useState<Announcement[]>(mockAnnouncements);
+  // Nur der Browser-Harness nutzt Beispieldaten. Im Spiel wartet die Spalte auf CoreRP.
+  const [announcements, setAnnouncements] = useState<Announcement[]>(isInFivem ? [] : mockAnnouncements);
   const [promo, setPromo] = useState<PromoConfig>(isInFivem ? { title: '', subtitle: '', buttonLabel: '' } : mockPromoConfig);
   // Spielerfoto (nui-img-Textur vom Client); null -> Initialen-Fallback.
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const avatarUrlRef = useRef<string | null>(null);
+  const contentRevisionRef = useRef(0);
   const [playerPosition, setPlayerPosition] = useState<MapPlayerPosition | null>(
     isInFivem ? null : { x: -200, y: 300 },
   );
@@ -52,8 +52,12 @@ export function AppShell() {
         if (!value) setView('hub');
       }),
       onNuiMessage<HomeData>('setHomeData', setHomeData),
-      onNuiMessage<Announcement[]>('setAnnouncements', setAnnouncements),
-      onNuiMessage<PromoConfig>('setPromoConfig', setPromo),
+      onNuiMessage<PauseMenuPublicContent>('setPauseContent', (content) => {
+        if (!content || !Number.isInteger(content.revision) || content.revision < contentRevisionRef.current) return;
+        contentRevisionRef.current = content.revision;
+        setPromo(content.event?.enabled ? content.event : { title: '', subtitle: '', buttonLabel: '' });
+        setAnnouncements(Array.isArray(content.announcements) ? content.announcements : []);
+      }),
       onNuiMessage<string | null>('setAvatar', (value) => {
         avatarUrlRef.current = value;
         setAvatarUrl(value);
@@ -118,7 +122,7 @@ export function AppShell() {
   }
 
   function handlePromoAction() {
-    if (isInFivem) fetchNui('promoAction');
+    if (announcements.length > 0) setView('announcements');
   }
 
   function handleAvatarError(failedUrl: string) {

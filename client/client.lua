@@ -26,6 +26,23 @@ end)
 -- Oeffnen unseres Menues, damit ESC sauber ins Spiel zurueckfuehrt statt hierher.
 local gtaSettingsOpen = false
 
+-- CoreRP ist die einzige veröffentlichende Quelle für Event und Ankündigungen.
+-- Lokale Client-Events überbrücken diese Resource zum CoreRP-TS-Client.
+-- Die Resource kann neu starten: beim Öffnen wird der Stand erneut angefordert.
+local PAUSE_CONTENT_REQUEST = 'rp:pause-menu:request-local'
+local PAUSE_CONTENT_EVENT = 'rp:pause-menu:content-local'
+local pauseContent = nil
+local pauseContentRevision = 0
+AddEventHandler(PAUSE_CONTENT_EVENT, function(payloadJson)
+    local ok, content = pcall(json.decode, payloadJson)
+    if not ok or type(content) ~= 'table' or type(content.revision) ~= 'number'
+        or content.revision < pauseContentRevision or type(content.event) ~= 'table'
+        or type(content.announcements) ~= 'table' then return end
+    pauseContentRevision = content.revision
+    pauseContent = content
+    SendNUIMessage({ action = 'setPauseContent', payload = content })
+end)
+
 -- Welcher Pausenmenue-Tab beim Klick auf "Einstellungen" angesteuert wird, haengt
 -- vom GTA-Build ab (dritter Parameter von ActivateFrontendMenu). Deshalb per
 -- Convar statt hart im Code, damit der Serverbetreiber ohne Rebuild den richtigen
@@ -95,18 +112,6 @@ local weatherLabels = {
     BLIZZARD = 'Schneesturm', HALLOWEEN = 'Halloween', NEUTRAL = 'Neutral',
 }
 
--- Promo-/Event-Banner unten im Hub, komplett per server.cfg-Convars steuerbar
--- (leerer Titel blendet das Banner aus) - kein NUI-Rebuild fuer Content-Pflege.
-local function getPromoConfig()
-    return {
-        title = GetConvar('neov_pausemenu_promo_title', ''),
-        subtitle = GetConvar('neov_pausemenu_promo_subtitle', ''),
-        buttonLabel = GetConvar('neov_pausemenu_promo_button', ''),
-        -- 0..100 -> Fortschrittsbalken in der Event-Karte; leer -> kein Balken.
-        progress = tonumber(GetConvar('neov_pausemenu_promo_progress', '')) or json.null,
-    }
-end
-
 -- Ort als "Strasse, Gebiet" (leer, wenn nichts bekannt) fuer die Kopfzeile.
 local function getLocationLabel()
     local coords = GetEntityCoords(PlayerPedId())
@@ -131,12 +136,6 @@ local function getWaypointDistance()
     local coords = GetEntityCoords(PlayerPedId())
     -- 2D-Distanz: der Wegpunkt-Blip traegt keine Hoehe.
     return #(vector2(coords.x, coords.y) - vector2(target.x, target.y))
-end
-
--- Hook fuer den Promo-Banner-Button ("promoAction"-NUI-Callback). Bewusst leer:
--- Serverbetreiber fuellen hier z. B. das Oeffnen eines Battle-Pass-/Event-UIs
--- ein (ExecuteCommand, TriggerEvent, ...). Das Menue bleibt dabei offen.
-local function OnPromoAction()
 end
 
 local function buildHomeData()
@@ -367,7 +366,8 @@ local function setMenuVisible(visible)
         lastAvatarRetry = 0
         SendNUIMessage({ action = 'setAvatar', payload = json.null })
         pushPlayerPosition()
-        SendNUIMessage({ action = 'setPromoConfig', payload = getPromoConfig() })
+        if pauseContent then SendNUIMessage({ action = 'setPauseContent', payload = pauseContent }) end
+        TriggerEvent(PAUSE_CONTENT_REQUEST)
         pushHeadshot()
         SendNUIMessage({ action = 'setHomeData', payload = buildHomeData() })
         -- Keybinds/Settings-Registry (client/keybinds.lua, client/settings.lua)
@@ -498,11 +498,6 @@ RegisterNUICallback('openSettings', function(_, cb)
         Wait(300)
         gtaSettingsOpen = false
     end)
-    cb({})
-end)
-
-RegisterNUICallback('promoAction', function(_, cb)
-    OnPromoAction()
     cb({})
 end)
 

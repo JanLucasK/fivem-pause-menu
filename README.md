@@ -19,10 +19,11 @@ sie nachzubauen:
   GTA-Settings). Das Menü schließt sich dafür zuerst, sodass ein anschließendes
   **ESC** das GTA-Menü schließt und normal ins Spiel zurückführt – **nicht**
   zurück in dieses Menü.
-- **Discord** ist eine Zeile mit Einladungs-URL (Convar) und Hinweistext; die
-  **Ankündigungen** rechts sind Mock (`nui/src/state/mockAnnouncements.ts`),
-  ein `setAnnouncements`-Listener steht für einen echten Feed bereit. Mehr als
-  drei Einträge -> „Alle ansehen" öffnet ein Overlay mit der ganzen Liste.
+- **Event-Karte und Ankündigungen** rechts kommen aus CoreRPs veröffentlichter
+  Datenbank-Konfiguration. Mehr als drei sichtbare Meldungen → „Alle ansehen“
+  öffnet das Overlay; der Event-Button führt ebenfalls dorthin. Ohne
+  Veröffentlichung bleibt die Fläche leer statt alte Mock-Meldungen zu zeigen.
+- **Discord** bleibt eine Zeile mit Einladungs-URL und Hinweistext aus Convars.
 - Die **Navigations-Rail** ist mit ↑/↓, Enter und Maus bedienbar (ein
   Fokusmodell, ruhige Messing-Hervorhebung und ortsfeste Symbole);
   Tasten-Hinweise stehen in der Fußzeile.
@@ -48,12 +49,6 @@ läuft das Menü unverändert):
   Parameter von `ActivateFrontendMenu`). Der passende Wert ist **GTA-Build-
   abhängig**; landet der Klick nicht auf dem gewünschten Tab, hier den zum Build
   passenden Wert setzen – kein NUI-Rebuild nötig.
-- `neov_pausemenu_promo_title` / `_subtitle` / `_button` – Event-Karte rechts
-  oben; leerer Titel blendet die Karte aus, leerer Button-Text den Button. Der
-  Button feuert den `promoAction`-Callback (Hook `OnPromoAction` in
-  `client/client.lua`).
-- `neov_pausemenu_promo_progress` (0–100, Default leer) – Fortschrittsbalken in
-  der Event-Karte; ohne Wert kein Balken.
 - `neov_pausemenu_discord_url` (Default `https://discord.gg/neov`) und
   `neov_pausemenu_discord_hint` (Default leer, z. B. „1.240 Mitglieder") –
   Discord-Zeile rechts unten.
@@ -118,8 +113,11 @@ fehlen. Deshalb ist das Asset auf 128×128 verkleinert — angezeigt wird es mit
   (`fetchNui`, `onNuiMessage`). Läuft die App ausserhalb von FiveM, liefert
   `fetchNui` leere Mock-Antworten statt echter Requests.
 - `client/client.lua` – Escape-Keybind, `SetPauseMenuActive(false)` solange
-  das Menü offen ist, `disconnect`-Callback für den Exit-Dialog,
-  `openMap`-Callback für CoreRP. `setHomeData` liefert echte corerp-Daten.
+  das Menü offen ist, `disconnect`-Callback und `openMap`-Callback für CoreRP.
+  `setHomeData` liefert Charakterdaten; CoreRPs Client-Brücke liefert
+  veröffentlichte Event-/News-Daten über `rp:pause-menu:content-local`.
+  Beim Öffnen fordert die Resource sie über `rp:pause-menu:request-local`
+  erneut an. Die CoreRP-Brücke hält die eigentlichen NetEvent-Namen zentral.
 - `client/keybinds.lua` / `client/settings.lua` – generische Registries für
   die "Tastenbelegung"/"Allgemein"-Unteransichten im Einstellungen-Tab, siehe
   Abschnitt darunter.
@@ -192,8 +190,20 @@ Atlas-Vorschau und Taste M im geöffneten Hub rufen denselben NUI-Callback
 `rp_map` aus; CoreRP zeigt dann seine Atlas-Karte mit Karten-Items,
 Spielerposition und Wegpunkten. Die passive Vorschau zeichnet `rp_atlas`-Kacheln
 auf einem Canvas mit gemeinsam gerundeten Pixelkanten, sodass keine 1-px-Lücken
-zwischen Kacheln entstehen. `fxmanifest.lua` verlangt `rp_core` und `rp_atlas`.
-Für Spieler ohne nutzbare Karte gelten die CoreRP-Regeln.
+zwischen Kacheln entstehen. Der Ausschnitt klemmt an allen Atlas-Grenzen;
+der Spielerpunkt folgt seiner Position im geklemmten Ausschnitt. `fxmanifest.lua`
+verlangt `rp_core` und `rp_atlas`. Für Spieler ohne nutzbare Karte gelten
+die CoreRP-Regeln.
+
+## Event und Ankündigungen verwalten
+
+Im CoreRP-Adminmenü unter **Welt & Inhalte → Medien & Fortschritt → Pause-Menü**
+steht ein Editor mit Entwurfsvorschau, bis zu zehn Meldungen, Reihenfolge,
+Sichtbarkeit, Event-Text, Button und optionalem Fortschrittsbalken. Das eigene
+Recht `admin.pausemenu.manage` schützt Kachel, Lesen und Speichern; CoreRP prüft
+es serverseitig erneut. Veröffentlichen schreibt den ganzen Stand mit
+Revisionsprüfung in MariaDB und verteilt nur aktive Meldungen an Spieler.
+Discord gehört nicht zu diesem Recht und bleibt in den obigen Convars.
 
 ## Offene Punkte / nächste Iteration
 

@@ -16,7 +16,6 @@ export function MapStrip({ data, playerPosition, onOpen }: MapStripProps) {
   return (
     <button type="button" className="hub-map" onClick={onOpen}>
       {playerPosition && <AtlasPreview position={playerPosition} />}
-      {playerPosition && <span className="hub-map-dot" aria-hidden="true" />}
       <span className="hub-map-text">
         <span className="hub-map-title">Atlas öffnen</span>
         {distance != null && <span className="hub-map-sub">Wegpunkt gesetzt · {formatDistance(distance)}</span>}

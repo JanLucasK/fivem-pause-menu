@@ -356,9 +356,10 @@
 .hub-stat-value {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 2.5rem;
+  font-size: 2.1rem;
   line-height: 1;
   letter-spacing: 0.01em;
+  white-space: nowrap;
 }
 
 .hub-stat-unit {
@@ -392,8 +393,8 @@
   width: 100%;
   height: 100%;
   pointer-events: none;
-  filter: grayscale(1) invert(1) contrast(1.35) brightness(0.5) sepia(1) saturate(2.4) hue-rotate(-8deg);
-  opacity: 0.85;
+  filter: grayscale(1) invert(1) contrast(1.3) brightness(0.82) sepia(1) saturate(2.2) hue-rotate(-8deg);
+  opacity: 0.95;
 }
 
 /* Abdunklung haelt Beschriftung vor der Atlas-Vorschau lesbar. */
@@ -402,9 +403,10 @@
   position: absolute;
   inset: 0;
   z-index: 1;
+  pointer-events: none;
   background:
-    linear-gradient(90deg, rgba(12, 13, 18, 0.92) 0%, rgba(12, 13, 18, 0.55) 40%, rgba(12, 13, 18, 0.2) 100%),
-    linear-gradient(0deg, rgba(12, 13, 18, 0.85) 0%, transparent 45%);
+    radial-gradient(ellipse 82% 86% at 0% 100%, rgba(9, 10, 15, 0.82) 0%, rgba(9, 10, 15, 0.33) 48%, transparent 100%),
+    linear-gradient(0deg, rgba(9, 10, 15, 0.32) 0%, transparent 52%);
 }
 
 .hub-map-dot {
@@ -455,6 +457,13 @@
   border-radius: 50%;
   border: 1px solid rgba(200, 151, 63, 0.5);
   color: var(--brass-bright);
+}
+
+.hub-map:hover { border-color: var(--brass-dim); }
+.hub-map:focus-visible {
+  outline: none;
+  border-color: var(--brass-bright);
+  box-shadow: var(--focus-ring);
 }
 
 .hub-map:hover .hub-map-arrow,
@@ -603,12 +612,12 @@
   margin: 0;
   font-size: 0.875rem;
   line-height: 1.4;
-  color: var(--muted);
+  color: #b8c0cc;
 }
 
 .hub-feed-meta {
   font-size: 0.8125rem;
-  color: #6f7582;
+  color: #9199a6;
 }
 
 /* Discord-Zeile */
