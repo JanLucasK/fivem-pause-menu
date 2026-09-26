@@ -36,8 +36,8 @@ if (!/RegisterNUICallback\('openMap',[\s\S]*?setMenuVisible\(false\)[\s\S]*?Exec
 }
 
 const manifest = readFileSync(join(repoRoot, 'fxmanifest.lua'), 'utf8');
-if (!manifest.includes("dependency 'rp_core'")) {
-  throw new Error('Pause-Menü muss rp_core für die Karte voraussetzen.');
+if (!manifest.includes("dependency 'fivem-corerp'")) {
+  throw new Error('Pause-Menü muss die fivem-corerp-Resource für die Karte voraussetzen.');
 }
 if (!manifest.includes("dependency 'rp_atlas'")) {
   throw new Error('Pause-Menü muss rp_atlas für die passive Vorschau voraussetzen.');
