@@ -1,4 +1,4 @@
-/* Vollbild-Overlays ueber dem Hub (Karte, Tastenbelegung, Regeln), siehe
+/* Vollbild-Overlays ueber dem Hub (Tastenbelegung, Regeln), siehe
    OverlayView.tsx. Liegt ueber dem Dashboard (z-index > .dashboard = 50). */
 .overlay-view {
   position: fixed;
@@ -97,20 +97,6 @@
   overflow-y: visible;
 }
 
-/* Karte: randlos, GtaMap fuellt die Flaeche selbst. */
-.overlay-content--bleed {
-  overflow: hidden;
-  padding: 0;
-  display: flex;
-}
-
-.overlay-content--bleed > * {
-  max-width: none;
-  width: 100%;
-  flex: 1 1 auto;
-  min-height: 0;
-}
-
 @media (max-width: 700px) {
   .overlay-bar {
     flex-wrap: wrap;
@@ -126,7 +112,7 @@
     display: none;
   }
 
-  .overlay-content:not(.overlay-content--bleed) {
+  .overlay-content {
     padding: 1rem;
     overflow-wrap: anywhere;
   }

@@ -4,10 +4,10 @@ lua54 'yes'
 
 name 'neov-pause-menu'
 author 'NeoV'
-description 'Custom Pause-Menu (Home/Map/Settings/Keybinds/Discord/Exit)'
+description 'Custom Pause-Menu (Home/Settings/Keybinds/Discord/Exit)'
 version '0.1.0'
 
-dependency 'rp_atlas'
+dependency 'rp_core'
 
 client_scripts {
     'client/keybinds.lua',
@@ -26,5 +26,4 @@ files {
     'nui/dist/fonts/*.woff2',
     -- Kachel-Artwork (public/img/, z.B. NeoV-Logomark der Einstellungen-Kachel).
     'nui/dist/img/*',
-    'nui/dist/blips/*.png',
 }

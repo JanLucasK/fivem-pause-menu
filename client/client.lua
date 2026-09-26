@@ -26,17 +26,6 @@ end)
 -- Oeffnen unseres Menues, damit ESC sauber ins Spiel zurueckfuehrt statt hierher.
 local gtaSettingsOpen = false
 
--- Kartenstil (Atlas/Grid/Satellite) per server.cfg-Convar statt hart im
--- NUI-Code, damit Serverbetreiber Default-Stil/Umschalter ohne NUI-Rebuild
--- aendern koennen: neov_pausemenu_map_default_style / _show_style_switcher,
--- gesetzt in server-data/server.cfg (fivem-fxserver-main).
-local function getMapConfig()
-    return {
-        defaultStyle = GetConvar('neov_pausemenu_map_default_style', 'satellite'),
-        showStyleSwitcher = GetConvarInt('neov_pausemenu_map_show_style_switcher', 1) == 1,
-    }
-end
-
 -- Welcher Pausenmenue-Tab beim Klick auf "Einstellungen" angesteuert wird, haengt
 -- vom GTA-Build ab (dritter Parameter von ActivateFrontendMenu). Deshalb per
 -- Convar statt hart im Code, damit der Serverbetreiber ohne Rebuild den richtigen
@@ -369,7 +358,6 @@ local function setMenuVisible(visible)
         avatarRetryCount = 0
         lastAvatarRetry = 0
         SendNUIMessage({ action = 'setAvatar', payload = json.null })
-        SendNUIMessage({ action = 'setMapConfig', payload = getMapConfig() })
         SendNUIMessage({ action = 'setPromoConfig', payload = getPromoConfig() })
         pushHeadshot()
         SendNUIMessage({ action = 'setHomeData', payload = buildHomeData() })
@@ -513,31 +501,3 @@ RegisterNUICallback('disconnect', function(_, cb)
     ExecuteCommand('disconnect')
     cb({})
 end)
-
--- Spielerposition fuer den Map-Tab. Laeuft nur, solange das Menü offen ist,
--- und mit 500ms-Intervall statt jedem Frame - Position aendert sich waehrend
--- Pause ohnehin nicht schnell, und die NUI ist dann eh nicht sichtbar.
-CreateThread(function()
-    while true do
-        Wait(500)
-        if isMenuOpen then
-            local ped = PlayerPedId()
-            local coords = GetEntityCoords(ped)
-            SendNUIMessage({
-                action = 'setPlayerPosition',
-                payload = { x = coords.x, y = coords.y, heading = GetEntityHeading(ped) },
-            })
-        end
-    end
-end)
-
-RegisterNUICallback('setWaypoint', function(data, cb)
-    SetNewWaypoint(data.x + 0.0, data.y + 0.0)
-    cb({})
-end)
-
--- TODO (corerp-Anbindung): 'setMapBlips' mit POI/Icon-Daten aus corerp
--- befuellen (Shops, Dienste, ggf. andere Spieler). Eigener Layer im Map-Tab,
--- bewusst getrennt von einer spaeteren Spieler-Zeichnungsebene - siehe
--- README "Map-Tab" fuer die geplante Architektur (Karten-Item, Kartenbild vs.
--- corerp-Icons).

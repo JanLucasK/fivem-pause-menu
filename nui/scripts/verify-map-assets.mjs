@@ -1,55 +1,43 @@
-import { existsSync, readFileSync, readdirSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const nuiRoot = join(dirname(fileURLToPath(import.meta.url)), '..');
-const localTiles = join(nuiRoot, 'public', 'mapStyles');
+const repoRoot = join(nuiRoot, '..');
+const readNui = (path) => readFileSync(join(nuiRoot, path), 'utf8');
 
-function filesBelow(directory) {
-  if (!existsSync(directory)) return [];
-  return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
-    const path = join(directory, entry.name);
-    return entry.isDirectory() ? filesBelow(path) : [path];
-  });
-}
-
-const bundledTiles = filesBelow(localTiles);
-if (bundledTiles.length > 0) {
-  throw new Error(
-    `Kartenkacheln gehören nach rp_atlas, nicht ins Pausemenü: ${bundledTiles[0]}`,
-  );
-}
-
-const mapSource = readFileSync(join(nuiRoot, 'src', 'components', 'GtaMap.tsx'), 'utf8');
-for (const template of [
-  'styleAtlas/{z}/{x}/{y}.jpg',
-  'styleGrid/{z}/{x}/{y}.webp',
-  'styleSatelite/{z}/{x}/{y}.webp',
+for (const path of [
+  'public/mapStyles',
+  'public/blips',
+  'vendor/gta-v-map',
+  'src/components/GtaMap.tsx',
+  'src/tabs/map',
+  'src/state/mockMapData.ts',
+  'src/types/gta-v-map-jsx.d.ts',
 ]) {
-  if (!mapSource.includes(template)) {
-    throw new Error(`Externe rp_atlas-Kachelvorlage fehlt: ${template}`);
+  if (existsSync(join(nuiRoot, path))) {
+    throw new Error(`Zweites Kartensystem im Pause-Menü: ${path}`);
   }
 }
 
-const previewSource = readFileSync(join(nuiRoot, 'src', 'hub', 'MapStrip.tsx'), 'utf8');
-for (const marker of [
-  '<GtaMap',
-  'centerOnPlayer',
-  'interactive={false}',
-  'showPlayerMarker={false}',
-]) {
-  if (!previewSource.includes(marker)) {
-    throw new Error(`Die Hub-Vorschau folgt nicht der echten Spielerposition: ${marker}`);
-  }
+const deps = JSON.parse(readNui('package.json')).dependencies;
+for (const dependency of ['gta-v-map', 'leaflet']) {
+  if (dependency in deps) throw new Error(`Ungenutzte Karten-Abhängigkeit: ${dependency}`);
 }
 
-for (const obsoletePath of [
-  join(nuiRoot, 'public', 'img', 'map-preview.jpg'),
-  join(nuiRoot, 'src', 'hub', 'mapPreview.ts'),
-]) {
-  if (existsSync(obsoletePath)) {
-    throw new Error(`Feste Kartenvorschau muss entfernt bleiben: ${obsoletePath}`);
-  }
+const shell = readNui('src/shell/AppShell.tsx');
+for (const marker of ["fetchNui('openMap')", 'onOpenMap={handleOpenMap}', 'handleOpenMap();']) {
+  if (!shell.includes(marker)) throw new Error(`Karten-Einstieg fehlt: ${marker}`);
 }
 
-console.log('Kartenkacheln: ausschließlich externe rp_atlas-Pfade.');
+const client = readFileSync(join(repoRoot, 'client', 'client.lua'), 'utf8');
+if (!/RegisterNUICallback\('openMap',[\s\S]*?setMenuVisible\(false\)[\s\S]*?ExecuteCommand\('rp_map'\)/.test(client)) {
+  throw new Error('openMap muss den Pause-Menü-Fokus freigeben und rp_map starten.');
+}
+
+const manifest = readFileSync(join(repoRoot, 'fxmanifest.lua'), 'utf8');
+if (!manifest.includes("dependency 'rp_core'")) {
+  throw new Error('Pause-Menü muss rp_core für die Karte voraussetzen.');
+}
+
+console.log('Karte: alle Pause-Menü-Einstiege verwenden CoreRP rp_map.');

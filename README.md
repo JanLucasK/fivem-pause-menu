@@ -4,18 +4,17 @@ Custom NUI-Pause-Menü für NeoV. Ersetzt das native GTA-Pause-Menü durch ein
 **Dossier**-Menü im NeoV-Look (Graphit + Messing, deckender Hintergrund):
 links eine **Navigations-Rail** (Fortsetzen, Karte, Einstellungen, Tasten,
 Regeln, Discord, Verlassen), in der Mitte das **Charakter-Dossier** (Headshot,
-Name, Job/Fraktion, Kennzahl-Zeile, Kartenstreifen), rechts **Event-Karte,
+Name, Job/Fraktion, Kennzahl-Zeile, Atlas-Einstieg), rechts **Event-Karte,
 Ankündigungen und Discord**. Design-Spec:
 `docs/superpowers/specs/2026-09-06-dossier-hub-redesign-design.md`.
 
 Das Menü hat bewusst wenig Eigenlogik – es ruft vorhandene Funktionen auf statt
 sie nachzubauen:
 
-- **Karte** (Rail-Eintrag, Kartenstreifen oder Taste **M** im Hub) öffnet das
-  interne Karten-Overlay (`nui/src/tabs/map/`). Der Client hält daneben den
-  `openMap`-Callback für die corerp-Vollbildkarte (`rp_map`) bereit. Der
-  Kartenstreifen ist eine echte, passive Atlas-Karte und bleibt auf der
-  aktuellen Spielerposition zentriert.
+- **Karte** (Rail-Eintrag, Atlas-Einstieg oder Taste **M** im Hub) schließt
+  das Pause-Menü und startet über `openMap` den CoreRP-Command `rp_map`.
+  CoreRP übernimmt Fokus, Karten-Item, Wegpunkte und Schließen. Der Streifen
+  im Hub ist nur ein dekorativer Einstieg; er rendert keine eigene Karte.
 - **Einstellungen** öffnet das **native GTA-Pausenmenü** (dort liegen die
   GTA-Settings). Das Menü schließt sich dafür zuerst, sodass ein anschließendes
   **ESC** das GTA-Menü schließt und normal ins Spiel zurückführt – **nicht**
@@ -49,8 +48,6 @@ läuft das Menü unverändert):
   Parameter von `ActivateFrontendMenu`). Der passende Wert ist **GTA-Build-
   abhängig**; landet der Klick nicht auf dem gewünschten Tab, hier den zum Build
   passenden Wert setzen – kein NUI-Rebuild nötig.
-- `neov_pausemenu_map_default_style` / `neov_pausemenu_map_show_style_switcher` –
-  Kartenstil-Convars der internen Karte, siehe Abschnitt „Map-Tab".
 - `neov_pausemenu_promo_title` / `_subtitle` / `_button` – Event-Karte rechts
   oben; leerer Titel blendet die Karte aus, leerer Button-Text den Button. Der
   Button feuert den `promoAction`-Callback (Hook `OnPromoAction` in
@@ -111,20 +108,18 @@ fehlen. Deshalb ist das Asset auf 128×128 verkleinert — angezeigt wird es mit
 
 ## Architektur
 
-- `nui/src/shell/` – AppShell (View-State `hub | map | keybinds | rules |
+- `nui/src/shell/` – AppShell (View-State `hub | keybinds | rules |
   announcements`, ESC-Kette, Hotkey M) und OverlayView (Vollbild-Overlay mit
   Zurück-Leiste).
 - `nui/src/hub/` – der Hub: HubView, TopBar, NavRail, Dossier, StatStrip,
   MapStrip, EventCard, AnnouncementsFeed, DiscordRow, PromptBar, `hub.css`.
-- `nui/src/tabs/<tab>/` – Overlays (map, keybinds, rules) und der Exit-Dialog.
+- `nui/src/tabs/<tab>/` – Overlays (keybinds, rules) und der Exit-Dialog.
 - `nui/src/bridge/nui.ts` – einzige Schnittstelle zum Client-Skript
   (`fetchNui`, `onNuiMessage`). Läuft die App ausserhalb von FiveM, liefert
   `fetchNui` leere Mock-Antworten statt echter Requests.
 - `client/client.lua` – Escape-Keybind, `SetPauseMenuActive(false)` solange
   das Menü offen ist, `disconnect`-Callback für den Exit-Dialog,
-  Spielerpositions-Streaming + `setWaypoint`-Callback für den Map-Tab (siehe
-  unten). `setHomeData` liefert bereits echte corerp-Daten; `setMapBlips`
-  (POI-Layer) ist noch offen.
+  `openMap`-Callback für CoreRP. `setHomeData` liefert echte corerp-Daten.
 - `client/keybinds.lua` / `client/settings.lua` – generische Registries für
   die "Tastenbelegung"/"Allgemein"-Unteransichten im Einstellungen-Tab, siehe
   Abschnitt darunter.
@@ -189,65 +184,14 @@ Beide Exports sind optional/lose gekoppelt (kein `dependency`-Eintrag im
 `fxmanifest.lua` der aufrufenden Resource nötig) - der `GetResourceState`-Guard
 oben verhindert nur einen Fehler, falls `neov-pause-menu` nicht läuft.
 
-## Map-Tab
+## Karte
 
-Baut auf [`gta-v-map`](https://github.com/RiceaRaul/gta-v-map-leaflet) auf,
-einer Leaflet-basierten `<gta-v-map>`-Web-Component (Lit) mit fertiger
-GTA-V-Koordinatentransformation und 3 Kartenstilen (Atlas/Grid/Satellite).
-
-- **Vendored, nicht per `npm install gta-v-map`:** `nui/vendor/gta-v-map/`
-  enthält den selbst gebauten `dist/`-Output des oben verlinkten Repos
-  (MIT-Lizenz, siehe `nui/vendor/gta-v-map/LICENSE` +
-  `nui/vendor/gta-v-map/VENDORED.md` für Commit-Hash + Update-Anleitung).
-  Eingebunden über `"gta-v-map": "file:vendor/gta-v-map"` in
-  `nui/package.json`. `nui/src/types/gta-v-map-jsx.d.ts` liefert die
-  JSX-Typisierung fürs `<gta-v-map>`-Element (im Original-Repo in
-  `src/jsx.d.ts`, aber nicht Teil des veröffentlichten `dist/`).
-- **Kartenkacheln separat:** Atlas, Grid und Satellite liegen ausschließlich in
-  der privaten FiveM-Resource `VanChanhMC/rp_atlas`. Das Pausenmenü lädt alle
-  drei Stile über `https://cfx-nui-rp_atlas/mapStyles/...`; `fxmanifest.lua`
-  erzwingt die Resource-Abhängigkeit. Im Pausemenü-Repository selbst liegen
-  keine Kartenkacheln mehr.
-- **Blip-Icons:** `nui/public/blips/` – PNG pro Icon-Nummer (`<n>.png`,
-  referenziert über `GtaMarker.icon`). `0.png`/`1.png` sind selbst erzeugte
-  Platzhalter (Spieler-Pfeil / generischer POI-Punkt), kein Fremdmaterial.
-  corerp kann eigene Icons unter weiteren Nummern ablegen.
-- **3 Kartenstile per Convar:** `neov_pausemenu_map_default_style`
-  (`satellite`/`atlas`/`grid`) und `neov_pausemenu_map_show_style_switcher`
-  (0/1, blendet Leaflets Layer-Control mit allen 3 Stilen ein/aus) – gesetzt
-  in `server-data/server.cfg` (fivem-fxserver-main), von `client.lua` gelesen
-  und per `setMapConfig`-NUI-Message an die NUI gepusht.
-- **Styling-Grenze:** `<gta-v-map>` rendert in einem Shadow-DOM – Leaflets
-  interne Chrome (Zoom-Buttons, Layer-Control-Panel) lässt sich von außen
-  nicht ans Graphit+Messing-Design anpassen, einzige offene Stellschraube ist
-  die CSS-Custom-Property `--gta-water-color` (siehe `mapTab.css`). Für
-  pixelgenaues Theming der Library-Chrome müsste man `gta-v-map.styles.ts`
-  im vendorten Fork anpassen und neu bauen.
-- Spieler-Marker (feste Id `player`, eigene Gruppe) und POI-Layer
-  (`setMapBlips`, Gruppe `POI`) sind getrennte Marker-Gruppen. Der POI-Layer
-  ist als alleinige corerp-Domäne gedacht – wichtig, falls später eine
-  Spieler-Zeichnungsebene (Karten-Item, siehe unten) dazukommt: die darf nur
-  ihre eigene Ebene berühren, nie den corerp-Icon-Layer.
-- `client/client.lua` pusht `setPlayerPosition` alle 500ms (nur solange das
-  Menü offen ist) und nimmt Kartenklicks über den `setWaypoint`-NUI-Callback
-  entgegen (`SetNewWaypoint`).
-
-### Geplant: Karten als Item (Zeichnen + Weitergeben)
-
-Idee: Karten sind ein Inventar-Item; Spieler können darauf zeichnen und es
-anderen Spielern geben. Umsetzung bewusst **auf corerp-Seite**, nicht in
-diesem Repo:
-
-- corerp hat bereits ein server-autoritatives, dupe-sicheres Inventar
-  (`InventoryOps`/`InventoryService`, atomare Cross-Container-Transfers,
-  siehe `fivem-corerp/FEATURES.md`). Ein Karten-Item mit Instanz-Daten
-  (Zeichnungs-Pfade als Vektor-JSON) und dessen Transfer gehört dort rein,
-  statt eine zweite Inventar-Logik hier zu bauen – sonst zwei Quellen der
-  Wahrheit für einen Item-Transfer, klassischer Dupe-Vektor.
-- Dieses Repo bleibt UI-only: Zeichnungs-Overlay als eigener Leaflet-Layer
-  (unterhalb/getrennt vom POI-Layer), Strokes werden über einen von corerp
-  exportierten Endpunkt geladen/gespeichert (Muster wie
-  `ClothingCatalogService`/`resolveItem` in corerp).
+Das Pause-Menü besitzt keinen eigenen Kartenrenderer. Rail-Eintrag,
+Atlas-Einstieg und Taste M im geöffneten Hub rufen denselben NUI-Callback
+`openMap` auf. `client/client.lua` gibt den Pause-Menü-Fokus frei und führt
+`rp_map` aus; CoreRP zeigt dann seine Atlas-Karte mit Karten-Items,
+Spielerposition und Wegpunkten. `fxmanifest.lua` verlangt deshalb `rp_core`.
+Für Spieler ohne nutzbare Karte gelten die CoreRP-Regeln.
 
 ## Offene Punkte / nächste Iteration
 

@@ -6,14 +6,11 @@ interface OverlayViewProps {
   title: string;
   onBack: () => void;
   children: ReactNode;
-  // Karte braucht randlose volle Flaeche; Text-Overlays (Keybinds/Regeln)
-  // bekommen eine zentrierte, scrollende Inhaltsspalte.
-  bleed?: boolean;
 }
 
-// Vollbild-Overlay ueber dem Hub (Karte, Tastenbelegung, Regeln). ESC bzw. der
+// Vollbild-Overlay ueber dem Hub (Tastenbelegung, Regeln). ESC bzw. der
 // Zurueck-Button fuehren zum Hub zurueck - die ESC-Kette verwaltet AppShell.
-export function OverlayView({ title, onBack, children, bleed = false }: OverlayViewProps) {
+export function OverlayView({ title, onBack, children }: OverlayViewProps) {
   return (
     <div className="overlay-view">
       <header className="overlay-bar">
@@ -26,7 +23,7 @@ export function OverlayView({ title, onBack, children, bleed = false }: OverlayV
           <kbd>ESC</kbd> zurück
         </p>
       </header>
-      <div className={bleed ? 'overlay-content overlay-content--bleed' : 'overlay-content'}>
+      <div className="overlay-content">
         {children}
       </div>
     </div>

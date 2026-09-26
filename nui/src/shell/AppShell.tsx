@@ -3,29 +3,24 @@ import type {
   Announcement,
   HomeData,
   KeybindEntry,
-  MapBlip,
-  MapConfig,
-  MapPlayerPosition,
   PromoConfig,
 } from '../types';
 import { fetchNui, isInFivem, onNuiMessage } from '../bridge/nui';
 import { mockHomeData, mockPromoConfig } from '../state/mockHomeData';
 import { mockAnnouncements } from '../state/mockAnnouncements';
-import { mockMapBlips, mockMapConfig, mockPlayerPosition } from '../state/mockMapData';
 import { mockKeybinds } from '../tabs/keybinds/keybinds.data';
 import { HubView } from '../hub/HubView';
 import { AnnouncementsList } from '../hub/AnnouncementsFeed';
 import { ExitConfirmDialog } from '../tabs/exit/ExitConfirmDialog';
 import { OverlayView } from './OverlayView';
-import { MapTab } from '../tabs/map/MapTab';
 import { KeybindsTab } from '../tabs/keybinds/KeybindsTab';
 import { RulesTab } from '../tabs/rules/RulesTab';
 import { faqEntries, ruleSections } from '../tabs/rules/rules.data';
 
-// Der Hub ist die einzige "Seite"; Karte/Tastenbelegung/Regeln liegen als
+// Der Hub ist die einzige "Seite"; Tastenbelegung/Regeln liegen als
 // Vollbild-Overlays darueber. ESC steigt die Kette ab: ExitDialog -> Overlay
 // -> Menue schliessen.
-type HubViewState = 'hub' | 'map' | 'keybinds' | 'rules' | 'announcements';
+type HubViewState = 'hub' | 'keybinds' | 'rules' | 'announcements';
 
 export function AppShell() {
   // Im Browser-Dev direkt sichtbar (zum Durchklicken); in FiveM startet die
@@ -41,9 +36,6 @@ export function AppShell() {
   // Spielerfoto (nui-img-Textur vom Client); null -> Initialen-Fallback.
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const avatarUrlRef = useRef<string | null>(null);
-  const [mapConfig, setMapConfig] = useState<MapConfig>(mockMapConfig);
-  const [playerPosition, setPlayerPosition] = useState<MapPlayerPosition>(mockPlayerPosition);
-  const [mapBlips, setMapBlips] = useState<MapBlip[]>(mockMapBlips);
   const [keybinds, setKeybinds] = useState<KeybindEntry[]>(isInFivem ? [] : mockKeybinds);
   const [exitDialogOpen, setExitDialogOpen] = useState(false);
 
@@ -62,9 +54,6 @@ export function AppShell() {
         avatarUrlRef.current = value;
         setAvatarUrl(value);
       }),
-      onNuiMessage<MapConfig>('setMapConfig', setMapConfig),
-      onNuiMessage<MapPlayerPosition>('setPlayerPosition', setPlayerPosition),
-      onNuiMessage<MapBlip[]>('setMapBlips', setMapBlips),
       onNuiMessage<KeybindEntry[]>('setKeybinds', setKeybinds),
     ];
     return () => offs.forEach((off) => off());
@@ -78,9 +67,9 @@ export function AppShell() {
   useEffect(() => {
     if (!visible) return;
     const handler = (event: KeyboardEvent) => {
-      // Hotkey "M" im Hub oeffnet die Karte (das Badge in der Rail verspricht es).
-      if (view === 'hub' && !exitDialogOpen && (event.key === 'm' || event.key === 'M')) {
-        setView('map');
+      // NUI haelt den Tastaturfokus: M muss denselben CoreRP-Pfad wie der Kartenknopf ausloesen.
+      if (view === 'hub' && !exitDialogOpen && event.key.toLowerCase() === 'm') {
+        handleOpenMap();
         return;
       }
       if (event.key !== 'Escape') return;
@@ -100,6 +89,12 @@ export function AppShell() {
   // "Fortsetzen" und ESC im Hub laufen ueber denselben Pfad.
   function closeMenu() {
     if (isInFivem) fetchNui('closeMenu');
+    else setVisible(false);
+  }
+
+  // Alle Karten-Einstiege geben den NUI-Fokus an CoreRPs M-Karte weiter.
+  function handleOpenMap() {
+    if (isInFivem) fetchNui('openMap');
     else setVisible(false);
   }
 
@@ -153,9 +148,8 @@ export function AppShell() {
         promo={promo}
         avatarUrl={avatarUrl}
         onAvatarError={handleAvatarError}
-        playerPosition={playerPosition}
         onResume={closeMenu}
-        onOpenMap={() => setView('map')}
+        onOpenMap={handleOpenMap}
         onOpenSettings={handleOpenSettings}
         onOpenKeybinds={() => setView('keybinds')}
         onOpenRules={() => setView('rules')}
@@ -164,20 +158,6 @@ export function AppShell() {
         onPromoAction={handlePromoAction}
         onDisconnect={() => setExitDialogOpen(true)}
       />
-
-      {view === 'map' && (
-        <OverlayView title="Karte" onBack={() => setView('hub')} bleed>
-          <MapTab
-            playerPosition={playerPosition}
-            blips={mapBlips}
-            defaultStyle={mapConfig.defaultStyle}
-            showStyleSwitcher={mapConfig.showStyleSwitcher}
-            onSetWaypoint={(x, y) => {
-              if (isInFivem) fetchNui('setWaypoint', { x, y });
-            }}
-          />
-        </OverlayView>
-      )}
 
       {view === 'keybinds' && (
         <OverlayView title="Tastenbelegung" onBack={() => setView('hub')}>
