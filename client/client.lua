@@ -473,7 +473,7 @@ RegisterNUICallback('openMap', function(_, cb)
     cb({})
 end)
 
--- "Einstellungen" im Menue: das native GTA-Pausenmenue oeffnen (dort liegen die
+-- "Einstellungen" im Menue: das native GTA-Multiplayer-Pausenmenue oeffnen (dort liegen die
 -- GTA-Settings). Erst unser Menue schliessen (Fokus zurueck ans Spiel), dann das
 -- Frontend-Menue aktivieren. gtaSettingsOpen haelt die Control-200-Unterdrueckung
 -- und das Wieder-Oeffnen unseres Menues zurueck, bis der Spieler das GTA-Menue
@@ -481,7 +481,7 @@ end)
 RegisterNUICallback('openSettings', function(_, cb)
     setMenuVisible(false)
     gtaSettingsOpen = true
-    ActivateFrontendMenu(GetHashKey('FE_MENU_VERSION_SP_PAUSE'), false, getSettingsComponent())
+    ActivateFrontendMenu(GetHashKey('FE_MENU_VERSION_MP_PAUSE'), false, getSettingsComponent())
     CreateThread(function()
         -- Warten, bis das Pausenmenue tatsaechlich offen ist (mit Timeout, falls
         -- ActivateFrontendMenu auf diesem Build nicht greift).

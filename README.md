@@ -15,7 +15,7 @@ sie nachzubauen:
   das Pause-Menü und startet über `openMap` den CoreRP-Command `rp_map`.
   CoreRP übernimmt Fokus, Karten-Item, Wegpunkte und Schließen. Die kleine
   Vorschau zeigt passiv die Spielerposition auf denselben `rp_atlas`-Kacheln.
-- **Einstellungen** öffnet das **native GTA-Pausenmenü** (dort liegen die
+- **Einstellungen** öffnet das **native GTA-Multiplayer-Pausenmenü** (`FE_MENU_VERSION_MP_PAUSE`) (dort liegen die
   GTA-Settings). Das Menü schließt sich dafür zuerst, sodass ein anschließendes
   **ESC** das GTA-Menü schließt und normal ins Spiel zurückführt – **nicht**
   zurück in dieses Menü.
@@ -52,6 +52,16 @@ läuft das Menü unverändert):
 - `neov_pausemenu_discord_url` (Default `https://discord.gg/neov`) und
   `neov_pausemenu_discord_hint` (Default leer, z. B. „1.240 Mitglieder") –
   Discord-Zeile rechts unten.
+
+## Native Einstellungen pruefen
+
+Seit 10.10.2026 verwendet **ESC -> Einstellungen** das MP-Frontend. Der
+Zieltab bleibt ueber `neov_pausemenu_gta_settings_component` konfigurierbar.
+
+In-game offen: Zieltab auf dem verwendeten GTA-Build, Audio-Regler und dessen
+Wirkung auf `profile_musicVolumeInMp`, sowie ESC zurueck ins Spiel. Die
+Umstellung setzt keine persoenlichen Lautstaerkewerte und ist noch kein
+Nachweis fuer die Behebung des leisen Autoradios.
 
 ## Entwickeln (Browser, ohne FiveM)
 
