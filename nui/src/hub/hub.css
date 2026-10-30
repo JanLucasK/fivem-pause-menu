@@ -570,11 +570,6 @@
   overflow-y: auto;
 }
 
-.hub-feed--full {
-  flex: none;
-  overflow: visible;
-}
-
 .hub-feed-head {
   display: flex;
   align-items: center;

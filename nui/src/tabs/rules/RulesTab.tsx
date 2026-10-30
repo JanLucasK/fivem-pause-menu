@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { OverlayView } from '../../shell/OverlayView';
 import { SectionNav } from '../../shell/SectionNav';
+import { usePageScroll } from '../../shell/usePageScroll';
 import type { RuleClause, Rulebook } from '../../types';
 import regelwerk from './regelwerk.json';
 import './rulesTab.css';
@@ -40,16 +41,7 @@ export function RulesTab({ onBack }: RulesTabProps) {
     mainRef.current?.scrollTo({ top: 0 });
   }, [chapterId]);
 
-  useEffect(() => {
-    const handler = (event: KeyboardEvent) => {
-      const main = mainRef.current;
-      if (!main || (event.key !== 'PageDown' && event.key !== 'PageUp')) return;
-      event.preventDefault();
-      main.scrollBy({ top: (event.key === 'PageDown' ? 1 : -1) * main.clientHeight * 0.8, behavior: 'smooth' });
-    };
-    window.addEventListener('keydown', handler);
-    return () => window.removeEventListener('keydown', handler);
-  }, []);
+  usePageScroll(mainRef);
 
   return (
     <OverlayView

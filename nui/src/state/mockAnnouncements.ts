@@ -24,4 +24,18 @@ export const mockAnnouncements: Announcement[] = [
     title: 'Neue Regeln im Straßenverkehr',
     body: 'Bitte lest euch die aktualisierten Verkehrsregeln durch, bevor ihr euch ans Steuer setzt.',
   },
+  {
+    id: 'a4',
+    tag: 'Update',
+    date: '12. Juli',
+    title: 'Tastenbelegung im Pausemenü',
+    body: 'Unter „Tasten" seht ihr jetzt alle Server-Tasten auf einer Tastatur – mit einem Klick auf eine Aktion belegt ihr sie neu.',
+  },
+  {
+    id: 'a5',
+    tag: 'Hinweis',
+    date: '8. Juli',
+    title: 'Wartung am Donnerstag',
+    body: 'Der Server ist am Donnerstag zwischen 6 und 8 Uhr für ein Update nicht erreichbar.',
+  },
 ];

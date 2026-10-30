@@ -37,23 +37,3 @@ export function AnnouncementsFeed({ announcements, onShowAll }: AnnouncementsFee
     </section>
   );
 }
-
-// Vollstaendige Liste fuer das "Alle ansehen"-Overlay.
-export function AnnouncementsList({ announcements }: { announcements: Announcement[] }) {
-  return (
-    <div className="hub-feed hub-feed--full">
-      {announcements.map((item) => (
-        <article key={item.id} className="hub-feed-item">
-          <span className="hub-feed-marker" />
-          <div className="hub-feed-body">
-            <h3 className="hub-feed-title hub-feed-title--strong">{item.title}</h3>
-            <p className="hub-feed-text">{item.body}</p>
-            <span className="hub-feed-meta">
-              {item.tag} · {item.date}
-            </span>
-          </div>
-        </article>
-      ))}
-    </div>
-  );
-}
