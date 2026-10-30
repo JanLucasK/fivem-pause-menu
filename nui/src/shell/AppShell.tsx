@@ -12,9 +12,8 @@ import { mockHomeData, mockPromoConfig } from '../state/mockHomeData';
 import { mockAnnouncements } from '../state/mockAnnouncements';
 import { mockKeybinds } from '../tabs/keybinds/keybinds.data';
 import { HubView } from '../hub/HubView';
-import { AnnouncementsList } from '../hub/AnnouncementsFeed';
 import { ExitConfirmDialog } from '../tabs/exit/ExitConfirmDialog';
-import { OverlayView } from './OverlayView';
+import { AnnouncementsTab } from '../tabs/announcements/AnnouncementsTab';
 import { KeybindsTab } from '../tabs/keybinds/KeybindsTab';
 import { RulesTab } from '../tabs/rules/RulesTab';
 
@@ -172,9 +171,7 @@ export function AppShell() {
       )}
 
       {view === 'announcements' && (
-        <OverlayView title="Ankündigungen" onBack={() => setView('hub')}>
-          <AnnouncementsList announcements={announcements} />
-        </OverlayView>
+        <AnnouncementsTab announcements={announcements} onBack={() => setView('hub')} />
       )}
 
       {exitDialogOpen && <ExitConfirmDialog onCancel={() => setExitDialogOpen(false)} />}

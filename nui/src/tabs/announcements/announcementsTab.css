@@ -1,0 +1,82 @@
+/* Ankuendigungen (AnnouncementsTab.tsx): Raster und Hairlines wie das
+   Regelwerk - Datum und Art in der linken Spalte, Text rechts. */
+.announcements {
+  max-width: 54rem;
+  border-bottom: 1px solid var(--graphite-line);
+  animation: announcements-in 180ms ease-out both;
+}
+
+.announcements-item {
+  display: grid;
+  grid-template-columns: 8.5rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 1.5rem 0;
+  border-top: 1px solid var(--graphite-line);
+}
+
+.announcements-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  padding-top: 0.25rem;
+}
+
+.announcements-date {
+  font-size: 0.9375rem;
+  color: var(--muted);
+}
+
+.announcements-date--new {
+  color: var(--brass-bright);
+}
+
+.announcements-tag {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #9199a6;
+}
+
+.announcements-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.announcements-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.5rem;
+  line-height: 1.15;
+}
+
+.announcements-text {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #b8c0cc;
+}
+
+.announcements-empty {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--muted);
+}
+
+@keyframes announcements-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .announcements {
+    animation: none;
+  }
+}
