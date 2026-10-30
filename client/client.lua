@@ -502,8 +502,9 @@ RegisterNUICallback('openSettings', function(_, cb)
 end)
 
 RegisterNUICallback('disconnect', function(_, cb)
-    ExecuteCommand('disconnect')
     cb({})
+    setMenuVisible(false)
+    TriggerServerEvent('neov-pause-menu:leaveServer')
 end)
 
 -- Nur die passive Atlas-Vorschau folgt der Spielerposition. Die interaktive
