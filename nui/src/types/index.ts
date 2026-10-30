@@ -110,17 +110,31 @@ export interface SettingDefinition {
   max?: number;
 }
 
-// Statischer Inhalt fuer den "Regeln & Hilfe"-Tab, gepflegt in
-// nui/src/tabs/rules/rules.data.ts - anders als Keybinds/Settings kommt das
-// nicht per NUI-Message vom Client, da es keine registrierende Resource gibt.
-export interface RuleSection {
-  id: string;
-  title: string;
-  paragraphs: string[];
+// Regelwerk, gespiegelt aus neov-homepage/regelwerk.html (scripts/sync-rules.mjs)
+// und mit dem Bundle ausgeliefert - kein NUI-Message-Pfad noetig.
+export interface RuleClause {
+  lead?: string;
+  text: string;
 }
 
-export interface FaqEntry {
+export interface Rule {
+  number: string;
+  title: string;
+  summary: string;
+  clauses: RuleClause[];
+  reviewNote?: string;
+}
+
+export interface RuleChapter {
   id: string;
-  question: string;
-  answer: string;
+  title: string;
+  rules: Rule[];
+  // Nur "Geltung und Verbindlichkeit": Absaetze ohne Regelnummern.
+  clauses?: RuleClause[];
+}
+
+export interface Rulebook {
+  source: string;
+  draftNote: string | null;
+  chapters: RuleChapter[];
 }

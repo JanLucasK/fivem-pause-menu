@@ -17,7 +17,6 @@ import { ExitConfirmDialog } from '../tabs/exit/ExitConfirmDialog';
 import { OverlayView } from './OverlayView';
 import { KeybindsTab } from '../tabs/keybinds/KeybindsTab';
 import { RulesTab } from '../tabs/rules/RulesTab';
-import { faqEntries, ruleSections } from '../tabs/rules/rules.data';
 
 // Der Hub ist die einzige "Seite"; Tastenbelegung/Regeln liegen als
 // Vollbild-Overlays darueber. ESC steigt die Kette ab: ExitDialog -> Overlay
@@ -82,7 +81,7 @@ export function AppShell() {
         return;
       }
       if (event.key !== 'Escape') return;
-      if (exitDialogOpen) return; // ESC schliesst erst den Bestätigungsdialog
+      if (exitDialogOpen) return; // ESC schliesst erst den Bestätigungsdialog (ExitConfirmDialog)
       if (view !== 'hub') {
         setView('hub');
         return;
@@ -170,15 +169,16 @@ export function AppShell() {
       />
 
       {view === 'keybinds' && (
-        <OverlayView title="Tastenbelegung" onBack={() => setView('hub')}>
-          <KeybindsTab keybinds={keybinds} onRebind={handleRebind} onReset={handleResetKeybind} />
-        </OverlayView>
+        <KeybindsTab
+          keybinds={keybinds}
+          onRebind={handleRebind}
+          onReset={handleResetKeybind}
+          onBack={() => setView('hub')}
+        />
       )}
 
       {view === 'rules' && (
-        <OverlayView title="Regeln & Hilfe" onBack={() => setView('hub')}>
-          <RulesTab sections={ruleSections} faq={faqEntries} />
-        </OverlayView>
+        <RulesTab onBack={() => setView('hub')} />
       )}
 
       {view === 'announcements' && (

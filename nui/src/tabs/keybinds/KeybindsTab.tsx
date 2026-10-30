@@ -1,6 +1,9 @@
-import { useEffect, useState } from 'react';
-import { Pencil, RotateCcw } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import type { KeyboardEvent as ReactKeyboardEvent } from 'react';
+import { RotateCcw } from 'lucide-react';
 import type { KeybindEntry } from '../../types';
+import { OverlayView } from '../../shell/OverlayView';
+import { SectionNav } from '../../shell/SectionNav';
 import { browserKeyToFivemKey } from './keyNameMap';
 import './keybindsTab.css';
 
@@ -8,6 +11,7 @@ interface KeybindsTabProps {
   keybinds: KeybindEntry[];
   onRebind: (id: string, key: string) => void;
   onReset: (id: string) => void;
+  onBack: () => void;
 }
 
 function groupByCategory(entries: KeybindEntry[]) {
@@ -24,8 +28,16 @@ function groupByCategory(entries: KeybindEntry[]) {
 // client/keybinds.lua) statt aus lokalen Mock-Daten - jede Resource, die dort
 // registriert, taucht hier automatisch auf. "Rebind" ruft fetchNui('rebindKey', ...)
 // auf, das Client-seitig `bind`/`unbind` ausführt und die Wahl persistiert.
-export function KeybindsTab({ keybinds, onRebind, onReset }: KeybindsTabProps) {
+// Bedienung: links Kategorien, Pfeil rechts in die Liste, Enter nimmt eine
+// neue Taste auf, Entf setzt auf Standard zurueck, Pfeil links zurueck.
+export function KeybindsTab({ keybinds, onRebind, onReset, onBack }: KeybindsTabProps) {
+  const groups = groupByCategory(keybinds);
+  const categories = Array.from(groups.keys());
+  const [category, setCategory] = useState(categories[0] ?? '');
   const [listeningFor, setListeningFor] = useState<string | null>(null);
+  const rowRefs = useRef<Array<HTMLButtonElement | null>>([]);
+  const activeCategory = groups.has(category) ? category : categories[0] ?? '';
+  const entries = groups.get(activeCategory) ?? [];
 
   useEffect(() => {
     if (!listeningFor) return;
@@ -53,48 +65,101 @@ export function KeybindsTab({ keybinds, onRebind, onReset }: KeybindsTabProps) {
     return () => window.removeEventListener('keydown', handler, true);
   }, [listeningFor, onRebind]);
 
-  const groups = groupByCategory(keybinds);
+  function focusRow(index: number) {
+    if (entries.length === 0) return;
+    rowRefs.current[(index + entries.length) % entries.length]?.focus();
+  }
+
+  function handleRowKeyDown(event: ReactKeyboardEvent<HTMLButtonElement>, index: number, entry: KeybindEntry) {
+    if (listeningFor) return;
+    if (event.key === 'ArrowDown') {
+      event.preventDefault();
+      focusRow(index + 1);
+    } else if (event.key === 'ArrowUp') {
+      event.preventDefault();
+      focusRow(index - 1);
+    } else if (event.key === 'ArrowLeft') {
+      event.preventDefault();
+      document.querySelector<HTMLButtonElement>('.section-nav-item--active')?.focus();
+    } else if (event.key === 'Delete' && entry.key !== entry.defaultKey) {
+      event.preventDefault();
+      onReset(entry.id);
+    }
+  }
 
   return (
-    <div className="keybinds-tab">
-      {Array.from(groups.entries()).map(([category, entries]) => (
-        <section key={category} className="keybinds-group">
-          <h3 className="keybinds-group-title">{category}</h3>
-          <div className="keybinds-list">
-            {entries.map((entry) => (
-              <div key={entry.id} className="keybinds-row">
-                <span className="keybinds-action">{entry.label}</span>
-                <div className="keybinds-controls">
-                  {entry.key !== entry.defaultKey && (
-                    <button
-                      type="button"
-                      className="keybinds-reset"
-                      title="Auf Standard zurücksetzen"
-                      onClick={() => onReset(entry.id)}
-                    >
-                      <RotateCcw size="0.75rem" />
-                    </button>
-                  )}
+    <OverlayView
+      title="Tastenbelegung"
+      onBack={onBack}
+      meta={keybinds.length > 0 && <span>{keybinds.length} Belegungen</span>}
+      aside={
+        categories.length > 0 && (
+          <SectionNav
+            label="Kategorien"
+            items={categories.map((name) => ({ id: name, label: name, count: groups.get(name)?.length }))}
+            activeId={activeCategory}
+            onChange={setCategory}
+            onEnterContent={() => focusRow(0)}
+          />
+        )
+      }
+      prompts={
+        keybinds.length > 0
+          ? [
+              { keys: '↑ ↓', label: 'Navigieren' },
+              { keys: '→', label: 'Zur Liste' },
+              { keys: 'ENTER', label: 'Neue Taste' },
+              { keys: 'ENTF', label: 'Standard' },
+            ]
+          : []
+      }
+    >
+      {keybinds.length === 0 ? (
+        <div className="keybinds-empty">
+          <h2 className="keybinds-empty-title">Noch keine Tasten gemeldet</h2>
+          <p className="keybinds-empty-text">
+            Die Belegungen erscheinen hier, sobald die Server-Ressourcen sie anmelden. Bis dahin lassen sich alle
+            Tasten im GTA-Menü unter Einstellungen → Tastenbelegung → FiveM ändern.
+          </p>
+        </div>
+      ) : (
+        <section className="keybinds-list" key={activeCategory} aria-label={activeCategory}>
+          {entries.map((entry, index) => {
+            const listening = listeningFor === entry.id;
+            const changed = entry.key !== entry.defaultKey;
+            return (
+              <div key={entry.id} className={`keybinds-row${listening ? ' keybinds-row--listening' : ''}`}>
+                <button
+                  ref={(el) => {
+                    rowRefs.current[index] = el;
+                  }}
+                  type="button"
+                  className="keybinds-row-main"
+                  onClick={() => setListeningFor(entry.id)}
+                  onKeyDown={(event) => handleRowKeyDown(event, index, entry)}
+                >
+                  <span className="keybinds-action">
+                    {entry.label}
+                    {changed && <span className="keybinds-default">Standard {entry.defaultKey}</span>}
+                  </span>
+                  <kbd className="keybinds-key">{listening ? 'Taste drücken …' : entry.key}</kbd>
+                </button>
+                {changed && !listening && (
                   <button
                     type="button"
-                    className={`keybinds-key ${listeningFor === entry.id ? 'listening' : ''}`}
-                    onClick={() => setListeningFor(entry.id)}
+                    className="keybinds-reset"
+                    title="Auf Standard zurücksetzen"
+                    aria-label={`${entry.label} auf ${entry.defaultKey} zurücksetzen`}
+                    onClick={() => onReset(entry.id)}
                   >
-                    {listeningFor === entry.id ? (
-                      <span>Taste drücken…</span>
-                    ) : (
-                      <>
-                        <span>{entry.key}</span>
-                        <Pencil size="0.75rem" />
-                      </>
-                    )}
+                    <RotateCcw size="1rem" />
                   </button>
-                </div>
+                )}
               </div>
-            ))}
-          </div>
+            );
+          })}
         </section>
-      ))}
-    </div>
+      )}
+    </OverlayView>
   );
 }

@@ -1,0 +1,890 @@
+{
+  "source": "https://neov.gg/regelwerk.html",
+  "draftNote": "Entwurf zur Teamprüfung. Noch nicht als neue gültige Fassung veröffentlicht.",
+  "chapters": [
+    {
+      "id": "p-grund",
+      "title": "Grundregeln",
+      "rules": [
+        {
+          "number": "1.1",
+          "title": "RP-Pflicht und glaubwürdiges Verhalten",
+          "summary": "Laufende Situationen müssen ausgespielt werden, auch wenn sie zum Nachteil des eigenen Charakters verlaufen.",
+          "clauses": [
+            {
+              "text": "Mit dem Betreten der Spielwelt befindest du dich im Roleplay. Du musst deinen Charakter entsprechend seiner Kenntnisse, Fähigkeiten und der aktuellen Situation darstellen."
+            },
+            {
+              "text": "Du darfst eine Verfolgung, Festnahme, medizinische Behandlung oder andere laufende Szene nicht allein deshalb verweigern, weil dir ihr Verlauf oder das erwartete Ergebnis nicht gefällt."
+            },
+            {
+              "text": "Der Wunsch nach Geld, Ausrüstung oder einem Sieg rechtfertigt weder einen Regelverstoß noch das Ausschließen anderer Beteiligter aus der Szene. Die Unterbrechung wegen einer akuten OOC-Gefahr richtet sich nach § 10.1."
+            }
+          ]
+        },
+        {
+          "number": "1.2",
+          "title": "Schutz des eigenen Lebens",
+          "summary": "Das Leben deines Charakters hat Vorrang vor Geld, Gegenständen und dem Gewinnen einer Situation.",
+          "clauses": [
+            {
+              "text": "Du musst erkennbare Lebensgefahren ernst nehmen und dein Verhalten daran ausrichten. Eigentum zu behalten oder einer IC-Strafe zu entgehen ist kein ausreichender Grund, den sicheren Tod des Charakters in Kauf zu nehmen."
+            },
+            {
+              "text": "Bei einer konkreten Bedrohung musst du Schmerzen, Angst und eingeschränkte Handlungsmöglichkeiten ausspielen. Eine Flucht oder Gegenwehr setzt eine in der Situation nachvollziehbare Erfolgsaussicht voraus."
+            },
+            {
+              "text": "Bewusstes Provozieren bewaffneter Gegner aus einer ausweglosen Lage, das Ignorieren einer Waffe am Kopf und Suizidaktionen zur Vermeidung einer Festnahme verstoßen gegen diese Regel."
+            }
+          ]
+        },
+        {
+          "number": "1.3",
+          "title": "Fortbestand von IC-Konsequenzen",
+          "summary": "Serverneustarts, Ausloggen und verlorene Szenen löschen keine ausgespielten Folgen.",
+          "clauses": [
+            {
+              "text": "Glaubwürdig entstandene IC-Konsequenzen müssen weiter ausgespielt werden. Dazu gehören insbesondere Schulden, Akten, Vorstrafen, Lizenzentscheidungen, Verletzungsfolgen und Fraktionskonflikte."
+            },
+            {
+              "text": "Ein Serverneustart oder eine technische Unterbrechung beendet diese Folgen nicht. Du darfst einen Wiedereinstieg nicht nutzen, um einer noch offenen Situation oder ihren Beteiligten auszuweichen."
+            },
+            {
+              "text": "Ob eine IC-Maßnahme rechtmäßig ist, wird grundsätzlich im Spiel geklärt. Bei einem zugrunde liegenden OOC-Regelverstoß ist der Support zuständig; bis zu seiner Entscheidung darfst du die Szene nicht eigenmächtig für ungültig erklären."
+            }
+          ]
+        },
+        {
+          "number": "1.4",
+          "title": "Trennung von IC und OOC",
+          "summary": "Charakterkonflikte und persönliche Konflikte dürfen nicht miteinander vermischt werden.",
+          "clauses": [
+            {
+              "lead": "IC (In Character)",
+              "text": "bezeichnet Handlungen und Wissen deiner Spielfigur. OOC (Out of Character) bezeichnet dich als Spieler sowie Informationen und Absprachen außerhalb der Spielwelt."
+            },
+            {
+              "text": "Persönlicher Ärger, Freundschaften, Discord-Streit und Supportentscheidungen dürfen nicht als IC-Motiv oder Wissensquelle eingesetzt werden. Ebenso darfst du andere Spieler wegen eines IC-Konflikts nicht OOC beleidigen, bedrohen oder unter Druck setzen."
+            },
+            {
+              "text": "Informationen dürfen erst IC genutzt werden, wenn der Charakter sie auf einem zulässigen Weg im RP erhalten hat. Einzelheiten regelt § 2.3."
+            }
+          ]
+        },
+        {
+          "number": "1.5",
+          "title": "Reaktionsmöglichkeiten und Fairness",
+          "summary": "Andere Beteiligte müssen eine tatsächliche Möglichkeit erhalten, auf deine Handlung zu reagieren.",
+          "clauses": [
+            {
+              "text": "Du musst anderen Spielern Gelegenheit geben, die Situation wahrzunehmen und eine passende Reaktion auszuspielen. Die für eine Handlung erforderliche Zeit und bestehende körperliche Einschränkungen sind zu berücksichtigen."
+            },
+            {
+              "text": "Das Ergebnis einer fremden Handlung oder Reaktion darfst du nicht einseitig festlegen. Eine ausgespielte Verletzung, Fesselung oder Durchsuchung ist kein Freibrief, weitere Folgen ohne Reaktionsmöglichkeit zu erzwingen."
+            },
+            {
+              "text": "Eine faire Reaktionsmöglichkeit bedeutet keinen Anspruch auf Flucht, Sieg oder folgenlose Ablehnung. Auch die Gegenseite bleibt an FearRP und die tatsächlich entstandene Situation gebunden."
+            }
+          ]
+        },
+        {
+          "number": "1.6",
+          "title": "Einsteiger und wiederholte Verstöße",
+          "summary": "Unkenntnis kann die Bewertung eines ersten Fehlers beeinflussen, hebt die Regelpflicht aber nicht auf.",
+          "clauses": [
+            {
+              "text": "Alle Spieler unterliegen denselben Verhaltensregeln. Bei einem erstmaligen geringfügigen Verstoß darf das Team einen Hinweis oder eine Erklärung statt einer weitergehenden Sanktion aussprechen."
+            },
+            {
+              "text": "Nach einer Erklärung musst du dein Verhalten anpassen. Das wiederholte Begehen desselben Verstoßes trotz eines dokumentierten Hinweises wird bei der Sanktion erschwerend berücksichtigt."
+            },
+            {
+              "text": "Einsteigerstatus und Probezeit schützen nicht vor Sanktionen bei schweren oder vorsätzlichen Verstößen. Es gibt keinen Anspruch auf einen kostenlosen Erstverstoß."
+            }
+          ]
+        },
+        {
+          "number": "1.7",
+          "title": "Charakterkonzept und RP-Niveau",
+          "summary": "Neo V verlangt glaubwürdiges Mittel-RP mit ernsthaft ausgespielten Folgen.",
+          "clauses": [
+            {
+              "text": "Dein Charakter muss eine nachvollziehbare Herkunft, Motivation und zu seinem Hintergrund passende Fähigkeiten haben. Übermenschliche Fähigkeiten und Konzepte, deren Zweck die Störung anderer Spieler ist, sind unzulässig."
+            },
+            {
+              "text": "Handlungen müssen zu den Umständen passen: Ein unverletzter Charakter kann anders handeln als ein Schwerverletzter; ein Sportwagen ist kein Geländefahrzeug; eine staatliche Funktion verleiht keine grenzenlose Macht."
+            },
+            {
+              "text": "Humor und lockere Alltagsszenen sind erlaubt, soweit sie die Beteiligten und den RP-Kontext respektieren. Bei Bedrohungen, schweren Verletzungen, Ermittlungen und vergleichbaren Konflikten gelten die entsprechenden Pflichten ohne Abschwächung."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "p-rolle",
+      "title": "Roleplay und Verhalten",
+      "rules": [
+        {
+          "number": "2.1",
+          "title": "FailRP",
+          "summary": "Unrealistische Handlungen oder das Ignorieren ausgespielter Einschränkungen sind verboten.",
+          "clauses": [
+            {
+              "text": "FailRP liegt vor, wenn du offensichtlich gegen die körperlichen, technischen oder situativen Möglichkeiten deines Charakters handelst oder die Folgen eines Ereignisses ignorierst."
+            },
+            {
+              "text": "Verboten sind insbesondere Weiterkämpfen nach schweren Schussverletzungen, unbeschwertes Weiterlaufen nach einem schweren Unfall, unmögliche körperliche Leistungen und das Benutzen ungeeigneter Fahrzeuge für unrealistische Fluchtwege."
+            },
+            {
+              "text": "Fesseln, Bewusstlosigkeit und ausgespielte Verletzungen schränken Handlungen auch dann ein, wenn eine Taste oder ein Spielsystem technisch noch bedienbar ist. Ein technisches Können begründet keine RP-Erlaubnis."
+            },
+            {
+              "lead": "Beispiel:",
+              "text": "Nach einem schweren Aufprall unverletzt aussteigen und wegsprinten ist unzulässig. Du musst die Unfallfolgen ausspielen und bei entsprechend schweren Verletzungen medizinische Versorgung zulassen."
+            }
+          ]
+        },
+        {
+          "number": "2.2",
+          "title": "PowerRP / Powergaming",
+          "summary": "Fremde Reaktionen und nicht ausgespielte Ergebnisse dürfen nicht erzwungen werden.",
+          "clauses": [
+            {
+              "text": "PowerRP liegt vor, wenn du einer anderen Person eine Handlung, einen Zustand oder ein Ergebnis ohne realistische Reaktionsmöglichkeit aufzwingst. Ebenso verboten sind unmögliche Fähigkeiten, die dir einen nicht abwehrbaren Vorteil verschaffen."
+            },
+            {
+              "text": "Eine Beschreibung oder Textaktion darf nur deine Handlung beziehungsweise deinen Versuch festlegen. Sie ersetzt weder eine erforderliche Interaktion noch den notwendigen RP-Hintergrund."
+            },
+            {
+              "lead": "Unzulässig:",
+              "text": "„Ich schlage dich bewusstlos, fessele dich und nehme dir alles weg“, wenn die Gegenseite auf keinen dieser Schritte reagieren konnte."
+            },
+            {
+              "lead": "Zulässig:",
+              "text": "Du beschreibst den Versuch, die Person festzuhalten, und lässt die Reaktion zu. Ein bereits rechtmäßig entstandener Zustand muss anschließend ausgespielt werden; die betroffene Person darf ihn nicht durch bloße Verweigerung aufheben."
+            }
+          ]
+        },
+        {
+          "number": "2.3",
+          "title": "Metagaming",
+          "summary": "OOC-Wissen und externe Absprachen dürfen keinen Einfluss auf IC-Handlungen haben.",
+          "clauses": [
+            {
+              "text": "Du darfst nur Informationen verwenden, die dein Charakter selbst IC erhalten hat. Wissen aus Discord, Streams, privaten Nachrichten, fremden Aufnahmen oder einem anderen Charakter darfst du weder nutzen noch an andere Charaktere weitergeben."
+            },
+            {
+              "text": "Verboten sind OOC-Standortmeldungen, externe Koordination einer laufenden Szene, das Aufsuchen von Personen aufgrund eines Streams sowie die Übernahme vertraulicher Fraktionsinformationen aus OOC-Gesprächen."
+            },
+            {
+              "text": "HUD-Anzeigen, Spieler-IDs, Namenseinblendungen und die OOC-Wiedererkennung einer Stimme ersetzen keine IC-Identifizierung. Bereits im RP glaubwürdig erworbenes Wissen bleibt davon unberührt."
+            },
+            {
+              "text": "Auch das nachträgliche Erfinden einer IC-Erklärung für bereits verwendetes OOC-Wissen ist Metagaming. Wissen aus Bewusstlosigkeit oder einer unter die New Life Rule fallenden Situation darf nicht über andere Spieler zurückbeschafft werden."
+            }
+          ]
+        },
+        {
+          "number": "2.4",
+          "title": "FearRP",
+          "summary": "Konkrete Bedrohungen müssen das Verhalten deines Charakters erkennbar beeinflussen.",
+          "clauses": [
+            {
+              "text": "FearRP gilt insbesondere bei einer Waffe am Kopf, einem Messer in unmittelbarer Reichweite, einer bewaffneten Übermacht, einer Geiselnahme und schweren Verletzungen."
+            },
+            {
+              "text": "Wenn dein Charakter keine realistische Flucht- oder Gegenwehrmöglichkeit hat, musst du lebensschützende Anweisungen befolgen. Respektloses Provozieren, das demonstrative Ignorieren der Gefahr und aussichtslose Angriffe sind verboten."
+            },
+            {
+              "text": "Eine bloße Unterzahl entscheidet nicht allein. Zu berücksichtigen sind unter anderem Ausrichtung der Waffen, Deckung, Entfernung, Bewegungsfreiheit, Verletzungen und die Aufmerksamkeit der Bedrohenden. Die Gefahr darf nicht allein wegen einer technischen Spielmechanik verneint werden."
+            }
+          ]
+        },
+        {
+          "number": "2.5",
+          "title": "RP-Flucht und Verbindungsabbrüche",
+          "summary": "Aktive Szenen dürfen nicht durch Ausloggen, Charakterwechsel oder absichtliche Unterbrechungen beendet werden.",
+          "clauses": [
+            {
+              "text": "Das absichtliche Verlassen oder Unterbrechen einer laufenden RP-, Polizei-, Kampf-, Medizin- oder Konfliktsituation ist verboten. Das gilt auch im bewusstlosen Zustand sowie bei unmittelbar bevorstehenden Konsequenzen."
+            },
+            {
+              "text": "Verboten sind insbesondere das Schließen des Spiels, absichtliches Trennen der Verbindung und der Wechsel in die Charakterauswahl zur Vermeidung der Szene."
+            },
+            {
+              "text": "Nach einem unbeabsichtigten Absturz musst du die Rückkehr unverzüglich versuchen und die offene Situation fortsetzen. Ist die Rückkehr technisch nicht möglich, musst du den Support über die verfügbaren offiziellen Kontaktwege informieren. Nenne Zeitpunkt, Charakter, Beteiligte und die unterbrochene Situation."
+            },
+            {
+              "text": "Ein Absturz allein ist kein nachgewiesenes Combat Logging. Die bewusste Vermeidung der Rückkehr oder der weiteren Klärung wird dagegen als RP-Flucht bewertet. Ein Serverneustart beendet eine noch offene Szene nicht automatisch."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "p-waffen",
+      "title": "Waffen und Gewalt",
+      "rules": [
+        {
+          "number": "3.1",
+          "title": "RDM und unverhältnismäßige Gewalt",
+          "summary": "Angriffe benötigen einen konkreten, ausgespielten RP-Anlass und eine dazu passende Eskalation.",
+          "clauses": [
+            {
+              "text": "Das willkürliche Verletzen oder Töten anderer Charaktere ohne nachvollziehbaren RP-Hintergrund ist verboten. Die Regel gilt für Schusswaffen, Messer, Schläge und andere Angriffsformen."
+            },
+            {
+              "text": "Ein geringfügiger Anlass wie eine einfache Beleidigung, ein kleiner Sachschaden oder bloße Anwesenheit rechtfertigt nicht für sich allein tödliche Gewalt. Motivation, Vorgeschichte und Intensität müssen zusammenpassen."
+            },
+            {
+              "text": "Eine Schussankündigung, Fraktionsfeindschaft oder kriminelle Rolle ersetzt keinen konkreten Anlass in der betreffenden Situation. Gewalt darf nicht ausschließlich zur Provokation, Belästigung oder zum Erzwingen eines Kampfes eingesetzt werden."
+            },
+            {
+              "text": "Sobald die konkrete Bedrohung beendet ist, darf eine Notwehrlage nicht als Begründung für beliebige weitere Angriffe verwendet werden."
+            }
+          ]
+        },
+        {
+          "number": "3.2",
+          "title": "VDM und Fahrzeugeinsatz",
+          "summary": "Fahrzeuge dürfen nicht als reguläres Mittel eingesetzt werden, um Personen zu verletzen oder zu töten.",
+          "clauses": [
+            {
+              "text": "Absichtliches Überfahren von Personen, Angriffe auf Menschenmengen und der Einsatz eines Fahrzeugs als Standardwaffe sind verboten. Dass ein Gegner zu Fuß flieht oder eine Straße blockiert, schafft für sich allein keine Ausnahme."
+            },
+            {
+              "text": "Wiederholtes Rammen ohne RP-Grund und unrealistischer Rammbockeinsatz sind ebenfalls verboten. Ein nachvollziehbarer Anlass hebt die Pflicht zu realistischen Unfallfolgen nicht auf."
+            },
+            {
+              "lead": "Eng begrenzte Ausnahme:",
+              "text": "Befindet sich der Charakter in unmittelbarer Lebensgefahr und besteht keine andere realistische Fluchtmöglichkeit, darf der Fahrzeugeinsatz ausschließlich der erforderlichen Flucht dienen. Gezieltes Nachsetzen, erneutes Überfahren oder eine anschließende Jagd auf Beteiligte sind davon nicht gedeckt."
+            }
+          ]
+        },
+        {
+          "number": "3.3",
+          "title": "Schussankündigung und Notwehr",
+          "summary": "Vor gezieltem Schusswaffengebrauch müssen Anlass, Forderung und Konsequenz erkennbar sein.",
+          "clauses": [
+            {
+              "text": "Vor einem gezielten Schuss musst du grundsätzlich eine für die betroffene Person wahrnehmbare und eindeutige Ankündigung abgeben. Sie muss erkennen können, welches Verhalten verlangt wird und dass bei Nichtbefolgung geschossen wird."
+            },
+            {
+              "text": "Die betroffene Person muss die Forderung wahrnehmen und tatsächlich reagieren können. Eine Ansage gleichzeitig mit dem Schuss erfüllt diese Voraussetzung nicht. Unmögliche Forderungen sind unzulässig."
+            },
+            {
+              "text": "Eine zusätzliche Ankündigung entfällt nur, wenn ein gegenwärtiger bewaffneter Angriff oder eine unmittelbar drohende Lebensgefahr ein sofortiges Eingreifen erfordert. Das gilt auch bei einer aktuell lebensgefährlichen Bedrohung einer Geisel. Eine Geisellage, Gangzugehörigkeit oder frühere Auseinandersetzung allein begründet keine Ausnahme."
+            },
+            {
+              "text": "Die Ansage gilt ausschließlich für die erkennbare aktuelle Situation und ihre betroffenen Beteiligten. Sie ist keine dauerhafte Schusserlaubnis. Jede Schussabgabe bleibt an RDM, Verhältnismäßigkeit und die konkrete Bedrohung gebunden."
+            }
+          ]
+        },
+        {
+          "number": "3.4",
+          "title": "Waffen und IC-Strafverfolgung",
+          "summary": "Waffenbesitz ersetzt weder einen RP-Anlass noch eine Erlaubnis zur Gewalt.",
+          "clauses": [
+            {
+              "text": "Das Beschaffen, Tragen und Verwenden von Waffen muss zum Charakter und zur ausgespielten Situation passen. Lizenz-, Kontroll- und Waffenbestimmungen der Spielwelt sind IC-Regeln und werden durch die zuständigen IC-Stellen verfolgt."
+            },
+            {
+              "text": "Eine Waffe oder Waffenlizenz berechtigt nicht zu Drohungen, Überfällen oder Schüssen ohne die dafür erforderliche RP-Grundlage. OOC-Gewaltregeln gelten unabhängig davon, ob eine Waffe IC legal oder illegal ist."
+            },
+            {
+              "text": "Illegale Bewaffnung und andere nachvollziehbar ausgespielte Straftaten sind nicht allein deshalb OOC-Regelverstöße. Ihre IC-Konsequenzen müssen aber akzeptiert und ausgespielt werden."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "p-leben",
+      "title": "Leben, Verletzung und Tod",
+      "rules": [
+        {
+          "number": "4.1",
+          "title": "Verletzungen und Bewusstlosigkeit",
+          "summary": "Schwere Verletzungen und medizinische Maßnahmen müssen mit ihren Einschränkungen ausgespielt werden.",
+          "clauses": [
+            {
+              "text": "Nach Unfällen, Schussverletzungen und anderen erheblichen Verletzungen musst du Schmerzen, eingeschränkte Beweglichkeit und erforderliche Versorgung darstellen. Der technische Gesundheitswert allein bestimmt nicht, ob dein Charakter wieder uneingeschränkt handeln kann."
+            },
+            {
+              "text": "Nach einer Wiederbelebung darfst du nicht unmittelbar weiterkämpfen oder eine unverändert leistungsfähige Flucht fortsetzen. Die Behandlung und die plausiblen Folgen der Verletzung müssen ausgespielt werden."
+            },
+            {
+              "text": "Während der Bewusstlosigkeit darfst du weder sprechen, funken, telefonieren noch Informationen über externe Kanäle weitergeben. In dieser Zeit beobachtete oder gehörte Informationen stehen dem Charakter später nicht zur Verfügung."
+            },
+            {
+              "text": "Medizinisches Personal muss eine reale Behandlungsmöglichkeit erhalten. Eine technische Wiederbelebung ersetzt die Behandlung nicht."
+            }
+          ]
+        },
+        {
+          "number": "4.2",
+          "title": "New Life Rule nach einem Respawn",
+          "summary": "Ein Respawn darf nicht zur Rückkehr in dieselbe Konfliktsituation oder zur Rache genutzt werden.",
+          "clauses": [
+            {
+              "lead": "Behandlung ohne Respawn:",
+              "text": "Der Charakter behält seine vorherigen Erinnerungen, soweit Verletzung und ausgespielte Behandlung dem nicht widersprechen. Während einer Bewusstlosigkeit entstehen keine neuen nutzbaren Erinnerungen."
+            },
+            {
+              "lead": "Respawn ohne Rettung:",
+              "text": "Informationen aus der unmittelbaren Situation, die zur Bewusstlosigkeit beziehungsweise zum Respawn geführt hat, dürfen nicht zur Fortsetzung des Konflikts, zur Identifizierung oder zur Weitergabe an andere genutzt werden."
+            },
+            {
+              "text": "Nach dem Respawn darfst du nicht in dieselbe noch laufende Konfliktsituation zurückkehren. Verboten sind insbesondere erneute Beteiligung am Kampf, Weitergabe von Positionen und eine Racheaktion aufgrund der verlorenen Situation."
+            },
+            {
+              "text": "Unabhängig davon müssen Verletzungsfolgen ausgespielt werden. Die Regel löscht weder die allgemeine Charakterbiografie noch zuvor unabhängig entstandene Akten oder Verpflichtungen."
+            }
+          ]
+        },
+        {
+          "number": "4.3",
+          "title": "Endgültiger Charaktertod",
+          "summary": "Technische Bewusstlosigkeit und Respawn sind nicht automatisch ein endgültiger Charaktertod.",
+          "clauses": [
+            {
+              "text": "Ein endgültiger Charaktertod beendet die weitere Bespielbarkeit dieses Charakters. Er muss ausdrücklich von einer normalen Bewusstlosigkeit, medizinischen Notlage oder einem Respawn unterschieden werden."
+            },
+            {
+              "text": "Ein freiwilliger Charaktertod ist möglich. Ein durch andere herbeigeführter endgültiger Charaktertod benötigt eine ausreichende, über den bloßen Verlust einer einzelnen Szene hinausgehende RP-Begründung."
+            },
+            {
+              "lead": "Freigabeverfahren:",
+              "text": "Bevor ein endgültiger Charaktertod verbindlich ausgespielt wird, muss er vom Support aufgenommen und durch eine unbeteiligte Administration ausdrücklich bestätigt werden. Eine einzelne Partei darf den dauerhaften Verlust eines fremden Charakters nicht allein festlegen."
+            },
+            {
+              "text": "Bis zur Bestätigung wird eine Verletzungs- oder Bewusstlosigkeitssituation ausgespielt. Endgültige Tatsachen, technische Löschungen oder ein erzwungener Charakterwechsel dürfen nicht vorweggenommen werden."
+            }
+          ],
+          "reviewNote": "Freigabe offen: Das Konzept sieht eine Teamprüfung vor, legt aber noch kein einheitliches Genehmigungsverfahren für alle endgültigen Charaktertode fest."
+        },
+        {
+          "number": "4.4",
+          "title": "Akten und langfristige Folgen",
+          "summary": "Akten und nachvollziehbar ausgespielte Entscheidungen bleiben über einzelne Spielsitzungen hinaus bestehen.",
+          "clauses": [
+            {
+              "text": "Polizei, Justiz, Medizin, Behörden und andere zuständige IC-Stellen dürfen im Rahmen ihrer ausgespielten Aufgaben Akten führen. Dazu gehören unter anderem Ermittlungen, Behandlungen, Lizenzen, Unternehmensvorgänge, Bewährung und Schulden."
+            },
+            {
+              "text": "Daraus entstandene IC-Maßnahmen wie Geld- oder Haftstrafen, Lizenzentzug, berufliche Einschränkungen und Fraktionsausschlüsse müssen ausgespielt werden. Zulässige IC-Rechtsmittel bleiben möglich."
+            },
+            {
+              "text": "Akten dürfen nicht durch Ausloggen oder technische Unterbrechungen für unwirksam erklärt werden. Manipulationen im RP unterliegen insbesondere der Korruptionsregel; das Ausnutzen technischer Lösch- oder Zugriffsfehler ist verboten."
+            },
+            {
+              "text": "Eine IC-Einreisesperre oder berufliche Einschränkung ist von einer OOC-Accountsperre zu unterscheiden. OOC-Sanktionen werden ausschließlich nach dem Supportverfahren verhängt."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "p-crime",
+      "title": "Kriminelles Roleplay",
+      "rules": [
+        {
+          "number": "5.1",
+          "title": "Raubüberfälle und Forderungen",
+          "summary": "Überfälle müssen kommuniziert werden und ein tatsächliches RP für Täter und Betroffene ermöglichen.",
+          "clauses": [
+            {
+              "text": "Ein Überfall setzt einen nachvollziehbaren RP-Anlass voraus. Täter müssen Forderungen verständlich mitteilen, den Betroffenen eine Reaktion ermöglichen und Flucht sowie Gegenwehr im Rahmen der Regeln einkalkulieren."
+            },
+            {
+              "text": "Verboten sind Überfälle ohne Kommunikation, wiederholtes Abfarmen erkennbarer Anfänger, Camping an Einstiegsorten und Serienüberfälle, die ausschließlich der schnellen Bereicherung ohne ausgespielte Interaktion dienen."
+            },
+            {
+              "text": "Forderungen müssen in der konkreten Situation erfüllbar und verhältnismäßig sein. Technisch unmögliche Leistungen oder die Ausnutzung fehlender Spielmechaniken dürfen nicht erzwungen werden."
+            },
+            {
+              "text": "Kooperation darf nicht ohne einen neuen, eigenständigen und verhältnismäßigen Anlass mit sofortiger Tötung beantwortet werden. Ein Überfall als solcher ist keine pauschale Erlaubnis, Opfer anschließend zu erschießen."
+            }
+          ]
+        },
+        {
+          "number": "5.2",
+          "title": "Geiselnahmen und Verbot von Schein-Geiseln",
+          "summary": "Geiseln müssen am RP beteiligt werden; abgesprochene Schein-Geiseln sind ausnahmslos verboten.",
+          "clauses": [
+            {
+              "text": "Eine Geiselnahme benötigt eine nachvollziehbare Motivation und muss gegenüber der Geisel ausgespielt werden. Das Opfer muss auf Ansprache, Bedrohung und Verhandlungen reagieren können."
+            },
+            {
+              "text": "Forderungen müssen erfüllbar und zur Lage verhältnismäßig sein. Freier Abzug, ein Fahrzeug, eine Geldforderung oder medizinische Versorgung können Gegenstand einer Verhandlung sein; daraus entsteht kein Anspruch auf Erfüllung."
+            },
+            {
+              "text": "Verboten sind grundlose Geiselnahmen, unnötige Gewalt, unmittelbares Töten zu Beginn der Lage und die ausschließliche Nutzung einer Person als stumme Deckung ohne Interaktion."
+            },
+            {
+              "lead": "Schein-Geiseln sind ausnahmslos verboten.",
+              "text": "Eine Schein-Geisel liegt vor, wenn eine Person mit den Tätern zusammenarbeitet und eine nicht tatsächlich bestehende Zwangslage vorspielt, um Dritte zu täuschen oder Forderungen durchzusetzen. Dazu zählt insbesondere ein Komplize, der beim Überfall freiwillig das Opfer darstellt."
+            },
+            {
+              "text": "Fehlende andere Spieler, eine geringe Spielerzahl, OOC-Zustimmung oder ein geplanter Story-Verlauf begründen keine Ausnahme. Bloße OOC-Bekanntschaft ist dagegen kein Verbot einer echten Geiselnahme. Auch ein ausgespielter Verrat innerhalb einer Gruppe kann eine echte Geiselnahme begründen, sofern das Opfer nicht als mitwirkender Komplize eingesetzt wird."
+            }
+          ]
+        },
+        {
+          "number": "5.3",
+          "title": "Cop-Baiting und missbräuchliche Notrufe",
+          "summary": "Polizei und Behörden dürfen nicht ohne nachvollziehbaren RP-Zweck beschäftigt oder provoziert werden.",
+          "clauses": [
+            {
+              "text": "Verboten ist das gezielte Herbeiführen von Verfolgungen oder Einsätzen allein zur Beschäftigung, Belästigung oder Provokation der Einsatzkräfte."
+            },
+            {
+              "text": "Dazu gehören insbesondere wiederholte kleinere Straftaten unmittelbar vor Beamten ohne weitergehenden RP-Zweck, grundloses Beschädigen von Dienstfahrzeugen und wiederholte falsche Notrufe zur Bindung von Personal."
+            },
+            {
+              "text": "Eine geplante Straftat oder eine nachvollziehbar ausgespielte Täuschung ist nicht automatisch Cop-Baiting. Der RP-Zweck muss über „die Polizei soll mich verfolgen“ hinausgehen; RDM, PowerRP und Fairness gelten weiterhin."
+            }
+          ]
+        },
+        {
+          "number": "5.4",
+          "title": "Offiziell ausgewiesene Safezones",
+          "summary": "Der Schutz gilt ausschließlich in offiziell festgelegten Bereichen und darf nicht zur RP-Flucht missbraucht werden.",
+          "clauses": [
+            {
+              "text": "Als Safezones gelten ausschließlich Bereiche, die von der Projektleitung ausdrücklich als solche veröffentlicht oder im Spiel eindeutig gekennzeichnet wurden. Die Festlegung muss den betroffenen Bereich erkennbar abgrenzen."
+            },
+            {
+              "text": "Ein Krankenhaus, eine Polizeiwache, ein Flughafen oder ein anderer öffentlicher Ort ist nicht allein aufgrund seiner Bezeichnung automatisch eine Safezone."
+            },
+            {
+              "text": "Innerhalb einer ausgewiesenen Safezone sind Schusswechsel, Raubüberfälle, Entführungen, gezielte Provokationen und das absichtliche Beginnen von Konflikten verboten. Ebenso verboten ist das Abpassen von Spielern am Zonenrand, um diesen Schutz gezielt zu umgehen."
+            },
+            {
+              "text": "Wer sich bereits in einem Konflikt befindet, darf nicht in eine Safezone flüchten, um Konsequenzen zu vermeiden. Dieser Verstoß erlaubt anderen Beteiligten aber keinen eigenen Verstoß gegen den Zonenschutz. Dokumentiert den Vorgang und lasst den Support die Fortsetzung klären."
+            }
+          ]
+        },
+        {
+          "number": "5.5",
+          "title": "Korruption und Dienstrechte",
+          "summary": "Korruptions-RP ist begrenzt erlaubt; Leitungshandlungen benötigen vorherige OOC-Abstimmung.",
+          "clauses": [
+            {
+              "text": "Korruption muss einen ausgespielten Anlass, nachvollziehbare Gegenleistungen oder Motive und ein tatsächliches Entdeckungsrisiko haben. Persönliche OOC-Freundschaften rechtfertigen keine Begünstigung."
+            },
+            {
+              "text": "Wer eine Leitungsfunktion bekleidet, muss geplantes Korruptions-RP vor der ersten entsprechenden Handlung mit der Administration beziehungsweise der zuständigen Fraktionsverwaltung OOC abstimmen. Eine nachträgliche Meldung ersetzt diese Abstimmung nicht."
+            },
+            {
+              "text": "Verboten sind die systematische Handlungsunfähigkeit einer Staatsfraktion, das flächendeckende Löschen von Ermittlungen, massenhafte Abgabe von Dienstwaffen, pauschale Freilassungen ohne RP-Grund und die systematische Verweigerung medizinischer Hilfe zugunsten einer Partei."
+            },
+            {
+              "text": "Dienstrechte dürfen nicht für OOC-Vorteile missbraucht werden. Sensible Informationen dürfen nur auf einer passenden RP-Grundlage weitergegeben werden. Technische Rechte oder Teamfunktionen dürfen niemals als Mittel für Korruptions-RP eingesetzt werden."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "p-frak",
+      "title": "Fraktionen",
+      "rules": [
+        {
+          "number": "6.1",
+          "title": "Verantwortung von Fraktionen",
+          "summary": "Fraktionsleitungen müssen Strukturen schaffen und Regelverstöße innerhalb ihrer Organisation ernst nehmen.",
+          "clauses": [
+            {
+              "text": "Fraktionen, Unternehmen und organisierte Gruppen müssen nachvollziehbare interne Zuständigkeiten haben und RP für ihre Mitglieder sowie andere Beteiligte ermöglichen."
+            },
+            {
+              "text": "Die Leitung ist verpflichtet, Mitglieder über einschlägige Regeln zu informieren und bekannt gewordene Verstöße nicht anzuweisen, zu fördern oder zu verdecken."
+            },
+            {
+              "text": "Organisierte, angeordnete oder wiederholt geduldete Regelverstöße können neben den individuellen Folgen zu Maßnahmen gegen die Fraktion führen. Die Beteiligung beziehungsweise das Versäumnis der Fraktion muss dabei begründet werden; die bloße Mitgliedschaft beweist keinen individuellen Regelverstoß."
+            },
+            {
+              "text": "Konflikte zwischen Fraktionen benötigen eine konkrete RP-Grundlage. Gewinnmaximierung oder ein OOC-Streit allein rechtfertigen keine dauerhafte Schädigung anderer Gruppen."
+            }
+          ]
+        },
+        {
+          "number": "6.2",
+          "title": "Staatsfraktionen und öffentliche Aufgaben",
+          "summary": "Staatliche Befugnisse müssen nachvollziehbar und innerhalb der ausgespielten Zuständigkeiten eingesetzt werden.",
+          "clauses": [
+            {
+              "text": "Polizei, Rettungsdienst, Justiz, Regierung, Zoll und weitere staatlich bespielte Stellen müssen ihre Aufgaben professionell und entsprechend den IC-Zuständigkeiten wahrnehmen."
+            },
+            {
+              "text": "Hoheitliche Maßnahmen und medizinische Entscheidungen dürfen nicht ohne RP-Grund zur persönlichen OOC-Bestrafung, Belästigung oder Begünstigung von Spielern eingesetzt werden."
+            },
+            {
+              "text": "Fehler, Ermittlungsentscheidungen und rechtliche Meinungsverschiedenheiten können Teil des RP sein. Sie werden zunächst IC geklärt, solange kein OOC-Regelverstoß vorliegt."
+            },
+            {
+              "text": "Auch Staatsfraktionen unterliegen RDM, FearRP, PowerRP und den Grenzen des Korruptions-RP. Eine Uniform oder ein hoher Dienstrang hebt diese Regeln nicht auf."
+            }
+          ]
+        },
+        {
+          "number": "6.3",
+          "title": "Crime-Fraktionen und Konflikte",
+          "summary": "Kriminelles RP muss über Schießereien und wiederholte Angriffe hinausgehen.",
+          "clauses": [
+            {
+              "text": "Kriminelle Gruppen müssen ihre Motivation, Beziehungen und Konflikte nachvollziehbar im RP entwickeln. Handel, Einfluss, Erpressung, Bündnisse und Feindschaften dürfen nicht durch rein OOC organisierte Kampfserien ersetzt werden."
+            },
+            {
+              "text": "Ein Konflikt mit einer Fraktion erlaubt nicht, jedes ihrer Mitglieder bei jeder Begegnung anzugreifen. Für die konkrete Eskalation gelten insbesondere § 3.1 und § 3.3."
+            },
+            {
+              "text": "Beteiligte müssen Verhandlungen, Niederlagen und daraus entstandene Folgen ausspielen. Die dauerhafte Blockade anderer Gruppen ohne eigenständige RP-Interaktion verstößt gegen die Fairnesspflicht."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "p-ton",
+      "title": "Umgang und Kommunikation",
+      "rules": [
+        {
+          "number": "7.1",
+          "title": "Diskriminierung",
+          "summary": "Diskriminierende Aussagen und Handlungen sind IC wie OOC verboten.",
+          "clauses": [
+            {
+              "text": "Verboten sind diskriminierende oder menschenverachtende Aussagen und Handlungen wegen Herkunft, Hautfarbe, Nationalität, Religion, Geschlecht, sexueller Orientierung, Behinderung, Krankheit, Alter oder politischer beziehungsweise weltanschaulicher Zugehörigkeit."
+            },
+            {
+              "text": "Das Verbot gilt in Sprache, Text, Namen, Bildern und ausgespielten Handlungen innerhalb der Neo-V-Community. Die Berufung auf eine Rolle, Humor oder eine Provokation schafft keine Ausnahme."
+            },
+            {
+              "text": "Die Aufforderung anderer Personen zu entsprechender Hetze oder Ausgrenzung ist ebenfalls verboten. Betroffene dürfen eine solche OOC-Grenzüberschreitung unmittelbar melden; § 10.1 regelt den Umgang mit akuten Fällen."
+            }
+          ]
+        },
+        {
+          "number": "7.2",
+          "title": "Beleidigungen, Belästigung und Drohungen",
+          "summary": "IC-Konflikte dürfen nicht zu persönlichen Angriffen auf Spieler werden.",
+          "clauses": [
+            {
+              "text": "Situationsbezogene IC-Beleidigungen sind nur zulässig, wenn sie zum RP passen, verhältnismäßig bleiben und keine der ausdrücklich verbotenen Grenzen überschreiten."
+            },
+            {
+              "text": "Verboten sind persönliche OOC-Angriffe, Angriffe auf Familie, Herkunft, Religion, Sexualität, Behinderung oder Krankheit, extreme sexuelle Beleidigungen, Mobbing und dauerhaftes Erniedrigen anderer Spieler."
+            },
+            {
+              "text": "Drohungen außerhalb des Spiels und das gezielte Belästigen einer Person über mehrere Situationen oder Plattformen sind verboten. Ein vorheriger IC-Konflikt oder eine spätere Entschuldigung hebt einen bereits begangenen Verstoß nicht auf."
+            }
+          ]
+        },
+        {
+          "number": "7.3",
+          "title": "Trolling und gezielte Störung",
+          "summary": "Absichtliches Stören von Spielern oder laufenden Szenen ist verboten.",
+          "clauses": [
+            {
+              "text": "Trolling liegt vor, wenn der erkennbare Zweck einer Handlung die Störung des RP, die Belästigung anderer Personen oder das bewusste Sabotieren einer Szene ist."
+            },
+            {
+              "text": "Verboten sind insbesondere anhaltendes Schreien, gezielte Gesprächsunterbrechungen, sinnloses Dauerhupen, absichtliches Blockieren und fortgesetzte Provokation ohne eigenständigen RP-Anlass."
+            },
+            {
+              "text": "Humor, Unerfahrenheit und die technische Möglichkeit einer Aktion sind keine Ausnahme. Auch das bewusste Umgehen des erkennbaren Regelzwecks durch konstruierte Grauzonen ist unzulässig; das Team muss den konkreten Verstoß begründen."
+            }
+          ]
+        },
+        {
+          "number": "7.4",
+          "title": "OOC-Kommunikation in aktiven Szenen",
+          "summary": "Regeldiskussionen, Supportdrohungen und technische Debatten gehören nicht in das laufende RP.",
+          "clauses": [
+            {
+              "text": "Während einer aktiven Szene musst du IC kommunizieren. Verboten sind insbesondere das Diskutieren von Regelverstößen, das Drohen mit Tickets oder Clips und das Ansprechen von Spieler-IDs oder OOC-Plattformen als Teil des RP."
+            },
+            {
+              "text": "Zwingend notwendige technische Hinweise sind als kurze Unterbrechung zulässig, wenn die weitere Teilnahme sonst nicht möglich ist. Beschränke dich auf die Störung; daraus darf keine Regeldebatte entstehen."
+            },
+            {
+              "text": "Eine technische Umschreibung verleiht kein Recht, eine Szene zu verlassen oder Informationen über externe Kanäle weiterzugeben. Bei einem Verbindungsabbruch gilt § 2.5; bei einem akuten OOC-Notfall gilt § 10.1."
+            }
+          ]
+        },
+        {
+          "number": "7.5",
+          "title": "Streaming, Aufnahmen und vertrauliche Gespräche",
+          "summary": "Veröffentlichungen dürfen weder OOC-Vorteile schaffen noch vertrauliche Gespräche offenlegen.",
+          "clauses": [
+            {
+              "text": "Das Streamen und Veröffentlichen eigener Spielszenen ist grundsätzlich erlaubt. Sämtliche RP- und Communityregeln gelten auch für dabei gezeigte oder weitergegebene Inhalte."
+            },
+            {
+              "text": "Streamsniping, das Verwenden von Zuschauerhinweisen als IC-Wissen und das gezielte Aufsuchen einer Person aufgrund ihres Streams sind verboten. Zuschauer dürfen nicht zur Informationsbeschaffung oder Belästigung anderer Spieler angehalten werden."
+            },
+            {
+              "text": "Supportgespräche dürfen ohne ausdrückliche Freigabe nicht gestreamt werden. Vertrauliche Team- und Fraktionsgespräche dürfen nicht öffentlich gemacht werden."
+            },
+            {
+              "text": "Für Supportbeweise bestimmte Aufnahmen sind über den vorgesehenen Supportweg einzureichen. Eine Beschwerde soll nicht durch öffentliche Bloßstellung oder das Mobilisieren von Zuschauern entschieden werden."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "p-tech",
+      "title": "Technik und Fairness",
+      "rules": [
+        {
+          "number": "8.1",
+          "title": "Cheats, Manipulation und Echtgeldhandel",
+          "summary": "Technische Manipulationen und der Handel mit Spielvorteilen gegen reale Werte sind verboten.",
+          "clauses": [
+            {
+              "text": "Cheats, Hacks und technische Veränderungen zur Erlangung unerlaubter Vorteile sind verboten. Das gilt auch für Programme, Makros oder Manipulationen, die Sicht, Bewegung, Angriffe oder Verbindungen zu diesem Zweck beeinflussen."
+            },
+            {
+              "text": "Geld, Gegenstände, Accounts oder sonstige Spielvorteile dürfen nicht außerhalb der vom Projekt ausdrücklich vorgesehenen Angebote gegen Echtgeld oder reale Gegenleistungen gehandelt werden."
+            },
+            {
+              "text": "Ein Verdacht allein ist kein Nachweis. Der Support muss den festgestellten Verstoß und die daraus folgende Maßnahme dokumentieren. Nachgewiesene schwere Manipulationen oder Echtgeldhandel können zum permanenten Ausschluss und zur Entfernung unrechtmäßig erlangter Vorteile führen."
+            }
+          ]
+        },
+        {
+          "number": "8.2",
+          "title": "Bugusing und Meldepflicht",
+          "summary": "Entdeckte Fehler müssen gemeldet werden und dürfen nicht weiter zum Vorteil genutzt werden.",
+          "clauses": [
+            {
+              "text": "Sobald du einen Fehler als solchen erkennst, musst du seine vorteilhafte Nutzung unterlassen und ihn unverzüglich dem Team melden. Beschreibe Auslöser, Zeitpunkt und bereits entstandene Auswirkungen."
+            },
+            {
+              "text": "Verboten sind insbesondere Item- und Geldduplikation, Vorteile durch unerreichbare Bereiche, Sicht durch Wände, Animationsfehler und die fehlerhafte Beschaffung von Fahrzeugen oder Waffen."
+            },
+            {
+              "text": "Durch einen Fehler erhaltene Vorteile dürfen nicht weitergegeben, verkauft oder gezielt verborgen werden. Weitere Tests am Produktivserver, die den Vorteil erneut erzeugen, benötigen eine ausdrückliche Teamfreigabe."
+            },
+            {
+              "text": "Das unbeabsichtigte Auslösen und ehrliche Melden eines Fehlers ist kein vorsätzliches Bugusing. Eine Meldung hebt eine vorherige bewusste Ausnutzung jedoch nicht automatisch auf."
+            }
+          ]
+        },
+        {
+          "number": "8.3",
+          "title": "Exploiting und Umgehung von Systemgrenzen",
+          "summary": "Auch technisch funktionierende Mechaniken dürfen nicht zur bewussten Umgehung vorgesehener Grenzen verwendet werden.",
+          "clauses": [
+            {
+              "text": "Exploiting ist die gezielte Nutzung von Mechaniken oder ihrer Kombination, um erkennbare Systemgrenzen und Einschränkungen zu umgehen und dadurch unfaire Vorteile zu erzeugen."
+            },
+            {
+              "text": "Verboten sind insbesondere die bewusste Umgehung von Cooldowns, das missbräuchliche Nutzen von Job- oder Wirtschaftssystemen und das Aushebeln von Safezone-Schutzmechanismen."
+            },
+            {
+              "text": "Wirtschaftlich gutes Spielen oder eine effiziente Route ist nicht allein ein Exploit. Bei einer Sanktion muss benannt werden, welche Grenze bewusst umgangen wurde und welcher unzulässige Vorteil daraus entstanden ist."
+            },
+            {
+              "text": "Erkennbare Systemlücken sind zu melden. Unrechtmäßig erlangtes Geld und Gegenstände können eingezogen werden; vorsätzliche oder wiederholte Ausnutzung kann zusätzlich sanktioniert werden."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "p-einreise",
+      "title": "Einreise und Probezeit",
+      "rules": [
+        {
+          "number": "9.1",
+          "title": "Charakter und IC-Einreise",
+          "summary": "Die Einreise ist eine RP-Situation; Angaben und Verhalten müssen zum Charakter passen.",
+          "clauses": [
+            {
+              "text": "Die Einreise erfolgt im Rahmen des IC-Einreisesystems. Ab dem Betreten der Spielwelt musst du deinen Charakter darstellen und auf die Einreisesituation eingehen."
+            },
+            {
+              "text": "Fragen zu Namen, Herkunft, Reisegrund, Arbeit, Kontakten oder sonstigen persönlichen Umständen sind aus Sicht des Charakters zu beantworten. Ein Charakterhintergrund muss in sich nachvollziehbar sein."
+            },
+            {
+              "text": "Die IC-Befragung ist keine Aufforderung zur Offenlegung deiner realen persönlichen Daten. Teamfragen in einem ausdrücklich als OOC gekennzeichneten Verfahren sind davon getrennt."
+            },
+            {
+              "text": "Offensichtliches Trolling, Verweigerung der Szene und ein erkennbar ungeeignetes Charakterverhalten können zur Ablehnung oder Nachprüfung der Einreise führen. Daraus folgt kein allgemeiner Anspruch auf Aufnahme."
+            }
+          ]
+        },
+        {
+          "number": "9.2",
+          "title": "Vierzehntägige Probezeit",
+          "summary": "Neue Spieler erhalten eine Probezeit von 14 Tagen; alle Verhaltensregeln gelten ab dem ersten Tag.",
+          "clauses": [
+            {
+              "text": "Die Probezeit beträgt 14 Tage ab der ersten erfolgreichen Einreise. Sie dient der Eingewöhnung und der Beobachtung des RP-Verhaltens."
+            },
+            {
+              "text": "Das Team kann kleinere Erstfehler erläutern und bei Auffälligkeiten ein Gespräch oder eine Nachprüfung verlangen. Du musst die gegebenen Hinweise bei der weiteren Teilnahme beachten."
+            },
+            {
+              "text": "Schwere Verstöße werden auch während der Probezeit sanktioniert. Wiederholte Regelverstöße trotz Erklärung können zum Ausschluss von der weiteren Einreise führen."
+            },
+            {
+              "text": "Nach Ablauf der Probezeit gelten dieselben Regeln weiter. Die Probezeit ist weder eine allgemeine Straffreiheit noch eine verschärfte automatische Bannstufe."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "p-support",
+      "title": "Support und Sanktionen",
+      "rules": [
+        {
+          "number": "10.1",
+          "title": "Support und Unterbrechung einer Szene",
+          "summary": "Regelbeschwerden werden nach der Szene geklärt; akute OOC-Grenzüberschreitungen sind davon ausgenommen.",
+          "clauses": [
+            {
+              "text": "Bei einem vermuteten Regelverstoß musst du grundsätzlich weiter regelkonform mitspielen, Beweise sichern und die Situation nach ihrem Abschluss melden. Du darfst die Szene nicht eigenmächtig abbrechen oder mit einem Ticket drohen."
+            },
+            {
+              "text": "Eine sofortige OOC-Unterbrechung ist zulässig, wenn eine reale Bedrohung, akute persönliche Belästigung oder Diskriminierung vorliegt oder ein technischer Fehler die weitere Teilnahme unmöglich macht. Teile die Unterbrechung knapp mit und kontaktiere den Support."
+            },
+            {
+              "text": "Der Support kann eine Szene ausdrücklich pausieren oder beenden. Diese Maßnahme darf nicht selbst als Gelegenheit für IC-Vorteile genutzt werden."
+            },
+            {
+              "text": "Eine verlorene Verfolgung, eine unerwünschte Festnahme oder bloße Unzufriedenheit mit einer IC-Entscheidung begründet keinen Notfall."
+            }
+          ]
+        },
+        {
+          "number": "10.2",
+          "title": "Abgrenzung zwischen IC und OOC",
+          "summary": "IC-Streitigkeiten werden im Spiel behandelt; OOC-Regelverstöße gehören in den Support.",
+          "clauses": [
+            {
+              "lead": "IC zu klären:",
+              "text": "gewöhnliche Charakterkonflikte, Schulden, zulässige IC-Beleidigungen, Kündigungen, Verhaftungen, Gerichtsverfahren, geschäftliche Streitigkeiten und ausgespielte Fraktionskonflikte."
+            },
+            {
+              "lead": "Im Support zu klären:",
+              "text": "Regelverstöße, persönliche OOC-Angriffe, Metagaming, RDM, VDM, PowerRP, Trolling, technische Fehler, Cheats, Bugusing, Exploits und Beschwerden über Teamverhalten."
+            },
+            {
+              "text": "Eine IC-Sanktion kann trotz einer OOC-Beschwerde bestehen bleiben, solange der Support keine Korrektur anordnet. Der Support ersetzt keine IC-Berufungsinstanz, wenn ausschließlich die Rechtmäßigkeit einer IC-Entscheidung bestritten wird."
+            }
+          ]
+        },
+        {
+          "number": "10.3",
+          "title": "Beschwerden, Beweise und Einreichungsfristen",
+          "summary": "Beschwerden müssen den konkreten Sachverhalt und verfügbare Beweismittel nachvollziehbar benennen.",
+          "clauses": [
+            {
+              "text": "Eine Beschwerde muss Zeitpunkt, eigenen Charakter, bekannte Beteiligte, den beanstandeten Vorgang und verfügbare Beweismittel enthalten. Trenne eigene Wahrnehmungen von Vermutungen."
+            },
+            {
+              "text": "Reiche Aufnahmen einschließlich der relevanten Vorgeschichte ein. Originaldateien sind bis zum Abschluss der Prüfung aufzubewahren; Zuschnitte dürfen den Vorgang nicht verfälschen. Auch Logs, Chatverläufe, Screenshots und Zeugen können berücksichtigt werden. Ein fehlender Videoclip allein macht eine Beschwerde nicht automatisch unzulässig."
+            },
+            {
+              "lead": "Einreichungsfristen:",
+              "text": "Gewöhnliche Beschwerden innerhalb von 48 Stunden nach dem Vorfall; schwere Regelverstöße innerhalb von 7 Tagen. Für Cheating, Exploiting, schwere OOC-Vergehen und belegbare Teamvergehen besteht keine feste Ausschlussfrist."
+            },
+            {
+              "text": "Für die Einreichung genügt ein rechtzeitiges Ticket mit nachvollziehbarem Sachverhalt. Wenn Belege später folgen müssen oder eine technische Einreichung nicht möglich war, ist dies mitzuteilen. Ob ein verspäteter oder unvollständig belegter Fall noch aufgeklärt werden kann, muss das Team anhand der verfügbaren Beweise begründen."
+            }
+          ],
+          "reviewNote": "Freigabe offen: 48 Stunden und 7 Tage sind im Konzept ausdrücklich eine empfohlene Regelung. Die Behandlung verspäteter Meldungen ist hier als nachvollziehbares Prüfverfahren vorgeschlagen."
+        },
+        {
+          "number": "10.4",
+          "title": "Supportverfahren und Mitwirkung",
+          "summary": "Alle Beteiligten müssen sachlich mitwirken; Entscheidungen werden begründet und dokumentiert.",
+          "clauses": [
+            {
+              "text": "Ein Supportfall umfasst die Aufnahme der Beschwerde, Sicherung der Beweise, Anhörung der betroffenen Parteien, Bewertung des Sachverhalts und eine dokumentierte Entscheidung mit gegebenenfalls angeordneter Maßnahme."
+            },
+            {
+              "text": "Du musst im Support wahrheitsgemäße Angaben machen und Rückfragen beantworten, soweit du die angefragten Informationen kennst. Nichtwissen ist als solches anzugeben. Beweise dürfen nicht manipuliert, gezielt gelöscht oder durch abgesprochene Falschaussagen beeinflusst werden."
+            },
+            {
+              "text": "Das bewusste Entziehen aus einer bereits mitgeteilten Supportklärung ist verboten. Wenn du aus tatsächlichen Gründen nicht teilnehmen kannst, musst du dies mitteilen und eine Fortsetzung ermöglichen. Eine unbeantwortete Nachricht allein beweist noch keine absichtliche Support-Flucht."
+            },
+            {
+              "text": "Schreien, Beleidigen und fortgesetztes Unterbrechen sind unzulässig. IC-Lügen im regulären RP sind von wahrheitsgemäßer OOC-Mitwirkung im Support zu unterscheiden."
+            }
+          ]
+        },
+        {
+          "number": "10.5",
+          "title": "Sanktionen und Verhältnismäßigkeit",
+          "summary": "Maßnahmen müssen zum nachgewiesenen Verstoß passen; eine starre automatische Bannfolge ist nicht festgelegt.",
+          "clauses": [
+            {
+              "text": "Mögliche Maßnahmen sind Hinweis, Verwarnung, zeitliche Sperre, dauerhafter Ausschluss, Einreisesperre sowie die Beschränkung bestimmter Spielbereiche. Ein Charakter-Reset, Geld- oder Itementzug sowie Fraktions- oder Waffensperren müssen konkret mit dem Verstoß begründet werden."
+            },
+            {
+              "text": "Bei der Entscheidung sind Vorsatz, Schwere, tatsächlicher RP-Schaden, erlangter Vorteil, einschlägige Vorgeschichte, Einsicht und Einsteigerstatus zu berücksichtigen. Schwere Fälle können unmittelbar eine weitergehende Maßnahme erfordern."
+            },
+            {
+              "text": "Eine bestimmte Anzahl von Verwarnungen führt nach dieser Fassung nicht automatisch zu einer festgelegten Sperre. Umfang, Beginn und Ende einer zeitlichen Maßnahme müssen der betroffenen Person mitgeteilt und dokumentiert werden."
+            },
+            {
+              "text": "Ein automatischer Verfall nach 60 oder 90 Tagen ist nicht beschlossen. Über die Reduzierung älterer Verwarnungen entscheidet die Administration begründet anhand regelkonformen Verhaltens und der Vorgeschichte."
+            }
+          ]
+        },
+        {
+          "number": "10.6",
+          "title": "Unabhängige Prüfung und Einspruch",
+          "summary": "Betroffene können eine Supportentscheidung prüfen lassen; Befangenheit muss vermieden werden.",
+          "clauses": [
+            {
+              "text": "Eine Supportentscheidung muss den festgestellten Sachverhalt, die verletzte Regel und die gewählte Maßnahme erkennen lassen. Die betroffene Person kann über ein Ticket eine Prüfung durch eine höhere beziehungsweise unbeteiligte Supportinstanz verlangen."
+            },
+            {
+              "text": "Der Einspruch muss die beanstandete Entscheidung benennen und erläutern, welche Tatsachen, Beweismittel oder Regelbewertungen überprüft werden sollen. Öffentliche Angriffe auf Bearbeiter ersetzen keinen Einspruch."
+            },
+            {
+              "text": "Teammitglieder dürfen keine Fälle entscheiden, an denen sie selbst als Partei beteiligt sind. Freunde dürfen nicht bevorzugt, relevante Beweise nicht ignoriert und persönliche Auffassungen nicht an die Stelle veröffentlichter Regeln gesetzt werden."
+            },
+            {
+              "text": "Das letzte Wort liegt bei einer unbeteiligten Administration. Eine Beschwerde über ein Mitglied der Administration ist von einer anderen unbeteiligten zuständigen Person zu prüfen. Bis zu einer ausdrücklichen Änderung bleibt die mitgeteilte Maßnahme bestehen."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "geltung",
+      "title": "Geltung und Verbindlichkeit",
+      "rules": [],
+      "clauses": [
+        {
+          "text": "Dieses Regelwerk richtet sich an Spieler und Teammitglieder von Neo V. Mit der Teilnahme am Spielserver verpflichtest du dich zur Einhaltung. Communityregeln gelten auch in den offiziellen OOC-Bereichen von Neo V."
+        },
+        {
+          "text": "Serverregeln sind OOC-Vorgaben. Sie sind von IC-Gesetzen, Dienstvorschriften und Charakterentscheidungen zu unterscheiden. Eine IC-Straftat ist nicht automatisch ein OOC-Verstoß; OOC-Regeln gelten auch bei IC-erlaubten Handlungen."
+        },
+        {
+          "text": "Ein Regelverstoß anderer Personen rechtfertigt keinen eigenen. Für Unterbrechungen und akute Notfälle gilt § 10.1. Beschwerden werden sachlich über den Support geklärt."
+        },
+        {
+          "text": "Beispiele erläutern den Anwendungsbereich. Eine technisch mögliche Handlung ist nicht automatisch erlaubt. Das bewusste Umgehen einer konkret erkennbaren Regel ist verboten; ein nicht benannter persönlicher Maßstab des Bearbeiters ersetzt keine Regelbegründung."
+        },
+        {
+          "text": "Angeordnete Ausnahmen sind nur zulässig, wenn die betreffende Regel sie ausdrücklich vorsieht. Sie müssen vorab von der zuständigen Stelle bestätigt und dokumentiert werden. Das ausnahmslose Verbot von Schein-Geiseln nach § 5.2 bleibt bestehen."
+        },
+        {
+          "text": "Regeländerungen werden mit Fassung und Wirksamkeitszeitpunkt auf der Website beziehungsweise in offiziellen Ankündigungen veröffentlicht. Spieler müssen sich darüber informieren. Informelle private Aussagen ändern das Regelwerk nicht."
+        }
+      ]
+    }
+  ]
+}
