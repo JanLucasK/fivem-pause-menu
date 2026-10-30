@@ -1,18 +1,47 @@
 import type { KeybindEntry } from '../../types';
 
-// Beispieldaten fuer den Browser-Dev-Modus (siehe bridge/nui.ts). In FiveM
-// kommt die Liste per 'setKeybinds' NUI-Message von client/keybinds.lua -
-// gespeist aus dem `RegisterKeybind`-Export, den NeoVs eigene Resourcen
-// (fivem-corerp) und Drittresourcen (z.B. fivem-pma-voice) aufrufen. Die
-// Werte hier spiegeln absichtlich die echten, aktuell in corerp/pma-voice
-// per RegisterKeyMapping vergebenen Defaults.
+// Beispieldaten fuer den Browser-Dev-Modus (siehe bridge/nui.ts), erzeugt aus
+// client/keybind_catalog.lua. In FiveM kommt die Liste per 'setKeybinds' von
+// client/keybinds.lua; `key` ist dort die gelesene Taste, null fuer
+// Sondertasten. Hier ist "Inventar" beispielhaft auf K umbelegt.
 export const mockKeybinds: KeybindEntry[] = [
-  { id: 'rp_interact', resource: 'rp_core', command: '+rp_interact', category: 'Allgemein', label: 'Interaktionsrad (halten)', mapper: 'keyboard', key: 'X', defaultKey: 'X' },
-  { id: 'inventory', resource: 'rp_core', command: 'inventory', category: 'Allgemein', label: 'Inventar öffnen/schließen', mapper: 'keyboard', key: 'I', defaultKey: 'I' },
-  { id: 'rp_pointer', resource: 'rp_core', command: 'rp_pointer', category: 'Allgemein', label: 'Zeiger-/Zielhilfe (an/aus)', mapper: 'keyboard', key: 'F4', defaultKey: 'F4' },
-  { id: 'phone', resource: 'rp_core', command: 'phone', category: 'Allgemein', label: 'Handy öffnen/schließen', mapper: 'keyboard', key: 'F1', defaultKey: 'F1' },
-  { id: 'tablet', resource: 'rp_core', command: 'tablet', category: 'Allgemein', label: 'Tablet öffnen/schließen', mapper: 'keyboard', key: 'F2', defaultKey: 'F2' },
-  { id: 'rp_lock', resource: 'rp_core', command: 'rp_lock', category: 'Fahrzeug', label: 'Haustür/Garage ab-/aufschließen', mapper: 'keyboard', key: 'L', defaultKey: 'L' },
-  { id: 'cycleproximity', resource: 'pma-voice', command: 'cycleproximity', category: 'Voice', label: 'Sprachreichweite wechseln', mapper: 'keyboard', key: 'Y', defaultKey: 'Y' },
-  { id: 'radiotalk', resource: 'pma-voice', command: '+radiotalk', category: 'Voice', label: 'Über Funk sprechen (halten)', mapper: 'keyboard', key: 'LMENU', defaultKey: 'LMENU' },
+  { id: "rp_map", resource: 'rp_core', command: "rp_map", category: "Allgemein", label: "Karte öffnen/schließen", mapper: 'keyboard', key: "M", defaultKey: "m" },
+  { id: "inventory", resource: 'rp_core', command: "inventory", category: "Allgemein", label: "Inventar öffnen/schließen", mapper: 'keyboard', key: "K", defaultKey: "i" },
+  { id: "phone", resource: 'rp_core', command: "phone", category: "Allgemein", label: "Handy öffnen/schließen", mapper: 'keyboard', key: null, defaultKey: "F1" },
+  { id: "tablet", resource: 'rp_core', command: "tablet", category: "Allgemein", label: "Tablet öffnen/schließen", mapper: 'keyboard', key: null, defaultKey: "F2" },
+  { id: "radio", resource: 'rp_core', command: "radio", category: "Allgemein", label: "Funkgerät öffnen/schließen", mapper: 'keyboard', key: null, defaultKey: "F5" },
+  { id: "chat", resource: 'rp_core', command: "chat", category: "Allgemein", label: "Chat/Befehlszeile öffnen", mapper: 'keyboard', key: "T", defaultKey: "t" },
+  { id: "rp_pointer", resource: 'rp_core', command: "rp_pointer", category: "Allgemein", label: "Zeiger-/Zielhilfe (an/aus)", mapper: 'keyboard', key: null, defaultKey: "F4" },
+  { id: "rp_hotbar1", resource: 'rp_core', command: "rp_hotbar1", category: "Schnellzugriff", label: "Hotbar-Slot 1 benutzen", mapper: 'keyboard', key: "1", defaultKey: "1" },
+  { id: "rp_hotbar2", resource: 'rp_core', command: "rp_hotbar2", category: "Schnellzugriff", label: "Hotbar-Slot 2 benutzen", mapper: 'keyboard', key: "2", defaultKey: "2" },
+  { id: "rp_hotbar3", resource: 'rp_core', command: "rp_hotbar3", category: "Schnellzugriff", label: "Hotbar-Slot 3 benutzen", mapper: 'keyboard', key: "3", defaultKey: "3" },
+  { id: "rp_hotbar4", resource: 'rp_core', command: "rp_hotbar4", category: "Schnellzugriff", label: "Hotbar-Slot 4 benutzen", mapper: 'keyboard', key: "4", defaultKey: "4" },
+  { id: "rp_hotbar5", resource: 'rp_core', command: "rp_hotbar5", category: "Schnellzugriff", label: "Hotbar-Slot 5 benutzen", mapper: 'keyboard', key: "5", defaultKey: "5" },
+  { id: "+rp_interact", resource: 'rp_core', command: "+rp_interact", category: "Interaktion", label: "Interaktionsrad (halten)", mapper: 'keyboard', key: "X", defaultKey: "x" },
+  { id: "+rp_umschau", resource: 'rp_core', command: "+rp_umschau", category: "Interaktion", label: "Umschau halten (Objekte anvisieren)", mapper: 'keyboard', key: null, defaultKey: "LMENU" },
+  { id: "rp_lock", resource: 'rp_core', command: "rp_lock", category: "Interaktion", label: "Tür / Tor / Garage ab-/aufschließen", mapper: 'keyboard', key: "L", defaultKey: "l" },
+  { id: "rp_ja", resource: 'rp_core', command: "rp_ja", category: "Interaktion", label: "Anfrage annehmen", mapper: 'keyboard', key: "J", defaultKey: "J" },
+  { id: "rp_nein", resource: 'rp_core', command: "rp_nein", category: "Interaktion", label: "Anfrage ablehnen", mapper: 'keyboard', key: "N", defaultKey: "N" },
+  { id: "rp_einmal_hinfallen", resource: 'rp_core', command: "rp_einmal_hinfallen", category: "Interaktion", label: "Einmal hinfallen", mapper: 'keyboard', key: null, defaultKey: "F10" },
+  { id: "+rp_emoterad", resource: 'rp_core', command: "+rp_emoterad", category: "Emotes", label: "Emote-Rad (halten)", mapper: 'keyboard', key: null, defaultKey: "y" },
+  { id: "+rp_zeigen_halten", resource: 'rp_core', command: "+rp_zeigen_halten", category: "Emotes", label: "Zeigen / Finger heben (halten)", mapper: 'keyboard', key: "B", defaultKey: "B" },
+  { id: "emoteHandsUp", resource: 'rp_core', command: "emoteHandsUp", category: "Emotes", label: "Hände heben", mapper: 'keyboard', key: "H", defaultKey: "H" },
+  { id: "emoteMenu", resource: 'rp_core', command: "emoteMenu", category: "Emotes", label: "Emote-Menü", mapper: 'keyboard', key: null, defaultKey: "F3" },
+  { id: "+rp_sprachreichweite", resource: 'pma-voice', command: "+rp_sprachreichweite", category: "Sprache & Funk", label: "Sprachreichweite wechseln (halten: stumm)", mapper: 'keyboard', key: null, defaultKey: "Z" },
+  { id: "+radioptt", resource: 'rp_core', command: "+radioptt", category: "Sprache & Funk", label: "Funk: Sprechen (Push-to-Talk)", mapper: 'keyboard', key: null, defaultKey: "DOWN" },
+  { id: "rp_beifahrer_oder_taserlaser", resource: 'rp_core', command: "rp_beifahrer_oder_taserlaser", category: "Fahrzeug", label: "Beifahrer einsteigen", mapper: 'keyboard', key: "G", defaultKey: "G" },
+  { id: "+rp_underground_tuning_nitro", resource: 'rp_core', command: "+rp_underground_tuning_nitro", category: "Fahrzeug", label: "Nitro (halten)", mapper: 'keyboard', key: null, defaultKey: "LSHIFT" },
+  { id: "rp_dispatch", resource: 'rp_core', command: "rp_dispatch", category: "Dienst", label: "Dispatch öffnen (im Dienst)", mapper: 'keyboard', key: "K", defaultKey: "K" },
+  { id: "rp_einsatz_annehmen", resource: 'rp_core', command: "rp_einsatz_annehmen", category: "Dienst", label: "Einsatz annehmen + Wegpunkt", mapper: 'keyboard', key: null, defaultKey: "F9" },
+  { id: "rp_radar", resource: 'rp_core', command: "rp_radar", category: "Dienst", label: "Radar an/aus (Streifenwagen)", mapper: 'keyboard', key: "O", defaultKey: "O" },
+  { id: "rp_radarlock", resource: 'rp_core', command: "rp_radarlock", category: "Dienst", label: "Radar: Messung sperren/freigeben", mapper: 'keyboard', key: "U", defaultKey: "U" },
+  { id: "rp_radarlog", resource: 'rp_core', command: "rp_radarlog", category: "Dienst", label: "Radar-Historie öffnen (Bußgeld)", mapper: 'keyboard', key: null, defaultKey: "F6" },
+  { id: "+rp_tasersicherung", resource: 'rp_core', command: "+rp_tasersicherung", category: "Dienst", label: "Taser: Sicherung", mapper: 'keyboard', key: null, defaultKey: "y" },
+  { id: "+taserreload", resource: 'rp_core', command: "+taserreload", category: "Dienst", label: "Taser nachladen", mapper: 'keyboard', key: "R", defaultKey: "R" },
+  { id: "+taserreactivate", resource: 'rp_core', command: "+taserreactivate", category: "Dienst", label: "Taser reaktivieren", mapper: 'keyboard', key: null, defaultKey: "PAGEUP" },
+  { id: "rp_feuerwehrfunk", resource: 'rp_core', command: "rp_feuerwehrfunk", category: "Dienst", label: "Feuerwehr: Einsatzfunk beitreten", mapper: 'keyboard', key: null, defaultKey: "F11" },
+  { id: "anschlagen", resource: 'rp_core', command: "anschlagen", category: "Jobs", label: "Angeln: anschlagen", mapper: 'keyboard', key: "E", defaultKey: "e" },
+  { id: "+rp_reel", resource: 'rp_core', command: "+rp_reel", category: "Jobs", label: "Angeln: einholen (halten)", mapper: 'keyboard', key: "E", defaultKey: "e" },
+  { id: "angelnabbrechen", resource: 'rp_core', command: "angelnabbrechen", category: "Jobs", label: "Angeln: abbrechen", mapper: 'keyboard', key: null, defaultKey: "BACK" },
+  { id: "+rp_lumber_chop", resource: 'rp_core', command: "+rp_lumber_chop", category: "Jobs", label: "Holzfäller: Axt schwingen", mapper: 'MOUSE_BUTTON', key: null, defaultKey: "MOUSE_LEFT" },
 ];

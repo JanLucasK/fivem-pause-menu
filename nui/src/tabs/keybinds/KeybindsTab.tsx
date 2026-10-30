@@ -1,17 +1,30 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import type { KeyboardEvent as ReactKeyboardEvent } from 'react';
-import { RotateCcw } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import type { KeybindEntry } from '../../types';
 import { OverlayView } from '../../shell/OverlayView';
 import { SectionNav } from '../../shell/SectionNav';
-import { browserKeyToFivemKey } from './keyNameMap';
+import { KeyboardView } from './KeyboardView';
+import { currentKeyLabel } from './keyLabel';
 import './keybindsTab.css';
 
 interface KeybindsTabProps {
   keybinds: KeybindEntry[];
-  onRebind: (id: string, key: string) => void;
-  onReset: (id: string) => void;
+  onRebind: (entry: KeybindEntry) => void;
   onBack: () => void;
+}
+
+type KeybindsMode = 'keyboard' | 'list';
+
+const ALL = '__alle';
+const MODE_STORAGE = 'neov-pause-menu:keybinds-mode';
+
+function readMode(): KeybindsMode {
+  try {
+    return localStorage.getItem(MODE_STORAGE) === 'list' ? 'list' : 'keyboard';
+  } catch {
+    return 'keyboard';
+  }
 }
 
 function groupByCategory(entries: KeybindEntry[]) {
@@ -24,92 +37,85 @@ function groupByCategory(entries: KeybindEntry[]) {
   return groups;
 }
 
-// Datengetrieben: die Liste kommt vom Client (RegisterKeybind-Registry, siehe
-// client/keybinds.lua) statt aus lokalen Mock-Daten - jede Resource, die dort
-// registriert, taucht hier automatisch auf. "Rebind" ruft fetchNui('rebindKey', ...)
-// auf, das Client-seitig `bind`/`unbind` ausführt und die Wahl persistiert.
-// Bedienung: links Kategorien, Pfeil rechts in die Liste, Enter nimmt eine
-// neue Taste auf, Entf setzt auf Standard zurueck, Pfeil links zurueck.
-export function KeybindsTab({ keybinds, onRebind, onReset, onBack }: KeybindsTabProps) {
+// Tastenbelegung mit zwei Ansichten: Tastatur (belegte Tasten in Messing,
+// Hover zeigt die Aktionen) und Liste. Die Liste und die aktuell belegten
+// Tasten kommen vom Client (client/keybinds.lua). Ein Klick auf eine Aktion
+// startet das Neubelegen (onRebind).
+export function KeybindsTab({ keybinds, onRebind, onBack }: KeybindsTabProps) {
   const groups = groupByCategory(keybinds);
   const categories = Array.from(groups.keys());
-  const [category, setCategory] = useState(categories[0] ?? '');
-  const [listeningFor, setListeningFor] = useState<string | null>(null);
+  const [mode, setMode] = useState<KeybindsMode>(readMode);
+  const [category, setCategory] = useState(ALL);
   const rowRefs = useRef<Array<HTMLButtonElement | null>>([]);
-  const activeCategory = groups.has(category) ? category : categories[0] ?? '';
-  const entries = groups.get(activeCategory) ?? [];
+  const activeCategory = category === ALL || groups.has(category) ? category : ALL;
+  const entries = activeCategory === ALL ? keybinds : groups.get(activeCategory) ?? [];
 
-  useEffect(() => {
-    if (!listeningFor) return;
-
-    const handler = (event: KeyboardEvent) => {
-      event.preventDefault();
-      // Capture + stopImmediatePropagation: muss vor AppShells ESC-Handler
-      // (schliesst das ganze Menü) laufen, sonst würde Escape während der
-      // Aufnahme das Menü schliessen statt nur die Aufnahme abzubrechen.
-      event.stopImmediatePropagation();
-
-      if (event.code === 'Escape') {
-        setListeningFor(null);
-        return;
-      }
-
-      const key = browserKeyToFivemKey(event);
-      if (!key) return; // unbekannte Taste - Aufnahme laeuft weiter
-
-      setListeningFor(null);
-      onRebind(listeningFor, key);
-    };
-
-    window.addEventListener('keydown', handler, true);
-    return () => window.removeEventListener('keydown', handler, true);
-  }, [listeningFor, onRebind]);
-
-  function focusRow(index: number) {
-    if (entries.length === 0) return;
-    rowRefs.current[(index + entries.length) % entries.length]?.focus();
+  function switchMode(next: KeybindsMode) {
+    setMode(next);
+    try {
+      localStorage.setItem(MODE_STORAGE, next);
+    } catch {
+      // Ohne Speicher startet die Seite beim naechsten Mal wieder mit der Tastatur.
+    }
   }
 
-  function handleRowKeyDown(event: ReactKeyboardEvent<HTMLButtonElement>, index: number, entry: KeybindEntry) {
-    if (listeningFor) return;
-    if (event.key === 'ArrowDown') {
+  function enterContent() {
+    if (mode === 'list') rowRefs.current[0]?.focus();
+    else document.querySelector<HTMLButtonElement>('.kb-key[tabindex="0"]')?.focus();
+  }
+
+  function handleRowKeyDown(event: ReactKeyboardEvent<HTMLButtonElement>, index: number) {
+    if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
       event.preventDefault();
-      focusRow(index + 1);
-    } else if (event.key === 'ArrowUp') {
-      event.preventDefault();
-      focusRow(index - 1);
+      const next = index + (event.key === 'ArrowDown' ? 1 : -1);
+      rowRefs.current[(next + entries.length) % entries.length]?.focus();
     } else if (event.key === 'ArrowLeft') {
       event.preventDefault();
       document.querySelector<HTMLButtonElement>('.section-nav-item--active')?.focus();
-    } else if (event.key === 'Delete' && entry.key !== entry.defaultKey) {
-      event.preventDefault();
-      onReset(entry.id);
     }
   }
+
+  const modeSwitch = (
+    <div className="keybinds-mode" role="group" aria-label="Ansicht">
+      {(['keyboard', 'list'] as const).map((value) => (
+        <button
+          key={value}
+          type="button"
+          className={`keybinds-mode-btn${mode === value ? ' keybinds-mode-btn--active' : ''}`}
+          aria-pressed={mode === value}
+          onClick={() => switchMode(value)}
+        >
+          {value === 'keyboard' ? 'Tastatur' : 'Aktionen'}
+        </button>
+      ))}
+    </div>
+  );
 
   return (
     <OverlayView
       title="Tastenbelegung"
       onBack={onBack}
-      meta={keybinds.length > 0 && <span>{keybinds.length} Belegungen</span>}
+      meta={keybinds.length > 0 && modeSwitch}
       aside={
         categories.length > 0 && (
           <SectionNav
             label="Kategorien"
-            items={categories.map((name) => ({ id: name, label: name, count: groups.get(name)?.length }))}
+            items={[
+              { id: ALL, label: 'Alle', count: keybinds.length },
+              ...categories.map((name) => ({ id: name, label: name, count: groups.get(name)?.length })),
+            ]}
             activeId={activeCategory}
             onChange={setCategory}
-            onEnterContent={() => focusRow(0)}
+            onEnterContent={enterContent}
           />
         )
       }
       prompts={
         keybinds.length > 0
           ? [
-              { keys: '↑ ↓', label: 'Navigieren' },
-              { keys: '→', label: 'Zur Liste' },
-              { keys: 'ENTER', label: 'Neue Taste' },
-              { keys: 'ENTF', label: 'Standard' },
+              { keys: '↑ ↓', label: 'Kategorie' },
+              { keys: '→', label: mode === 'list' ? 'Zu den Aktionen' : 'Zur Tastatur' },
+              { keys: 'ENTER', label: 'Neu belegen' },
             ]
           : []
       }
@@ -118,46 +124,34 @@ export function KeybindsTab({ keybinds, onRebind, onReset, onBack }: KeybindsTab
         <div className="keybinds-empty">
           <h2 className="keybinds-empty-title">Noch keine Tasten gemeldet</h2>
           <p className="keybinds-empty-text">
-            Die Belegungen erscheinen hier, sobald die Server-Ressourcen sie anmelden. Bis dahin lassen sich alle
-            Tasten im GTA-Menü unter Einstellungen → Tastenbelegung → FiveM ändern.
+            Alle Tasten lassen sich im GTA-Menü unter Einstellungen → Tastenbelegung → FiveM ändern.
           </p>
         </div>
+      ) : mode === 'keyboard' ? (
+        <KeyboardView keybinds={keybinds} category={activeCategory === ALL ? null : activeCategory} onRebind={onRebind} />
       ) : (
-        <section className="keybinds-list" key={activeCategory} aria-label={activeCategory}>
-          {entries.map((entry, index) => {
-            const listening = listeningFor === entry.id;
-            const changed = entry.key !== entry.defaultKey;
-            return (
-              <div key={entry.id} className={`keybinds-row${listening ? ' keybinds-row--listening' : ''}`}>
-                <button
-                  ref={(el) => {
-                    rowRefs.current[index] = el;
-                  }}
-                  type="button"
-                  className="keybinds-row-main"
-                  onClick={() => setListeningFor(entry.id)}
-                  onKeyDown={(event) => handleRowKeyDown(event, index, entry)}
-                >
-                  <span className="keybinds-action">
-                    {entry.label}
-                    {changed && <span className="keybinds-default">Standard {entry.defaultKey}</span>}
-                  </span>
-                  <kbd className="keybinds-key">{listening ? 'Taste drücken …' : entry.key}</kbd>
-                </button>
-                {changed && !listening && (
-                  <button
-                    type="button"
-                    className="keybinds-reset"
-                    title="Auf Standard zurücksetzen"
-                    aria-label={`${entry.label} auf ${entry.defaultKey} zurücksetzen`}
-                    onClick={() => onReset(entry.id)}
-                  >
-                    <RotateCcw size="1rem" />
-                  </button>
-                )}
-              </div>
-            );
-          })}
+        <section className="keybinds-list" key={activeCategory} aria-label="Aktionen">
+          {entries.map((entry, index) => (
+            <button
+              key={entry.id}
+              ref={(el) => {
+                rowRefs.current[index] = el;
+              }}
+              type="button"
+              className="keybinds-row"
+              onClick={() => onRebind(entry)}
+              onKeyDown={(event) => handleRowKeyDown(event, index)}
+            >
+              <span className="keybinds-action">
+                {entry.label}
+                {activeCategory === ALL && <span className="keybinds-category">{entry.category}</span>}
+              </span>
+              <span className="keybinds-cta">
+                Neu belegen <ArrowRight size="0.875rem" />
+              </span>
+              <kbd className="keybinds-key">{currentKeyLabel(entry.key, entry.defaultKey)}</kbd>
+            </button>
+          ))}
         </section>
       )}
     </OverlayView>

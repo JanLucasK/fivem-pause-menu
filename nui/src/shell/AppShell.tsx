@@ -70,8 +70,7 @@ export function AppShell() {
   // ESC-Kette. In FiveM haelt SetNuiFocus die Tastatur in der NUI fest, solange
   // das Menue offen ist - das Client-Skript bekommt ESC nicht mit und muss beim
   // Schliessen ueber closeMenu informiert werden. Offene Overlays fallen nur zum
-  // Hub zurueck; der KeybindsTab faengt ESC waehrend einer Tasten-Aufnahme per
-  // capture+stopImmediatePropagation selbst ab.
+  // Hub zurueck.
   useEffect(() => {
     if (!visible) return;
     const handler = (event: KeyboardEvent) => {
@@ -114,6 +113,13 @@ export function AppShell() {
     else setVisible(false);
   }
 
+  // Key-Mappings lassen sich per Script nicht umlegen - "Neu belegen" fuehrt
+  // deshalb ins GTA-Tastenmenue (client.lua: openKeymapping).
+  function handleRebind(entry: KeybindEntry) {
+    if (isInFivem) fetchNui('openKeymapping', { command: entry.command });
+    else setVisible(false);
+  }
+
   // Discord (Mock): im Browser-Dev öffnet die Einladung einen neuen Tab; im Spiel
   // ist window.open ein No-op - CEF hat keinen externen Browser.
   function handleOpenDiscord() {
@@ -131,21 +137,6 @@ export function AppShell() {
     avatarUrlRef.current = null;
     setAvatarUrl(null);
     if (isInFivem) fetchNui('retryAvatar');
-  }
-
-  // Optimistisch aktualisieren: der Lua-Callback (rebindKey/resetKeybind)
-  // antwortet nur per cb, pusht aber kein neues setKeybinds - ohne lokales
-  // Update bliebe die Liste bis zum naechsten Menue-Oeffnen alt.
-  function handleRebind(id: string, key: string) {
-    if (isInFivem) fetchNui('rebindKey', { id, key });
-    setKeybinds((prev) => prev.map((entry) => (entry.id === id ? { ...entry, key } : entry)));
-  }
-
-  function handleResetKeybind(id: string) {
-    if (isInFivem) fetchNui('resetKeybind', { id });
-    setKeybinds((prev) =>
-      prev.map((entry) => (entry.id === id ? { ...entry, key: entry.defaultKey } : entry)),
-    );
   }
 
   return (
@@ -172,7 +163,6 @@ export function AppShell() {
         <KeybindsTab
           keybinds={keybinds}
           onRebind={handleRebind}
-          onReset={handleResetKeybind}
           onBack={() => setView('hub')}
         />
       )}

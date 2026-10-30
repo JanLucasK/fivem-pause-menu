@@ -85,6 +85,8 @@ export interface MapPlayerPosition {
 // Ein Keybind-Eintrag, wie ihn client/keybinds.lua liefert. `resource` ist die
 // Resource, die den Bind per `RegisterKeybind`-Export angemeldet hat (NeoV
 // selbst oder eine beliebige andere Resource) - rein informativ fürs UI.
+// `key` ist die aktuell belegte Taste, null wenn der Client sie nicht lesen
+// konnte (Sondertasten) - dann gilt die Anzeige des Defaults.
 export interface KeybindEntry {
   id: string;
   resource: string;
@@ -92,7 +94,7 @@ export interface KeybindEntry {
   label: string;
   category: string;
   mapper: string;
-  key: string;
+  key: string | null;
   defaultKey: string;
 }
 
