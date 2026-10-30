@@ -7,9 +7,10 @@ body {
   overflow: hidden;
   font-family: var(--font-ui);
   color: var(--text);
-  /* Readable on small screens; proportional growth on 1440p/4K.
-     Layout breakpoints handle narrow viewports instead of shrinking the text. */
-  font-size: clamp(14px, min(0.833333vw, 1.481481vh), 32px);
+  /* Skaliert proportional zu 1080p (16px). Untergrenze 12px statt 14px: mit
+     14px lief das Layout bei 1366x768 und 1440x900 ueber (Stat-Labels und
+     Chips brachen um). */
+  font-size: clamp(12px, min(0.833333vw, 1.481481vh), 32px);
   /* Transparent halten: Die NUI-Page bleibt in FiveM immer geladen, auch wenn
      die React-App bei visible=false null rendert. Ein opaker Hintergrund hier
      wuerde dann als schwarze Flaeche ueber Spiel und andere NUI-Ressourcen

@@ -287,6 +287,7 @@
 
 .hub-chips {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 0.75rem;
   margin-top: 0.375rem;
@@ -302,6 +303,7 @@
   font-size: 1.0625rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
+  white-space: nowrap;
   color: var(--muted);
 }
 
@@ -312,6 +314,7 @@
 }
 
 .hub-phone {
+  white-space: nowrap;
   font-size: 0.9375rem;
   color: var(--muted);
 }
@@ -347,6 +350,9 @@
 }
 
 .hub-stat-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   font-size: 0.8125rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -405,8 +411,8 @@
   z-index: 1;
   pointer-events: none;
   background:
-    radial-gradient(ellipse 82% 86% at 0% 100%, rgba(9, 10, 15, 0.82) 0%, rgba(9, 10, 15, 0.33) 48%, transparent 100%),
-    linear-gradient(0deg, rgba(9, 10, 15, 0.32) 0%, transparent 52%);
+    radial-gradient(ellipse 82% 86% at 0% 100%, rgba(9, 10, 15, 0.9) 0%, rgba(9, 10, 15, 0.4) 48%, transparent 100%),
+    linear-gradient(0deg, rgba(9, 10, 15, 0.42) 0%, transparent 52%);
 }
 
 .hub-map-dot {
@@ -441,7 +447,8 @@
 
 .hub-map-sub {
   font-size: 0.9375rem;
-  color: var(--muted);
+  color: #b8c0cc;
+  text-shadow: 0 1px 0.5rem rgba(9, 10, 15, 0.9);
 }
 
 .hub-map-arrow {
@@ -485,57 +492,73 @@
 .hub-event {
   display: flex;
   flex-direction: column;
-  padding: 1.375rem 1.5rem;
-  border-radius: 0.875rem;
-  border: 1px solid rgba(200, 151, 63, 0.3);
-  background: rgba(200, 151, 63, 0.07);
+  padding-bottom: 0.5rem;
 }
 
 .hub-event-title {
   margin: 0.5rem 0 0;
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 1.875rem;
+  font-size: 2.25rem;
   line-height: 1;
 }
 
 .hub-event-sub {
-  margin: 0.375rem 0 0;
+  margin: 0.5rem 0 0;
   font-size: 0.9375rem;
+  line-height: 1.45;
   color: #c9cdd6;
 }
 
+.hub-event-progress {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+
 .hub-event-bar {
-  margin-top: 1rem;
-  height: 0.25rem;
-  border-radius: 0.125rem;
-  background: rgba(255, 255, 255, 0.08);
+  flex: 1;
+  height: 0.125rem;
+  background: var(--graphite-line);
 }
 
 .hub-event-bar-fill {
   height: 100%;
-  border-radius: 0.125rem;
   background: var(--brass-bright);
 }
 
+.hub-event-percent {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--brass-bright);
+}
+
+/* Primaer-Button wie auf neov.gg: eckig, volles Messing, Pfeil rechts. */
 .hub-event-btn {
   align-self: flex-start;
-  margin-top: 1rem;
-  padding: 0.5rem 1rem;
-  border: 1px solid rgba(200, 151, 63, 0.5);
-  border-radius: 0.5rem;
-  background: rgba(200, 151, 63, 0.14);
+  display: inline-flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-top: 1.25rem;
+  padding: 0.75rem 1.25rem;
+  border: 1px solid var(--brass-bright);
+  border-radius: 0;
+  background: var(--brass-bright);
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 0.9375rem;
-  letter-spacing: 0.08em;
+  font-size: 1rem;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--brass-bright);
+  color: #141310;
   cursor: pointer;
+  transition: background 180ms, transform 180ms;
 }
 
 .hub-event-btn:hover {
-  background: rgba(200, 151, 63, 0.24);
+  background: #edc878;
+  transform: translateY(-2px);
 }
 
 /* Ankuendigungen: keine Box, nur Hairlines */
@@ -625,8 +648,9 @@
   display: flex;
   align-items: center;
   gap: 0.875rem;
-  padding: 0;
+  padding: 1rem 0 0;
   border: none;
+  border-top: 1px solid var(--graphite-line);
   background: none;
   color: var(--text);
   cursor: pointer;

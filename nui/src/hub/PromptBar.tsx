@@ -5,13 +5,11 @@ interface PromptBarProps {
   data: HomeData;
 }
 
-// Fusszeile: Tasten-Hinweise links, Beitritt und Spieler-ID rechts.
+// Fusszeile: Tasten-Hinweise links, Beitritt rechts. Die Spieler-ID steht
+// bereits am Avatar im Dossier.
 export function PromptBar({ data }: PromptBarProps) {
   const joined = formatJoined(data.server.joinedAtUnix);
-  const serverId = data.character.serverId;
-  const right = [joined && `Beigetreten ${joined}`, serverId != null && `Spieler-ID ${serverId}`]
-    .filter(Boolean)
-    .join(' · ');
+  const right = joined && `Beigetreten ${joined}`;
 
   return (
     <footer className="hub-prompts">
