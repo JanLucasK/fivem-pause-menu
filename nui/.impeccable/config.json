@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "side-tab",
+        "value": "*",
+        "files": [
+          "nui/src/shell/appShell.css"
+        ],
+        "createdAt": "2026-10-30T16:37:53.915Z",
+        "reason": "Claude: L20 ist die Messing-Kante am linken Bildschirmrand (.overlay-backdrop::before), 1:1 aus dem freigegebenen Hub-Backdrop (hub.css .hub-backdrop::before, RC Dossier) übernommen, keine Karten-Kante"
+      }
+    ]
+  }
+}

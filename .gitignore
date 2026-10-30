@@ -3,3 +3,4 @@ nui/dist/
 _preview/
 *.log
 *.tsbuildinfo
+nui/.impeccable/hook.cache.json
