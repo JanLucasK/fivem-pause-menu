@@ -372,9 +372,8 @@ local function setMenuVisible(visible)
         SendNUIMessage({ action = 'setHomeData', payload = buildHomeData() })
         -- Keybinds/Settings-Registry (client/keybinds.lua, client/settings.lua)
         -- laufen unabhaengig vom Menuestatus, damit andere Resourcen jederzeit
-        -- registrieren koennen - beim Oeffnen schicken wir trotzdem den
-        -- aktuellen Stand mit, falls sich seit dem letzten `setKeybinds`/
-        -- `setSettings`-Push (bei Registrierung) etwas geaendert hat.
+        -- registrieren koennen. Die Tasten werden hier beim Oeffnen gelesen,
+        -- damit Aenderungen aus dem FiveM-Tastenmenue sofort sichtbar sind.
         SendNUIMessage({ action = 'setKeybinds', payload = GetKeybinds() })
         SendNUIMessage({ action = 'setSettings', payload = GetSettings() })
         -- Bargeld/Bank aktiv nachfragen: corerp schickt Balances nur bei Mutation
@@ -478,16 +477,25 @@ end)
 -- Frontend-Menue aktivieren. gtaSettingsOpen haelt die Control-200-Unterdrueckung
 -- und das Wieder-Oeffnen unseres Menues zurueck, bis der Spieler das GTA-Menue
 -- per ESC schliesst - dann geht es normal ins Spiel zurueck, nicht in unser Menue.
-RegisterNUICallback('openSettings', function(_, cb)
+-- Oeffnet ein GTA-Frontend-Menue (Einstellungen, Tastenbelegung) anstelle
+-- unseres Menues und wartet, bis der Spieler es wieder schliesst.
+local function openGtaMenu(menu, component, fallback)
     setMenuVisible(false)
     gtaSettingsOpen = true
-    ActivateFrontendMenu(GetHashKey('FE_MENU_VERSION_MP_PAUSE'), false, getSettingsComponent())
+    ActivateFrontendMenu(GetHashKey(menu), false, component)
     CreateThread(function()
         -- Warten, bis das Pausenmenue tatsaechlich offen ist (mit Timeout, falls
         -- ActivateFrontendMenu auf diesem Build nicht greift).
         local guard = GetGameTimer() + 2000
         while gtaSettingsOpen and not IsPauseMenuActive() and GetGameTimer() < guard do
             Wait(0)
+        end
+        if not IsPauseMenuActive() and fallback then
+            ActivateFrontendMenu(GetHashKey(fallback.menu), false, fallback.component)
+            guard = GetGameTimer() + 2000
+            while gtaSettingsOpen and not IsPauseMenuActive() and GetGameTimer() < guard do
+                Wait(0)
+            end
         end
         -- ... dann warten, bis der Spieler es wieder schliesst.
         while gtaSettingsOpen and IsPauseMenuActive() do
@@ -498,6 +506,19 @@ RegisterNUICallback('openSettings', function(_, cb)
         Wait(300)
         gtaSettingsOpen = false
     end)
+end
+
+RegisterNUICallback('openSettings', function(_, cb)
+    openGtaMenu('FE_MENU_VERSION_MP_PAUSE', getSettingsComponent())
+    cb({})
+end)
+
+-- "Neu belegen" auf der Tastenseite: Key-Mappings sind nur im GTA-Tastenmenue
+-- umlegbar (dort unter FiveM). Direkt ins Tastenmenue; greift das auf diesem
+-- Build nicht, in die normalen Einstellungen.
+RegisterNUICallback('openKeymapping', function(_, cb)
+    openGtaMenu('FE_MENU_VERSION_LANDING_KEYMAPPING_MENU', -1,
+        { menu = 'FE_MENU_VERSION_MP_PAUSE', component = getSettingsComponent() })
     cb({})
 end)
 

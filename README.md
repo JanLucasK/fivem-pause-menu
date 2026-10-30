@@ -114,11 +114,12 @@ fehlen. Deshalb ist das Asset auf 128×128 verkleinert — angezeigt wird es mit
 ## Architektur
 
 - `nui/src/shell/` – AppShell (View-State `hub | keybinds | rules |
-  announcements`, ESC-Kette, Hotkey M) und OverlayView (Vollbild-Overlay mit
-  Zurück-Leiste).
+  announcements`, ESC-Kette, Hotkey M), OverlayView (Vollbild-Seite im
+  Hub-Raster), SectionNav (linke Spalte) und `usePageScroll` (Bild auf/ab).
 - `nui/src/hub/` – der Hub: HubView, TopBar, NavRail, Dossier, StatStrip,
   MapStrip, EventCard, AnnouncementsFeed, DiscordRow, PromptBar, `hub.css`.
-- `nui/src/tabs/<tab>/` – Overlays (keybinds, rules) und der Exit-Dialog.
+- `nui/src/tabs/<tab>/` – Overlays (keybinds, rules, announcements) und der
+  Exit-Dialog.
 - `nui/src/bridge/nui.ts` – einzige Schnittstelle zum Client-Skript
   (`fetchNui`, `onNuiMessage`). Läuft die App ausserhalb von FiveM, liefert
   `fetchNui` leere Mock-Antworten statt echter Requests.
@@ -128,9 +129,10 @@ fehlen. Deshalb ist das Asset auf 128×128 verkleinert — angezeigt wird es mit
   veröffentlichte Event-/News-Daten über `rp:pause-menu:content-local`.
   Beim Öffnen fordert die Resource sie über `rp:pause-menu:request-local`
   erneut an. Die CoreRP-Brücke hält die eigentlichen NetEvent-Namen zentral.
-- `client/keybinds.lua` / `client/settings.lua` – generische Registries für
-  die "Tastenbelegung"/"Allgemein"-Unteransichten im Einstellungen-Tab, siehe
-  Abschnitt darunter.
+- `client/keybinds.lua` + `client/keybind_catalog.lua` – Tastenseite: Katalog
+  der Spieler-Tasten von CoreRP und pma-voice, aktuelle Belegung wird zur
+  Laufzeit gelesen. `client/settings.lua` – Registry für Einstellungen anderer
+  Resourcen. Siehe Abschnitt darunter.
 
 ## Keybinds & Settings für andere Resourcen
 
@@ -140,25 +142,29 @@ Einträge per Export anmelden. Das NUI rendert ausschließlich, was diese
 Registries liefern - keine Resource wird von diesem Menü aus angefasst.
 
 **Keybinds** (`client/keybinds.lua`, Export `RegisterKeybind`): meldet einen
-bereits per `RegisterKeyMapping` registrierten Command zur Anzeige/zum Rebind
-im UI an. Aufruf aus dem Client-Skript der eigenen Resource, nachdem der
-eigene `RegisterKeyMapping`-Call gelaufen ist:
+bereits per `RegisterKeyMapping` registrierten Command zur Anzeige im UI an.
+Die Seite "Tastenbelegung" zeigt nur an; geändert wird im FiveM-Tastenmenü
+(GTA-Einstellungen → Tastenbelegung → FiveM), das die Wahl selbst speichert.
+Die aktuell belegte Taste liest der Client beim Öffnen per
+`GetControlInstructionalButton` (Buchstaben/Ziffern; bei Sondertasten zeigt
+das UI den Default). Commands, die gerade nicht registriert sind, erscheinen
+nicht. Aufruf aus dem Client-Skript der eigenen Resource, nachdem der eigene
+`RegisterKeyMapping`-Call gelaufen ist:
 
 ```lua
 if GetResourceState('neov-pause-menu') == 'started' then
     exports['neov-pause-menu']:RegisterKeybind({
-        id = 'myres_dosomething',       -- eindeutig, dient als KVP-Key
+        id = 'myres_dosomething',       -- eindeutig
         command = 'myres_dosomething',  -- Command-String aus RegisterCommand/RegisterKeyMapping
         label = 'Etwas tun',
         category = 'Mein Script',       -- Gruppierung im UI, frei wählbar
-        defaultKey = 'E',               -- muss zum RegisterKeyMapping-Default passen
+        defaultKey = 'E',               -- RegisterKeyMapping-Default (Rohname)
     })
 end
 ```
 
-Rebind aus dem UI führt intern `bind`/`unbind` für genau diesen Command aus
-und merkt sich die Wahl in einem Resource-KVP (übersteht Neustarts/Reconnects
-- FiveM selbst bietet keine Query-Native für "aktuell gebundene Taste").
+Die Tasten von CoreRP und pma-voice meldet dieses Menü selbst an
+(`client/keybind_catalog.lua`); neue Spieler-Tasten in CoreRP dort ergänzen.
 
 **Settings** (`client/settings.lua`, Export `RegisterSetting`): meldet eine
 Slider- oder Toggle-Zeile an. NeoVs eigene Audio/HUD/Voice-Sektionen nutzen
@@ -226,8 +232,8 @@ Discord gehört nicht zu diesem Recht und bleibt in den obigen Convars.
   beeinflussen), liegt bei der jeweils registrierenden Resource - `neov-pause-
   menu` selbst setzt nur den Wert, keine Spiel-Convars.
 - **Keybinds-Tab:** datengetrieben über `client/keybinds.lua`
-  (`RegisterKeybind`-Export, siehe oben). Rebind führt echtes `bind`/`unbind`
-  aus und persistiert die Wahl im Resource-KVP.
+  (`RegisterKeybind`-Export, siehe oben). Reine Anzeige; geändert wird im
+  FiveM-Tastenmenü, das die Wahl selbst speichert.
 - **Fonts:** Rajdhani/Inter/JetBrains Mono liegen bereits selbst-gehostet in
   `nui/public/fonts/` (Open-Font-License, aus Google Fonts geladen) – passend
   zum bestehenden NeoV-Design-System (Graphit + Messing).

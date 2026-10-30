@@ -12,6 +12,7 @@ dependency 'rp_atlas'
 
 client_scripts {
     'client/keybinds.lua',
+    'client/keybind_catalog.lua',
     'client/settings.lua',
     'client/client.lua',
 }
